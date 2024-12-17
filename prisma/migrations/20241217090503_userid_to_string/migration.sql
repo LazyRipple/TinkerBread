@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "ItemData" ALTER COLUMN "senderId" SET DEFAULT '',
+ALTER COLUMN "senderId" SET DATA TYPE TEXT;

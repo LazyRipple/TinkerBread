@@ -15,7 +15,7 @@
 
 1. `pnpm i` to install every library
 2. open docker, then cmd → `docker-compose up -d`
-3. run `npx prisma migrate dev`
+3. run `pnpm add @prisma/client prisma`, `pnpm prisma generate`, `npx prisma migrate dev`
 4. run `pnpm run seed` to create mock data
 
 ## To delete data base and start from scratch
@@ -66,7 +66,9 @@ postgres-data:
 
 // prisma ---------------------
 pnpm i prisma --save-dev
-pnpm i prisma/client
+// pnpm i prisma/client
+pnpm add @prisma/client prisma
+pnpm prisma generate
 npx prisma init // init prisma schema, then write prisma schema
 
 // prisma migration
