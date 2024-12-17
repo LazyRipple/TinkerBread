@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  username    String?
+  gmail       String       @unique
+  GGB_id      Int          @unique
+  createdAt   DateTime     @default(now())
+  Gingerbread Gingerbreads @relation(fields: [GGB_id], references: [id])
+}
+
+model Gingerbreads {
+  id             Int    @id @default(autoincrement())
+  User           User?
+  GGB_type       String
+  thanks_message String
+  GGB_1_id       Int
+  GGB_2_id       Int
+  GGB_3_id       Int
+}
+
+model Gingerbread {
+  id            Int @id @default(autoincrement())
+  head_id       Int @default(0)
+  left_hand_id  Int @default(0)
+  right_hand_id Int @default(0)
+}
+
+model Item {
+  id               Int    @id @default(autoincrement())
+  item_name        String @default("")
+  item_model       String @default("")
+  item_description String @default("")
+  item_position    String @default("")
+  x_position       Float  @default(0)
+  y_position       Float  @default(0)
+  z_position       Float  @default(0)
+  x_rotation       Float  @default(0)
+  y_rotation       Float  @default(0)
+  z_rotation       Float  @default(0)
+  scale            Float  @default(0)
+}
+
+model ItemData {
+  id       Int     @id @default(autoincrement())
+  itemId   Int
+  senderId Int     @default(0)
+  message  String?
+}
