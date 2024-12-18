@@ -15,6 +15,7 @@ datasource db {
 
 model User {
   id           String       @id @default(uuid())
+  link_id      String?      @default(uuid()) @db.VarChar(10)
   username     String
   gmail        String       @unique
   GGBs_id      String       @unique @default("none")
@@ -23,26 +24,28 @@ model User {
 }
 
 model Gingerbreads {
-  id             String @id @default(uuid())
+  id             String  @id @default(uuid())
+  link_id        String? @default(uuid()) @db.VarChar(10)
   User           User?
-  GGB_type       String @default("normal")
-  thanks_message String @default("")
-  GGB_1_id       String @default("none")
-  GGB_2_id       String @default("none")
-  GGB_3_id       String @default("none")
+  GGB_type       String  @default("normal")
+  thanks_message String  @default("")
+  GGB_1_id       String  @default("none")
+  GGB_2_id       String  @default("none")
+  GGB_3_id       String  @default("none")
+  senders        String  @default("")
 }
 
 model Gingerbread {
   id             String @id @default(uuid())
-  head1_id       Int    @default(0)
-  left1_hand_id  Int    @default(0)
-  right1_hand_id Int    @default(0)
-  head2_id       Int    @default(0)
-  left2_hand_id  Int    @default(0)
-  right2_hand_id Int    @default(0)
-  head3_id       Int    @default(0)
-  left3_hand_id  Int    @default(0)
-  right3_hand_id Int    @default(0)
+  head1_id       String @default("")
+  left1_hand_id  String @default("")
+  right1_hand_id String @default("")
+  head2_id       String @default("")
+  left2_hand_id  String @default("")
+  right2_hand_id String @default("")
+  head3_id       String @default("")
+  left3_hand_id  String @default("")
+  right3_hand_id String @default("")
 }
 
 model Item {
