@@ -22,14 +22,14 @@ export default async function GingerbreadInfo(GGB_id) {
   // get each item infomation
   let GGB = {}
   GGB['head1'] = await processItemDataInfo(GGB_res.head1_id)
-  GGB['left1'] = await processItemDataInfo(GGB_res.left1_hand_id)
-  GGB['right1'] = await processItemDataInfo(GGB_res.right1_hand_id)
+  GGB['left1_hand'] = await processItemDataInfo(GGB_res.left1_hand_id)
+  GGB['right1_hand'] = await processItemDataInfo(GGB_res.right1_hand_id)
   GGB['head2'] = await processItemDataInfo(GGB_res.head2_id)
-  GGB['left2'] = await processItemDataInfo(GGB_res.left2_hand_id)
-  GGB['right2'] = await processItemDataInfo(GGB_res.right2_hand_id)
+  GGB['left2_hand'] = await processItemDataInfo(GGB_res.left2_hand_id)
+  GGB['right2_hand'] = await processItemDataInfo(GGB_res.right2_hand_id)
   GGB['head3'] = await processItemDataInfo(GGB_res.head3_id)
-  GGB['left3'] = await processItemDataInfo(GGB_res.left3_hand_id)
-  GGB['right3'] = await processItemDataInfo(GGB_res.right3_hand_id)
+  GGB['left3_hand'] = await processItemDataInfo(GGB_res.left3_hand_id)
+  GGB['right3_hand'] = await processItemDataInfo(GGB_res.right3_hand_id)
   return NextResponse.json({
     data: GGB,
   })

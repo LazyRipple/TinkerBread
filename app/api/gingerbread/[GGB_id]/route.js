@@ -12,14 +12,7 @@ export async function GET(request, { params }) {
       },
     })
     if (GGB == null) {
-      return NextResponse.json(
-        {
-          message: 'no gingerbread with this id',
-        },
-        {
-          status: 400,
-        },
-      )
+      throw new Error('gingerbread id is incorrect')
     }
 
     return NextResponse.json({
@@ -41,47 +34,28 @@ export async function GET(request, { params }) {
 
 export async function PATCH(request, { params }) {
   const GGB_id = params.GGB_id
-  const { user_id, receiver_id, item_id, item_message, position } = await request.json()
+  const { GGBs_id, user_id, item_id, item_message, position } = await request.json()
   try {
     // check if user valid and not already decorate
-    const res = await (await fetch(`${process.env.BASEURL}/api/gingerbreads/${receiver_id}/${user_id}`)).json()
-    if (res.message == 'failed') {
-      return NextResponse.json(
-        {
-          message: 'failed',
-          error: res.error,
-        },
-        {
-          status: 400,
-        },
-      )
-    }
-    console.log(res.data)
+    const GGBs = await prisma.gingerbreads.findFirst({
+      where: {
+        id: GGBs_id,
+      },
+    })
 
-    if (res.data.is_decorate == 'T') {
-      return NextResponse.json(
-        {
-          message: 'failed',
-          error: 'this user already decorate receiver gingerbread',
-        },
-        {
-          status: 400,
-        },
-      )
+    if (GGBs == null) {
+      throw new Error('gingerbreads id is incorrect')
     }
 
-    // TODO : check if GGB_id valid in user
-    // if (!(res.data.GGB1 == GGB_id || res.data.GGB2 == GGB_id || res.data.GGB3 == GGB_id)) {
-    //   return NextResponse.json(
-    //     {
-    //       message: 'failed',
-    //       error: 'GGB id not belong with this receiver user',
-    //     },
-    //     {
-    //       status: 400,
-    //     },
-    //   )
-    // }
+    // check if user already sent decoration
+    if (GGBs.senders.indexOf(user_id) != -1) {
+      throw new Error('this user already decorate receiver gingerbread')
+    }
+
+    // check if GGB_id is in GGBs
+    if (GGBs.GGB_1_id != GGB_id && GGBs.GGB_2_id != GGB_id && GGBs.GGB_3_id != GGB_id) {
+      throw new Error('gingerbread id is incorrect')
+    }
 
     // check if item valid
     const is_item_id_valid =
@@ -91,32 +65,21 @@ export async function PATCH(request, { params }) {
         },
       })) == null
     if (is_item_id_valid) {
-      return NextResponse.json(
-        {
-          message: 'failed',
-          error: 'item_id not valid',
-        },
-        {
-          status: 400,
-        },
-      )
+      throw new Error('item_id not valid')
     }
 
-    // check if position valid
-    if (!positions.includes(position)) {
-      return NextResponse.json(
-        {
-          message: 'failed',
-          error: 'position not valid',
-        },
-        {
-          status: 400,
-        },
-      )
+    // check if GGB already has item in position
+    const GGB = await prisma.gingerbread.findFirst({
+      where: {
+        id: GGB_id,
+      },
+    })
+    const position_text = position + '_id'
+    if (!(GGB[position_text] == '' || GGB[position_text] == 0)) {
+      throw new Error('those position already decorated')
     }
 
     // add new Item data
-    const position_text = position + '_id'
     const new_item = await prisma.itemData.create({
       data: {
         itemId: parseInt(item_id),
@@ -124,12 +87,20 @@ export async function PATCH(request, { params }) {
         message: item_message,
       },
     })
-    const GGB = await prisma.gingerbread.update({
-      where: {
-        id: GGB_id,
+
+    await prisma.gingerbread.update({
+      where: { id: GGB.id },
+      data: {
+        [position_text]: new_item.id,
       },
-      data: { [position_text]: new_item.id },
     })
+    await prisma.gingerbreads.update({
+      where: { id: GGBs.id },
+      data: {
+        senders: `${GGBs.senders}, ${user_id}`,
+      },
+    })
+
     return NextResponse.json({
       message: 'success',
     })
