@@ -24,7 +24,7 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({
       message: 'success',
-      data: JSON.stringify({ GGB }),
+      data: GGB,
     })
   } catch (error) {
     return NextResponse.json(
