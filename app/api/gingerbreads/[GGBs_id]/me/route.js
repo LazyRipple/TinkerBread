@@ -3,6 +3,8 @@ import GingerbreadInfo from '@/libs/gingerbreadInfo'
 import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
+
+// GET : get your gingerbread infomation
 export async function GET(request, { params }) {
   const GGBs_id = params.GGBs_id
   try {

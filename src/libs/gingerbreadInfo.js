@@ -54,8 +54,16 @@ const processItemDataInfo = async (item_id) => {
     },
   })
 
+  // get item data
+  const sender = await prisma.user.findFirst({
+    where: {
+      id: res.senderId,
+    },
+  })
+
   return {
     message: res.message,
+    sender: sender.username,
     item: item,
   }
 }
