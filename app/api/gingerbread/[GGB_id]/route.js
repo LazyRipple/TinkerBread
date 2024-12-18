@@ -3,9 +3,8 @@ import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
 export async function GET(request, { params }) {
-  const GGB_id = params.GGB_id
-
   try {
+    const GGB_id = params.GGB_id
     const GGB = await prisma.gingerbread.findFirst({
       where: {
         id: GGB_id,
@@ -33,9 +32,9 @@ export async function GET(request, { params }) {
 }
 
 export async function PATCH(request, { params }) {
-  const GGB_id = params.GGB_id
-  const { GGBs_id, user_id, item_id, item_message, position } = await request.json()
   try {
+    const GGB_id = params.GGB_id
+    const { GGBs_id, user_id, item_id, item_message, position } = await request.json()
     // check if user valid and not already decorate
     const GGBs = await prisma.gingerbreads.findFirst({
       where: {
@@ -69,6 +68,9 @@ export async function PATCH(request, { params }) {
     }
 
     // check if GGB already has item in position
+    if (!positions.includes(position)) {
+      throw new Error('position not valid')
+    }
     const GGB = await prisma.gingerbread.findFirst({
       where: {
         id: GGB_id,

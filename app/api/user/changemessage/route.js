@@ -15,14 +15,7 @@ export async function PATCH(request) {
     })
 
     if (user == null) {
-      return NextResponse.json(
-        {
-          message: 'no user with this user_id',
-        },
-        {
-          status: 400,
-        },
-      )
+      throw new Error('no user with this user_id')
     }
 
     const update_user = await prisma.gingerbreads.update({
