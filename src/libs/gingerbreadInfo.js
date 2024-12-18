@@ -10,7 +10,7 @@ export default async function GingerbreadInfo(GGB_id, user_id) {
   }
 
   // get gingerbread infomation
-  const res = await (await fetch(`http://localhost:3000/api/gingerbread/${GGB_id}`)).json()
+  const res = await (await fetch(`${process.env.BASEURL}/api/gingerbread/${GGB_id}`)).json()
   if (res.message == 'no gingerbread with this id') {
     return NextResponse.json({
       data: 'none',

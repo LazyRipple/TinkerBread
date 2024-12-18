@@ -17,7 +17,8 @@ export async function GET(request, { params }) {
     if (GGBs == null) {
       return NextResponse.json(
         {
-          message: 'no gingerbreads with this id',
+          message: 'failed',
+          error: 'no gingerbreads with this id',
         },
         {
           status: 400,
