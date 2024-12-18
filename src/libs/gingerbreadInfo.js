@@ -16,7 +16,8 @@ export default async function GingerbreadInfo(GGB_id) {
       data: 'none',
     })
   }
-  const GGB_res = JSON.parse(res.data).GGB
+
+  const GGB_res = res.data
 
   // get each item infomation
   let GGB = {}
