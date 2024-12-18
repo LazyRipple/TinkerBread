@@ -7,7 +7,7 @@ export async function PATCH(request) {
   try {
     const { user_id, newname } = await request.json()
 
-    // find if user already signin
+    // if user not in database
     const user = await prisma.user.findFirst({
       where: {
         id: user_id,

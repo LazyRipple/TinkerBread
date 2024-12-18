@@ -2,22 +2,28 @@ const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
-export async function PATCH(request) {
-  // please send this 2 in body
+export async function GET(request, { params }) {
+  const GGB_id = params.GGB_id
+  if (GGB_id == 'none') {
+    return NextResponse.json(
+      {
+        message: 'no gingerbread with this id',
+      },
+      {
+        status: 400,
+      },
+    )
+  }
   try {
-    const { user_id, thanks_message } = await request.json()
-
-    // if user not in database
-    const user = await prisma.user.findFirst({
+    const GGB = await prisma.gingerbread.findFirst({
       where: {
-        id: user_id,
+        id: GGB_id,
       },
     })
-
-    if (user == null) {
+    if (GGB == null) {
       return NextResponse.json(
         {
-          message: 'no user with this user_id',
+          message: 'no gingerbread with this id',
         },
         {
           status: 400,
@@ -25,17 +31,9 @@ export async function PATCH(request) {
       )
     }
 
-    const update_user = await prisma.gingerbreads.update({
-      where: {
-        id: user.GGBs_id,
-      },
-      data: {
-        thanks_message,
-      },
-    })
     return NextResponse.json({
       message: 'success',
-      data: update_user.id,
+      data: JSON.stringify({ GGB }),
     })
   } catch (error) {
     return NextResponse.json(
