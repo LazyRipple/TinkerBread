@@ -4,16 +4,7 @@ import { NextResponse } from 'next/server'
 const prisma = new PrismaClient()
 export async function GET(request, { params }) {
   const GGB_id = params.GGB_id
-  if (GGB_id == 'none') {
-    return NextResponse.json(
-      {
-        message: 'no gingerbread with this id',
-      },
-      {
-        status: 400,
-      },
-    )
-  }
+
   try {
     const GGB = await prisma.gingerbread.findFirst({
       where: {

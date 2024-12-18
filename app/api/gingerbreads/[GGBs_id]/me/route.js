@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+import GingerbreadInfo from '@/libs/gingerbreadInfo'
 import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
@@ -25,16 +26,13 @@ export async function GET(request, { params }) {
       GGB_type: GGBs.GGB_type,
       thanks_message: GGBs.thanks_message,
     }
-    data['GGB1'] =
-      GGBs.GGB_1_id == 'none' ? 'none' : await prisma.gingerbread.findFirst({ where: { id: GGBs.GGB_1_id } })
-    data['GGB2'] =
-      GGBs.GGB_2_id == 'none' ? 'none' : await prisma.gingerbread.findFirst({ where: { id: GGBs.GGB_2_id } })
-    data['GGB3'] =
-      GGBs.GGB_3_id == 'none' ? 'none' : await prisma.gingerbread.findFirst({ where: { id: GGBs.GGB_3_id } })
 
+    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id)).json()).data
+    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id)).json()).data
+    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
     return NextResponse.json({
       message: 'success',
-      data: JSON.stringify(data),
+      data: data,
     })
   } catch (error) {
     return NextResponse.json(
