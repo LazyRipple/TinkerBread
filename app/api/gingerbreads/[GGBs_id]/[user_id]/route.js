@@ -31,21 +31,10 @@ export async function GET(request, { params }) {
       thanks_message: GGBs.thanks_message,
     }
 
-    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id, user_id)).json()).data
-    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id, user_id)).json()).data
-    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id, user_id)).json()).data
-
-    // is_decorate
-    let is_decorate = false
-    is_decorate |= data['GGB1'] == 'none' ? false : data['GGB1'].is_decorate
-    is_decorate |= data['GGB2'] == 'none' ? false : data['GGB2'].is_decorate
-    is_decorate |= data['GGB3'] == 'none' ? false : data['GGB3'].is_decorate
-    data['is_decorate'] = is_decorate ? 'T' : 'F'
-
-    // drop is_decorate in GGB
-    delete data['GGB1'].is_decorate
-    delete data['GGB2'].is_decorate
-    delete data['GGB3'].is_decorate
+    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id)).json()).data
+    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id)).json()).data
+    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
+    data['is_decorate'] = GGBs.senders.indexOf(user_id) == -1 ? 'F' : 'T'
 
     return NextResponse.json({
       message: 'success',
