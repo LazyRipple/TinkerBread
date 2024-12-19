@@ -4,21 +4,23 @@ import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { Suspense } from 'react';
 import { FormLoading } from '@/components/FormLoading';
 
 export default  function Page() {
   const {data:session} = useSession()
   const [newName, setNewName] = useState('')
   const [newMessage, setNewMessage] = useState('')
+  const [loaded, setLoaded] = useState(false)
   const router = useRouter()
   
   useEffect(()=>{
     const fetchUser = async () =>{
       const user = await (await fetch(`/api/user/${session.user.link_id}`)).json()
-      setNewName(user.data.username??"")
-      const GGB = await (await fetch(`/api/gingerbreads/${user.data.GGBs_id}/me`)).json()
-      setNewMessage(GGB.data.thanks_message??"")
+      
+      setNewName(user.data?.username??"")
+      const GGB = await (await fetch(`/api/gingerbreads/${user.data?.GGBs_id ?? ""}/me`)).json()
+      setNewMessage(GGB.data?.thanks_message??"")
+      setLoaded(true)
     }
     fetchUser()
   }, [session.user.user_id, session.user.link_id])
@@ -54,7 +56,7 @@ export default  function Page() {
       <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
         <p>This is Setting pages</p>
       
-    <Suspense fallback={<FormLoading />}>
+    {loaded ? 
       <form
         onSubmit={handleSubmit}
         className="rounded-md bg-white p-6 shadow-md"
@@ -86,7 +88,9 @@ export default  function Page() {
           Save Change
         </button>{' '}
       </form>
-      </Suspense>
+      :
+      <FormLoading />
+    }
       </div>
     </>
   )
