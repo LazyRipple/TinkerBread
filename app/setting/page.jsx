@@ -2,27 +2,39 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { Suspense } from 'react';
+import { FormLoading } from '@/components/FormLoading';
 
-export default function Page() {
+export default  function Page() {
+  const {data:session} = useSession()
   const [newName, setNewName] = useState('')
   const [newMessage, setNewMessage] = useState('')
   const router = useRouter()
+  
+  useEffect(()=>{
+    const fetchUser = async () =>{
+      const user = await (await fetch(`/api/user/${session.user.link_id}`)).json()
+      setNewName(user.data.username??"")
+      const GGB = await (await fetch(`/api/gingerbreads/${user.data.GGBs_id}/me`)).json()
+      setNewMessage(GGB.data.thanks_message??"")
+    }
+    fetchUser()
+  }, [session.user.user_id, session.user.link_id])
+
   const handleSubmit = async (e) => {
       e.preventDefault()    
-      // TODO : user_id through session
-      const user_id = "86a05bca-b01d-44a5-ae11-0c3ec9fec484"
-      const link_id = "aida"
-      
       try {
         if (!newName || !newMessage) {
           throw new Error("please fill out form")
         }
-
+        
         // TODO : better way to fetch ?
         const res = await (await fetch(`api/user`, {
           method: "PATCH",
           body: JSON.stringify({
-            user_id,
+            user_id : session.user.id,
             newname: newName,
             thanks_message: newMessage 
           }),
@@ -31,7 +43,7 @@ export default function Page() {
         if(res.message == 'failed'){
           throw new Error(res.error)
         }
-        router.push(`/bake/${link_id}`)
+        router.push(`/bake/${session.user.link_id}`)
       } catch (error) {      
         toast.error(error.message)
       }
@@ -42,7 +54,7 @@ export default function Page() {
       <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
         <p>This is Setting pages</p>
       
-
+    <Suspense fallback={<FormLoading />}>
       <form
         onSubmit={handleSubmit}
         className="rounded-md bg-white p-6 shadow-md"
@@ -74,6 +86,7 @@ export default function Page() {
           Save Change
         </button>{' '}
       </form>
+      </Suspense>
       </div>
     </>
   )

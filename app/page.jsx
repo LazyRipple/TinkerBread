@@ -2,7 +2,7 @@
 import { Button } from "@/components/Button"
 import Link from "next/link"
 import { GoogleSignInButton } from "@/components/GoogleSignInButton"
-import { signIn, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function Page() {
   const {data:session, status} = useSession()
@@ -24,16 +24,16 @@ export default function Page() {
           <GoogleSignInButton />
         }
         
-        
-        <Link href="/bake/me">
-            <Button text="Bake me" />
-        </Link>
         <Link href="/bake/friend">
             <Button text="Bake friend" />
         </Link>
         <Link href="/setting">
-            <Button text="setting" />
+            <Button text="Setting" />
         </Link>
+        <button
+        onClick={()=> {signOut()}}>
+          <Button text="Sign Out" />
+        </button>
         </div>
       </div>
     </>
