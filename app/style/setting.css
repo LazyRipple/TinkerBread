@@ -1,0 +1,35 @@
+/* Customize the overall style */
+body {
+    background-color: #e6f7ff; /* Light blue pastel background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button {
+    border-radius: 9999px; /* Rounded buttons */
+}
+
+
+input {
+    border-radius: 8px;
+    padding: 12px 15px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #66b3ff;
+    box-shadow: 0 0 8px rgba(102, 179, 255, 0.6);
+}
+
+/* Button styling */
+button:hover {
+    opacity: 0.9;
+}
+
+/* Box shadow for elements */
+.shadow-lg {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-2xl {
+    border-radius: 16px;
+}
