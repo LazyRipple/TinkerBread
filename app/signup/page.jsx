@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation'
-import { Router } from 'next/router';
+import { signIn, useSession } from 'next-auth/react';
 
 export default function Page() {
   const searchParams = useSearchParams()
@@ -11,8 +11,14 @@ export default function Page() {
   const [username, setUsername] = useState(searchParams.get('username'))
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
- 
   const router = useRouter()
+  const {data:session, status} = useSession()
+  
+  // TODO : changn this to middleware
+  if(status == 'authenticated'){
+    router.push('/')
+  }
+
   const handleSubmit = async (e) => {
       e.preventDefault()    
      
@@ -32,7 +38,7 @@ export default function Page() {
           throw new Error(res.error)
         }
         
-        router.push(`/bake/${res.data}`)
+        signIn('google')
       } catch (error) {      
         toast.error(error.message)
       }

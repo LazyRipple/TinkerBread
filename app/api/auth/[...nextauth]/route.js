@@ -24,7 +24,7 @@ export const authOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    signIn: async ({ user }) => {
+    signIn: async ({ user, account, profile }) => {
       const existingUser = await prisma.user.findFirst({
         where: {
           email: user.email,
@@ -33,6 +33,28 @@ export const authOptions = {
       if (!existingUser) {
         return `/signup?email=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}` // go to signup
       }
+
+      const existingAccount = await prisma.account.findFirst({
+        where: {
+          userId: existingUser.id,
+          provider: account.provider,
+        },
+      })
+
+      if (!existingAccount) {
+        await prisma.account.create({
+          data: {
+            userId: existingUser.id,
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
+            type: account.type,
+            access_token: account.access_token,
+            id_token: account.id_token,
+            expires_at: account.expires_at,
+          },
+        })
+      }
+
       return true // Allow sign-in if user exists
     },
     jwt: async ({ token, user }) => {
