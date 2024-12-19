@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id           String       @id @default(uuid())
-  link_id      String?      @default(uuid()) @db.VarChar(10)
+  link_id      String?      @default(dbgenerated("substring(MD5(RANDOM()::TEXT), 1, 10)"))
   username     String
   gmail        String       @unique
   GGBs_id      String       @unique @default("none")
@@ -26,7 +26,7 @@ model User {
 
 model Gingerbreads {
   id             String  @id @default(uuid())
-  link_id        String? @default(uuid()) @db.VarChar(10)
+  link_id        String? @default(dbgenerated("substring(MD5(RANDOM()::TEXT), 1, 10)"))
   User           User?
   GGB_type       String  @default("normal")
   thanks_message String  @default("")
