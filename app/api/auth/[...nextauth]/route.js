@@ -10,7 +10,6 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      // explain this
       profile(profile) {
         return {
           id: profile.sub,
@@ -26,20 +25,26 @@ export const authOptions = {
   },
   callbacks: {
     signIn: async ({ user }) => {
-      const existingUser = await prisma.user.findUnique({
-        where: { gmail: user.email },
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          gmail: user.email,
+        },
       })
       if (!existingUser) {
-        console.log('No user with this Gmail')
         return `/signup?gmail=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}` // go to signup
       }
       return true // Allow sign-in if user exists
     },
     jwt: async ({ token, user }) => {
-      if (user) {
-        token.user_id = user.id
-        token.link_id = user.link_id
-        token.username = user.username
+      const user_db = await prisma.user.findFirst({
+        where: {
+          gmail: user.email,
+        },
+      })
+      if (user_db) {
+        token.user_id = user_db.id
+        token.link_id = user_db.link_id
+        token.username = user_db.username
       }
       return token
     },
@@ -55,9 +60,9 @@ export const authOptions = {
       if (user?.link_id) {
         return `/bake/${user.link_id}` // Custom page if user exists
       }
-      if (url.startsWith('/')) {
-        return `${baseUrl}${url}` // Allow valid internal routes
-      }
+      // if (url.startsWith('/')) {
+      //   return `${baseUrl}${url}` // Allow valid internal routes
+      // }
       return baseUrl
     },
   },

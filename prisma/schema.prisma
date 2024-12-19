@@ -17,7 +17,7 @@ model User {
   id           String       @id @default(uuid())
   link_id      String?      @default(dbgenerated("substring(MD5(RANDOM()::TEXT), 1, 10)"))
   username     String
-  gmail        String       @unique
+  email        String       @unique
   GGBs_id      String       @unique @default("none")
   Gingerbreads Gingerbreads @relation(fields: [GGBs_id], references: [id])
   createdAt    DateTime     @default(now())

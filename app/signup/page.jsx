@@ -2,16 +2,19 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
+import { useSearchParams } from 'next/navigation'
+import { signIn } from 'next-auth/react'
+
+
 
 export default function Page() {
-  // get gmail from params
-  const gmail ="ss"
-  // get username from params
-  const [username, setUsername] = useState('user')
+  const searchParams = useSearchParams()
+  const gmail = searchParams.get('gmail')
+  const [username, setUsername] = useState(searchParams.get('username'))
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
  
-  const router = useRouter()
+  // const router = useRouter()
   const handleSubmit = async (e) => {
       e.preventDefault()    
      
@@ -31,6 +34,8 @@ export default function Page() {
           throw new Error(res.error)
         }
         
+        signIn('google')
+        // TODO : if success go to bake/{link_id}
       } catch (error) {      
         toast.error(error.message)
       }
@@ -39,8 +44,7 @@ export default function Page() {
     <>
     <Toaster />
       <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
-        <p>This is Setting pages</p>
-      
+        <p>This is Signup pages</p>
 
       <form
         onSubmit={handleSubmit}
@@ -81,7 +85,7 @@ export default function Page() {
           className="mb-4 w-full rounded bg-blue-500 py-2 text-white"
         >
           Save Change
-        </button>{' '}
+        </button>
       </form>
       </div>
     </>
