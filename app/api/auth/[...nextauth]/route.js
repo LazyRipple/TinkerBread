@@ -27,18 +27,18 @@ export const authOptions = {
     signIn: async ({ user }) => {
       const existingUser = await prisma.user.findFirst({
         where: {
-          gmail: user.email,
+          email: user.email,
         },
       })
       if (!existingUser) {
-        return `/signup?gmail=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}` // go to signup
+        return `/signup?email=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}` // go to signup
       }
       return true // Allow sign-in if user exists
     },
     jwt: async ({ token, user }) => {
       const user_db = await prisma.user.findFirst({
         where: {
-          gmail: user.email,
+          email: user?.email || '',
         },
       })
       if (user_db) {
@@ -56,9 +56,9 @@ export const authOptions = {
       }
       return session
     },
-    redirect: async ({ url, baseUrl, user }) => {
+    redirect: async ({ url, baseUrl, user, session }) => {
       if (user?.link_id) {
-        return `/bake/${user.link_id}` // Custom page if user exists
+        return `/bake/${session.user.link_id}` // Custom page if user exists
       }
       // if (url.startsWith('/')) {
       //   return `${baseUrl}${url}` // Allow valid internal routes

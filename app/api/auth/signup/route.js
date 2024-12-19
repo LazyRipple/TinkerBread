@@ -6,16 +6,16 @@ export async function POST(request) {
   // please send this 4 in body
 
   try {
-    const { username, gmail, thanks_message, GGB_type } = await request.json()
+    const { username, email, thanks_message, GGB_type } = await request.json()
 
     // find if user already signin
-    const same_gmail_user = await prisma.user.findFirst({
+    const same_email_user = await prisma.user.findFirst({
       where: {
-        gmail: gmail,
+        email: email,
       },
     })
-    if (same_gmail_user != null) {
-      throw new Error('this gmail already signup')
+    if (same_email_user != null) {
+      throw new Error('this email already signup')
     }
 
     // create new user
@@ -34,7 +34,7 @@ export async function POST(request) {
     const new_user = await prisma.user.create({
       data: {
         username,
-        gmail,
+        email,
         GGBs_id: new_gingerbreads.id,
       },
     })

@@ -3,13 +3,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react'
-
-
+import { Router } from 'next/router';
 
 export default function Page() {
   const searchParams = useSearchParams()
-  const gmail = searchParams.get('gmail')
+  const email = searchParams.get('email')
   const [username, setUsername] = useState(searchParams.get('username'))
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
@@ -26,7 +24,7 @@ export default function Page() {
         const res = await (await fetch(`api/auth/signup`, {
           method: "POST",
           body: JSON.stringify({
-            username, gmail, thanks_message:thxmessage, GGB_type : GGBType
+            username, email, thanks_message:thxmessage, GGB_type : GGBType
           }),
         })).json()
         
@@ -34,7 +32,7 @@ export default function Page() {
           throw new Error(res.error)
         }
         
-        signIn('google')
+        // signIn('google')
         // TODO : if success go to bake/{link_id}
       } catch (error) {      
         toast.error(error.message)
