@@ -1,8 +1,9 @@
 "use client";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
-import { useState, useRef } from "react";
+import { OrbitControls, Environment, Html } from "@react-three/drei";
+import { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
+import Link from "next/link";
 
 export default function DressingScene() {
     const [focusedIndex, setFocusedIndex] = useState(null);
@@ -41,8 +42,36 @@ export default function DressingScene() {
         setCanChangeFocus(true);
     };
 
+    const [thankYouVisible, setThankYouVisible] = useState(false);
+    const [thankYouPosition, setThankYouPosition] = useState([0, 0, 0]);
+    const [thankYouMessage, setThankYouMessage] = useState("");
+
+    useEffect(() => {
+        const message = localStorage.getItem("thankYouMessage") || "Thank you!";
+        setThankYouMessage(message);
+    }, []);
+
+    const handleDecorate = (position) => {
+        // Simulate decoration logic
+        setThankYouPosition(position);
+        setThankYouVisible(true);
+        console.log('thank you message');
+
+
+        // Hide the message after 3 seconds and reset camera
+        setTimeout(() => {
+            setThankYouVisible(false);
+            resetCameraView(); // Implement the camera reset logic
+        }, 3000);
+    };
+
     return (
-        <div className="relative w-screen h-screen">
+        <div className="relative flex flex-col h-full min-h-screen w-full gap-4 md:mx-auto md:max-w-[25rem] bg-gray-50">
+            {/* Setting Button */}
+            <div className="absolute top-4 right-4 z-10">
+                <Link href="/setting" className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">Settings</Link>
+            </div>
+
             <Canvas>
                 {/* Lighting and Environment */}
                 <ambientLight intensity={0.8} />
@@ -71,8 +100,16 @@ export default function DressingScene() {
                         setCurrentPos={setCurrentPos} // Allow Gingerbread to set position
                         selectedMode={selectedMode}
                         focusedIndex={focusedIndex}
+                        handleDecorate={handleDecorate}
                     />
                 ))}
+                {thankYouVisible && (
+                    <Html position={thankYouPosition}>
+                        <div className="bg-white text-black p-4 rounded shadow-lg">
+                            {thankYouMessage}
+                        </div>
+                    </Html>
+                )}
             </Canvas>
 
             {/* Back Button */}
@@ -160,9 +197,15 @@ export default function DressingScene() {
                     ))}
                 </div>
             )}
-
         </div>
     );
+}
+
+function resetCameraView() {
+    // Define the default camera position
+    const defaultPosition = new THREE.Vector3(6, 6, 10);
+    camera.position.copy(defaultPosition);
+    camera.lookAt(0, 0, 0);
 }
 
 function CameraController({ focusedIndex }) {
@@ -207,7 +250,7 @@ function CameraController({ focusedIndex }) {
         />
     );
 }
-function Gingerbread({ position, onClick, styles, isFocused, setCurrentPos, selectedMode, focusedIndex }) {
+function Gingerbread({ position, onClick, styles, isFocused, setCurrentPos, selectedMode, focusedIndex, handleDecorate }) {
     const ref = useRef();
     const [hover, setHover] = useState(false);
 
@@ -224,6 +267,7 @@ function Gingerbread({ position, onClick, styles, isFocused, setCurrentPos, sele
     const handlePositionClick = (pos) => {
         if (!styles[pos] && selectedMode === "decorate" && isFocused) { // Only allow click in decorate mode
             setCurrentPos(pos); // Only select position if it's unoccupied
+            handleDecorate(pos)
         }
     };
 
@@ -256,7 +300,7 @@ function Gingerbread({ position, onClick, styles, isFocused, setCurrentPos, sele
                     <mesh
                         key={`pos-${idx}`}
                         position={[0, idx - 1, 0]}
-                        onClick={() => handlePositionClick(idx)}
+                        onClick={() => handlePositionClick(pos)}
                     >
                         <sphereGeometry args={[0.3, 16, 16]} />
                         <meshStandardMaterial color={"#9e2a2b"} transparent opacity={0.2} />
