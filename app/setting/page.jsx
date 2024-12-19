@@ -3,44 +3,45 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 
-import session from 'express-session'
-import { PATCH } from '@/api/gingerbread/[GGB_id]/route';
-
 export default function Page() {
   const [newName, setNewName] = useState('')
   const [newMessage, setNewMessage] = useState('')
   const router = useRouter()
-const handleSubmit = async (e) => {
-    e.preventDefault()    
-    const user_id = "86a05bca-b01d-44a5-ae11-0c3ec9fec484"
-    
-    try {
-      if (!newName || !newMessage) {
-        throw new Error("please fill out form")
-      }
-
-      const res = await (await fetch(`api/user`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          user_id,
-          newname: newName,
-          thanks_message: newMessage 
-        }),
-      })).json()
-      console.log(res);
+  const handleSubmit = async (e) => {
+      e.preventDefault()    
+      // TODO : user_id through session
+      const user_id = "86a05bca-b01d-44a5-ae11-0c3ec9fec484"
+      const link_id = "aida"
       
-      if(res.message == 'failed'){
-        throw new Error(res.error)
+      try {
+        if (!newName || !newMessage) {
+          throw new Error("please fill out form")
+        }
+
+        // TODO : better way to fetch ?
+        const res = await (await fetch(`api/user`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            user_id,
+            newname: newName,
+            thanks_message: newMessage 
+          }),
+        })).json()
+        
+        if(res.message == 'failed'){
+          throw new Error(res.error)
+        }
+        router.push(`/bake/${link_id}`)
+      } catch (error) {      
+        toast.error(error.message)
       }
-    } catch (error) {      
-       toast.error(error.message)
     }
-  }
   return (
     <>
     <Toaster />
-      <div className='mx-auto flex w-full flex-col flex-wrap items-center md:flex-row  lg:w-4/5'>
-      This is Setting pages
+      <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
+        <p>This is Setting pages</p>
+      
 
       <form
         onSubmit={handleSubmit}
@@ -53,7 +54,7 @@ const handleSubmit = async (e) => {
             type="newName"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            className="w-full rounded border border-gray-300 px-3 py-2" // Added border
+            className="w-full rounded border border-gray-300 px-3 py-2" 
           />
         </div>
         <div className="mb-4">
@@ -63,14 +64,14 @@ const handleSubmit = async (e) => {
             type="newMessage"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="w-full rounded border border-gray-300 px-3 py-2" // Added border
+            className="w-full rounded border border-gray-300 px-3 py-2" 
           />
         </div>
         <button
           type="submit"
           className="mb-4 w-full rounded bg-blue-500 py-2 text-white"
         >
-          Sign In
+          Save Change
         </button>{' '}
       </form>
       </div>
