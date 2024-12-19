@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 export async function PATCH(request) {
   // please send this 2 in body
   try {
-    const { user_id, thanks_message } = await request.json()
+    const { user_id, thanks_message, newname } = await request.json()
 
     // if user not in database
     const user = await prisma.user.findFirst({
@@ -18,7 +18,15 @@ export async function PATCH(request) {
       throw new Error('no user with this user_id')
     }
 
-    const update_user = await prisma.gingerbreads.update({
+    await prisma.user.update({
+      where: {
+        id: user_id,
+      },
+      data: {
+        username: newname,
+      },
+    })
+    await prisma.gingerbreads.update({
       where: {
         id: user.GGBs_id,
       },
@@ -28,7 +36,6 @@ export async function PATCH(request) {
     })
     return NextResponse.json({
       message: 'success',
-      data: update_user.id,
     })
   } catch (error) {
     return NextResponse.json(
