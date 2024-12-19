@@ -11,8 +11,8 @@ export default function Page() {
       
         <div className="flex flex-col space-y-4">
         <Button text="google login" />
-        <Link href="/signin">
-            <Button text="sign in" />
+        <Link href="/signup">
+            <Button text="sign up" />
         </Link>
         <Link href="/bake/me">
             <Button text="Bake me" />

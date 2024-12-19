@@ -15,14 +15,7 @@ export async function POST(request) {
       },
     })
     if (same_gmail_user != null) {
-      return NextResponse.json(
-        {
-          message: 'this gmail already signup',
-        },
-        {
-          status: 400,
-        },
-      )
+      throw new Error('this gmail already signup')
     }
 
     // create new user
