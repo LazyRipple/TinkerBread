@@ -12,7 +12,7 @@ export default function Page() {
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
  
-  // const router = useRouter()
+  const router = useRouter()
   const handleSubmit = async (e) => {
       e.preventDefault()    
      
@@ -32,8 +32,7 @@ export default function Page() {
           throw new Error(res.error)
         }
         
-        // signIn('google')
-        // TODO : if success go to bake/{link_id}
+        router.push(`/bake/${res.data}`)
       } catch (error) {      
         toast.error(error.message)
       }

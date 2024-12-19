@@ -40,7 +40,7 @@ export async function POST(request) {
     })
     return NextResponse.json({
       message: 'success',
-      data: new_user.id,
+      data: new_user.link_id,
     })
   } catch (error) {
     return NextResponse.json(
