@@ -1,13 +1,13 @@
 'use client'
 import { useParams } from 'next/navigation'
 import { notFound } from 'next/navigation'
-import { useSession } from "next-auth/react"
+import { useSession} from "next-auth/react"
 import { BakeMeComponents } from "@/components/BakeMeComponents"
 
 
 export default function Page() {
   const { GGBs_id } = useParams()
-    const {data:session} = useSession()
+  const {data:session} = useSession()
   
   
   // TODO : if no GGBs_id send to 404
