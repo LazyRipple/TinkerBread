@@ -11,14 +11,8 @@ export default function Page() {
   const [username, setUsername] = useState(searchParams.get('username'))
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
-  const router = useRouter()
-  const {data:session, status} = useSession()
-  
-  // TODO : changn this to middleware
-  if(status == 'authenticated'){
-    router.push('/')
-  }
 
+  
   const handleSubmit = async (e) => {
       e.preventDefault()    
      
