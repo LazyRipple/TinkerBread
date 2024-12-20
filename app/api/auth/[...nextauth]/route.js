@@ -33,7 +33,6 @@ export const authOptions = {
       if (!existingUser) {
         return `/signup?email=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}` // go to signup
       }
-
       const existingAccount = await prisma.account.findFirst({
         where: {
           userId: existingUser.id,

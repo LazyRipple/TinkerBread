@@ -11,7 +11,8 @@ export async function middleware(request) {
   if (!user && (pathname.startsWith('/bake') || pathname.startsWith('/setting'))) {
     return NextResponse.redirect(new URL('/', request.url))
   }
-  if (user && pathname.startsWith('/signup')) {
+
+  if (pathname.startsWith('/signup') && user != null) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
