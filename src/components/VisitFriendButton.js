@@ -21,7 +21,7 @@ export function VisitFriendButton() {
             value={friendLink}
             onChange={(e) => setFriendLink(e.target.value)}
             className='w-full border p-1'
-            placeholder='Enter friend link'
+            placeholder='Link (ex:1dfsz82d4f2e)'
           />
           <button
             onClick={() => {

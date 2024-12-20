@@ -20,10 +20,7 @@ export default function Page() {
       <div className='flex w-full flex-col items-center justify-center space-y-4 pt-20'>
       <p>This is bake pages {GGBs_id}</p>
       
-      {
-        session.user.link_id == GGBs_id &&
-          <BakeMeComponents />
-      }
+      { session.user.link_id == GGBs_id && <BakeMeComponents />}
       
       </div>
       
