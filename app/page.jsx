@@ -15,7 +15,7 @@ export default function Page() {
         {
           status == 'authenticated' ? 
           (
-          <Link href={`/bake/${session.user.link_id}`}>
+          <Link href={`/bake/me`}>
             <Button text="My TingerBread" />
           </Link>
           )

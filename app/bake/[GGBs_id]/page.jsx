@@ -26,8 +26,7 @@ function PageContent({ GGBs_id }) {
 
  
   if (load_status == 'loading') return <Loading /> 
-  // if (!GGBs) return notFound()
-  if (!GGBs) return <p>not found</p>
+  if (!GGBs) return notFound()
 
   return (
     <div className='flex w-full flex-col items-center justify-center space-y-4 pt-20'>
