@@ -34,7 +34,7 @@ function PageContent({ GGBs_id }) {
       <Toaster />
       <p>{`${GGBs.owner} Gingerbreads Kitchen`}</p>
       
-      {GGBs.is_decorate == "F" && 
+      {GGBs.is_decorate == "F" ? 
       
         <div>
           <button
@@ -45,6 +45,9 @@ function PageContent({ GGBs_id }) {
             <Button text='Decorate GGB1' />
           </button>
         </div>
+
+        :
+        <p>you already decorated</p>
         }
       
     </div>
@@ -58,7 +61,7 @@ const handdleAddItem = async (session, id, GGBs_id) => {
       body: JSON.stringify({
         user_id : session.user.id,
         GGBs_id : GGBs_id,
-        item_id : "1",
+        item_id : "1", // TODO : choose id here
         item_message : "haha",
         position : "left2_hand"
       }),
