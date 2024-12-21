@@ -79,7 +79,7 @@ export const authOptions = {
     },
     redirect: async ({ url, baseUrl, user, session }) => {
       if (user?.link_id) {
-        return `/bake/${session.user.link_id}` // Custom page if user exists
+        return `/bake/me` // Custom page if user exists
       }
       // if (url.startsWith('/')) {
       //   return `${baseUrl}${url}` // Allow valid internal routes

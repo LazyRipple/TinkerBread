@@ -45,7 +45,7 @@ export default  function Page() {
         if(res.message == 'failed'){
           throw new Error(res.error)
         }
-        router.push(`/bake/${session.user.link_id}`)
+        router.push(`/bake/me`)
       } catch (error) {      
         toast.error(error.message)
       }

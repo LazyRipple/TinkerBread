@@ -1,6 +1,6 @@
 'use client'
 import { signOut } from 'next-auth/react'
-import { VisitFriendButton } from '@/components/visitFriendButton'
+import { VisitFriendButton } from '@/components/VisitFriendButton'
 import { Button } from '@/components/Button'
 import Link from 'next/link'
 
