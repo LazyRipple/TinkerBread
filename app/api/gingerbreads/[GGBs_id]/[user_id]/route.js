@@ -35,6 +35,7 @@ export async function GET(request, { params }) {
     data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
     data['is_decorate'] = GGBs.senders.indexOf(user_id) == -1 ? 'F' : 'T'
     data['owner'] = user.username
+    data['GGBs_id'] = GGBs.id
     return NextResponse.json({
       message: 'success',
       data: data,

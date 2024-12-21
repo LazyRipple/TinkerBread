@@ -30,6 +30,7 @@ export default async function GingerbreadInfo(GGB_id) {
   GGB['head3'] = await processItemDataInfo(GGB_res.head3_id)
   GGB['left3_hand'] = await processItemDataInfo(GGB_res.left3_hand_id)
   GGB['right3_hand'] = await processItemDataInfo(GGB_res.right3_hand_id)
+  GGB['id'] = GGB_res.id
   return NextResponse.json({
     data: GGB,
   })
