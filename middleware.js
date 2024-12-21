@@ -8,6 +8,10 @@ export async function middleware(request) {
   })
   const { pathname } = request.nextUrl
 
+  if (user && pathname.startsWith(`/bake/${user.link_id}`)) {
+    return NextResponse.redirect(new URL('/bake/me', request.url))
+  }
+
   if (!user && (pathname.startsWith('/bake') || pathname.startsWith('/setting'))) {
     return NextResponse.redirect(new URL('/', request.url))
   }
