@@ -14,9 +14,17 @@ export async function GET(request, { params }) {
       throw new Error('gingerbread id is incorrect')
     }
 
+    let fulled = true
+    positions.map((pos) => {
+      if (GGB[`${pos}_id`] == '') {
+        fulled = false
+      }
+    })
+
     return NextResponse.json({
       message: 'success',
       data: GGB,
+      fulled,
     })
   } catch (error) {
     return NextResponse.json(
