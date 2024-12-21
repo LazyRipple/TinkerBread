@@ -32,7 +32,7 @@ function PageContent({ GGBs_id }) {
   return (
     <div className='flex w-full flex-col items-center justify-center space-y-4 pt-20'>
           <p>{`${user?.username}'s Gingerbreads Kitchen`}</p>
-          {session?.user?.link_id === GGBs_id && <BakeMeComponents />}
+          <BakeMeComponents />
       
     </div>
   )

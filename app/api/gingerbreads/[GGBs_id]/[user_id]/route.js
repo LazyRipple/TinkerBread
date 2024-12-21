@@ -11,12 +11,19 @@ export async function GET(request, { params }) {
   try {
     const GGBs = await prisma.gingerbreads.findFirst({
       where: {
-        id: GGBs_id,
+        link_id: GGBs_id,
       },
     })
+
     if (GGBs == null) {
       throw new Error('no gingerbreads with this id')
     }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        GGBs_id: GGBs.id,
+      },
+    })
 
     let data = {
       GGB_type: GGBs.GGB_type,
@@ -27,7 +34,7 @@ export async function GET(request, { params }) {
     data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id)).json()).data
     data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
     data['is_decorate'] = GGBs.senders.indexOf(user_id) == -1 ? 'F' : 'T'
-
+    data['owner'] = user.username
     return NextResponse.json({
       message: 'success',
       data: data,

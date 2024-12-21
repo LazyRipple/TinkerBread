@@ -3,7 +3,6 @@
 import React from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
-import { BakeMeComponents } from "@/components/BakeMeComponents"
 import Loading from './Loading'
 import { BakeSessionProvider, useSessionContext } from './SessionContext'
 
@@ -22,18 +21,17 @@ export default function Page() {
 }
 
 function PageContent({ GGBs_id }) {
-  const { user, GGBs, load_status } = useSessionContext()
+  const { GGBs, load_status } = useSessionContext(GGBs_id)
   const { data: session } = useSession()
 
  
   if (load_status == 'loading') return <Loading /> 
-  if (!GGBs) return notFound()
+  // if (!GGBs) return notFound()
+  if (!GGBs) return <p>not found</p>
 
   return (
     <div className='flex w-full flex-col items-center justify-center space-y-4 pt-20'>
-          <p>{`${user?.username}'s Gingerbreads Kitchen`}</p>
-          {session?.user?.link_id === GGBs_id && <BakeMeComponents />}
-      
+          <p>{`${GGBs.owner} Gingerbreads Kitchen`}</p>
     </div>
   )
 }
