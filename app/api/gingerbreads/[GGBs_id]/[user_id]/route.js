@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
-import GingerbreadInfo from '@/libs/gingerbreadInfo'
+import GingerbreadInfo from '../../../../../src/libs/gingerbreadInfo'
 import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
