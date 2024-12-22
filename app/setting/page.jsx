@@ -38,7 +38,6 @@ export default  function Page() {
         const res = await (await fetch(`api/user`, {
           method: "PATCH",
           body: JSON.stringify({
-            user_id : session.user.id,
             newname: newName,
             thanks_message: newMessage 
           }),

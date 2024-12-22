@@ -1,16 +1,18 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
-
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]/route'
 const prisma = new PrismaClient()
 export async function PATCH(request) {
-  // please send this 2 in body
   try {
-    const { user_id, thanks_message, newname } = await request.json()
+    const session = await getServerSession(authOptions)
+    if (!session || !session.user.id) throw new Error('Unauthorized')
+    const { thanks_message, newname } = await request.json()
 
     // if user not in database
     const user = await prisma.user.findFirst({
       where: {
-        id: user_id,
+        id: session.user.id,
       },
     })
 
@@ -20,7 +22,7 @@ export async function PATCH(request) {
 
     await prisma.user.update({
       where: {
-        id: user_id,
+        id: session.user.id,
       },
       data: {
         username: newname,
