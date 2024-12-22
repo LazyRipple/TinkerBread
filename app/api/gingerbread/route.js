@@ -31,12 +31,12 @@ export async function POST(request) {
     }
     let key = ''
     if (GGBs.GGB_2_id == 'none') {
-      const res = await (await fetch(`${process.env.BASEURL}/api/gingerbread/${GGBs.GGB_1_id}`)).json()
+      const res = await (await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/gingerbread/${GGBs.GGB_1_id}`)).json()
       if (res.message == 'failed') throw new Error('Fetch Failed')
       if (!res.fulled) throw new Error('Last Gingerbread not fully decorated')
       key = 'GGB_2_id'
     } else if (GGBs.GGB_3_id == 'none') {
-      const res = await (await fetch(`${process.env.BASEURL}/api/gingerbread/${GGBs.GGB_2_id}`)).json()
+      const res = await (await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/gingerbread/${GGBs.GGB_2_id}`)).json()
       if (res.message == 'failed') throw new Error('Fetch Failed')
       if (!res.fulled) throw new Error('Last Gingerbread not fully decorated')
       key = 'GGB_3_id'

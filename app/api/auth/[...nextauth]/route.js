@@ -77,14 +77,14 @@ export const authOptions = {
       }
       return session
     },
-    redirect: async ({ url, baseUrl, user, session }) => {
+    redirect: async ({ url, NEXT_PUBLIC_BASEURL, user, session }) => {
       if (user?.link_id) {
         return `/bake/me` // Custom page if user exists
       }
       // if (url.startsWith('/')) {
-      //   return `${baseUrl}${url}` // Allow valid internal routes
+      //   return `${NEXT_PUBLIC_BASEURL}${url}` // Allow valid internal routes
       // }
-      return baseUrl
+      return NEXT_PUBLIC_BASEURL
     },
   },
 }

@@ -53,7 +53,7 @@ async function main() {
     },
   })
 
-  const user1 = await fetch(`${process.env.BASEURL}/api/auth/signup`, {
+  const user1 = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/auth/signup`, {
     method: 'POST',
     body: JSON.stringify({
       username: 'aisha',
@@ -63,7 +63,7 @@ async function main() {
     }),
   })
 
-  const user2 = await fetch(`${process.env.BASEURL}/api/auth/signup`, {
+  const user2 = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/auth/signup`, {
     method: 'POST',
     body: JSON.stringify({
       username: 'aida',

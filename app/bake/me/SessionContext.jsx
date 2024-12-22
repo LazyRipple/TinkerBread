@@ -14,12 +14,12 @@ export const BakeSessionProvider = ({ children }) => {
           const userRes = await fetch(`/api/user/${session.user.link_id}`)
           const userData = await userRes.json()
           setUser(userData?.data ?? null)
-          // console.log("user", userData.data); // TO Beam : uncomment to see user 
+          console.log("user", userData.data); // TO Beam : uncomment to see user 
           
           if (userData?.data?.GGBs_id) {
             const GGBRes = await fetch(`/api/gingerbreads/${userData.data.GGBs_id}/me`)
             const GGBData = await GGBRes.json()
-            // console.log("GGBs", GGBData.data); // TO Beam : uncomment to see GGBs 
+            console.log("GGBs", GGBData.data); // TO Beam : uncomment to see GGBs 
             
             setGGBs(GGBData?.data ?? null)
             setLoadStatus('loaded')
