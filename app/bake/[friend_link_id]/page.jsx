@@ -6,23 +6,23 @@ import { useSession, status } from 'next-auth/react'
 import Loading from '../Loading'
 import { BakeSessionProvider, useSessionContext } from './SessionContext'
 import toast, { Toaster } from 'react-hot-toast';
-import { Button } from '@/components/Button'
+import { Button } from '../../../src/components/Button'
 import { BackButton } from '../../../src/components/BackButton'
 
 export default function Page() {
-  const { GGBs_id } = useParams()
+  const { friend_link_id } = useParams()
   if (status === 'unauthenticated') {        
      return notFound()
   }
   return (
     <BakeSessionProvider>
-      <PageContent GGBs_id={GGBs_id} />
+      <PageContent friend_link_id={friend_link_id} />
     </BakeSessionProvider>
   )
 }
 
-function PageContent({ GGBs_id }) {
-  const { GGBs, load_status } = useSessionContext(GGBs_id)
+function PageContent({ friend_link_id }) {
+  const { GGBs, load_status } = useSessionContext(friend_link_id)
   const { data: session } = useSession()
 
  

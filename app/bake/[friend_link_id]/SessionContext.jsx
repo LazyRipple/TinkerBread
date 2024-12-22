@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 
 const SessionContext = createContext(undefined)
 export const BakeSessionProvider = ({ children }) => {
-  const { GGBs_id } = useParams() 
+  const { friend_link_id } = useParams() 
   const { data: session, status } = useSession()
   const [GGBs, setGGBs] = useState(null)
   const [load_status, setLoadStatus] = useState('loading')
@@ -13,7 +13,12 @@ export const BakeSessionProvider = ({ children }) => {
       
       if (status === 'authenticated' && session?.user?.link_id) {
         try {
-          const GGBRes = await fetch(`/api/gingerbreads/${GGBs_id}/${session?.user?.link_id}`)
+          const userRes = await fetch(`/api/user/${friend_link_id}`)
+          const userData = await userRes.json()
+          console.log(userData);
+          
+          
+          const GGBRes = await fetch(`/api/gingerbreads/${userData.data.GGBs_id}/${session?.user?.link_id}`)
           const GGBData = await GGBRes.json()
           console.log("GGBs", GGBData.data);
           
@@ -37,7 +42,7 @@ export const BakeSessionProvider = ({ children }) => {
   )
 }
 
-export const useSessionContext = ({GGBs_id}) => {
+export const useSessionContext = ({friend_link_id}) => {
   const context = useContext(SessionContext)
   if (!context) {
     throw new Error('useSessionContext must be used within a BakeSessionProvider')
