@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
 export async function POST(request) {
-  // please send this 4 in body
+  // TODO : jwt check
 
   try {
     const { username, email, thanks_message, GGB_type } = await request.json()

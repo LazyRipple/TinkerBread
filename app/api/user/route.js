@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]/route'
 const prisma = new PrismaClient()
+
+// API for update name and thanks message
 export async function PATCH(request) {
   try {
     const session = await getServerSession(authOptions)

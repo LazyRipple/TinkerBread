@@ -2,6 +2,8 @@ const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
+
+// API to get user data
 export async function GET(request, { params }) {
   try {
     const link_id = params.link_id
@@ -19,7 +21,11 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({
       message: 'success',
-      data: user,
+      data: {
+        username: user.username,
+        GGBs_id: user.GGBs_id,
+        link_id: user.link_id,
+      },
     })
   } catch (error) {
     return NextResponse.json(

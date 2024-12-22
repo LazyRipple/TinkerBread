@@ -44,7 +44,6 @@ export async function GET(request, { params }) {
 export async function PATCH(request, { params }) {
   try {
     const session = await getServerSession(authOptions)
-    console.log(session)
     if (!session || !session.user.id) throw new Error('Unauthorized')
 
     const GGB_id = params.GGB_id
