@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react';
+import jwt from 'jsonwebtoken';
 
 export default function Page() {
   const session = new useSession()
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
-  const token = searchParams.get('token')
   const [username, setUsername] = useState(searchParams.get('username'))
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
@@ -22,26 +22,32 @@ export default function Page() {
         if (!username || !thxmessage) {
           throw new Error("please fill out form")
         }        
-        // TODO : better way to fetch ?
+
+        const SECRET_KEY = process.env.JWT_SECRET
+        console.log(process.env.JWT_SECRET);
+        
+        const token = jwt.sign({
+          username, email, thanks_message:thxmessage, GGB_type : GGBType
+        }, SECRET_KEY, { expiresIn: '10m' })
+
         const res = await (await fetch(`api/auth/signup`, {
           method: "POST",
-          body: JSON.stringify({
-            username, email, thanks_message:thxmessage, GGB_type : GGBType
-          }),
+          body: JSON.stringify({ token }),
         })).json()
         
         if(res.message == 'failed'){
           throw new Error(res.error)
         }
         
-        signIn('google')
+        console.log(res);
+        
+        // signIn('google')
       } catch (error) {      
         toast.error(error.message)
       }
     }
   return (
     <>
-    {token}
     <Toaster />
       <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
         <p>This is Signup pages</p>

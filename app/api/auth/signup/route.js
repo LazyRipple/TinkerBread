@@ -3,14 +3,27 @@ import { NextResponse } from 'next/server'
 const prisma = new PrismaClient()
 export async function POST(request) {
   // TODO : jwt check
-
+  let decoded
   try {
-    const { username, email, thanks_message, GGB_type } = await request.json()
-
+    const { token } = await request.json()
+    const SECRET_KEY = process.env.JWT_SECRET
+    decoded = jwt.verify(token, SECRET_KEY)
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: 'failed',
+        error: 'invalid token',
+      },
+      {
+        status: 400,
+      },
+    )
+  }
+  try {
     // find if user already signin
     const same_email_user = await prisma.user.findFirst({
       where: {
-        email: email,
+        email: decoded.email,
       },
     })
     if (same_email_user != null) {
@@ -24,16 +37,16 @@ export async function POST(request) {
 
     const new_gingerbreads = await prisma.gingerbreads.create({
       data: {
-        thanks_message,
-        GGB_type,
+        thanks_message: decoded.thanks_message,
+        GGB_type: decoded.GGB_type,
         GGB_1_id: new_gingerbread1.id,
       },
     })
 
     const new_user = await prisma.user.create({
       data: {
-        username,
-        email,
+        username: decoded.username,
+        email: decoded.email,
         GGBs_id: new_gingerbreads.id,
       },
     })
