@@ -1,5 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../../auth/[...nextauth]/route'
 
 const prisma = new PrismaClient()
 export async function GET(request, { params }) {
@@ -41,8 +43,12 @@ export async function GET(request, { params }) {
 
 export async function PATCH(request, { params }) {
   try {
+    const session = await getServerSession(authOptions)
+    console.log(session)
+    if (!session || !session.user.id) throw new Error('Unauthorized')
+
     const GGB_id = params.GGB_id
-    const { GGBs_id, user_id, item_id, item_message, position } = await request.json()
+    const { GGBs_id, item_id, item_message, position } = await request.json()
     // check if user valid and not already decorate
     const GGBs = await prisma.gingerbreads.findFirst({
       where: {
@@ -55,7 +61,7 @@ export async function PATCH(request, { params }) {
     }
 
     // check if user already sent decoration
-    if (GGBs.senders.indexOf(user_id) != -1) {
+    if (GGBs.senders.indexOf(session.user.id) != -1) {
       throw new Error('this user already decorate receiver gingerbread')
     }
 
@@ -93,7 +99,7 @@ export async function PATCH(request, { params }) {
     const new_item = await prisma.itemData.create({
       data: {
         itemId: parseInt(item_id),
-        senderId: user_id,
+        senderId: session.user.id,
         message: item_message,
       },
     })
@@ -107,7 +113,7 @@ export async function PATCH(request, { params }) {
     await prisma.gingerbreads.update({
       where: { id: GGBs.id },
       data: {
-        senders: `${GGBs.senders}, ${user_id}`,
+        senders: `${GGBs.senders}, ${session.user.id}`,
       },
     })
 

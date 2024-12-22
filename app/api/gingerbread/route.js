@@ -1,15 +1,17 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
-
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]/route'
 const prisma = new PrismaClient()
 export async function POST(request) {
   try {
-    const { user_id } = await request.json()
+    const session = await getServerSession(authOptions)
+    if (!session || !session.user.id) throw new Error('Unauthorized')
 
     // find if user already signin
     const user = await prisma.user.findFirst({
       where: {
-        id: user_id,
+        id: session.user.id,
       },
     })
     if (user == null) {

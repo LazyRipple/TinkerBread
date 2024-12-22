@@ -66,10 +66,7 @@ const handdleAddGGB = async (session) => {
   try {
     // TODO : better way to fetch ?
     const res = await (await fetch(`/api/gingerbread`, {
-      method: "POST",
-      body: JSON.stringify({
-        user_id : session.user.id,
-      }),
+      method: "POST"
     })).json()
     
     if(res.message == 'failed'){

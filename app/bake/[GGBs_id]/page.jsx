@@ -61,7 +61,6 @@ const handdleAddItem = async (session, id, GGBs_id) => {
     const res = await (await fetch(`/api/gingerbread/${id}`, {
       method: "PATCH",
       body: JSON.stringify({
-        user_id : session.user.id,
         GGBs_id : GGBs_id,
         item_id : "1", // TODO : choose id here
         item_message : "haha",
