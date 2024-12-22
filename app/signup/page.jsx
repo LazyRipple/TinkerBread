@@ -6,8 +6,10 @@ import { useSearchParams } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react';
 
 export default function Page() {
+  const session = new useSession()
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
+  const token = searchParams.get('token')
   const [username, setUsername] = useState(searchParams.get('username'))
   const [thxmessage, setThxMessage] = useState('thank you')
   const [GGBType, setGGBType] = useState('normal')
@@ -39,6 +41,7 @@ export default function Page() {
     }
   return (
     <>
+    {token}
     <Toaster />
       <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
         <p>This is Signup pages</p>

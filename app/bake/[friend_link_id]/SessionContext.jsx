@@ -14,13 +14,10 @@ export const BakeSessionProvider = ({ children }) => {
       if (status === 'authenticated' && session?.user?.link_id) {
         try {
           const userRes = await fetch(`/api/user/${friend_link_id}`)
-          const userData = await userRes.json()
-          console.log(userData);
-          
+          const userData = await userRes.json()          
           
           const GGBRes = await fetch(`/api/gingerbreads/${userData.data.GGBs_id}/${session?.user?.link_id}`)
           const GGBData = await GGBRes.json()
-          console.log("GGBs", GGBData.data);
           
           setGGBs(GGBData?.data ?? null)
           setLoadStatus('loaded')

@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
-
 const prisma = new PrismaClient()
 export async function POST(request) {
   // TODO : jwt check

@@ -24,14 +24,15 @@ export const authOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    signIn: async ({ user, account, profile }) => {
+    signIn: async ({ user, account, profile, session }) => {
       const existingUser = await prisma.user.findFirst({
         where: {
           email: user.email,
         },
       })
       if (!existingUser) {
-        return `/signup?email=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}` // go to signup
+        const accesstoken = 'token'
+        return `/signup?email=${encodeURIComponent(user.email)}&username=${encodeURIComponent(user.username)}&token=${encodeURIComponent(accesstoken)}` // go to signup
       }
       const existingAccount = await prisma.account.findFirst({
         where: {
