@@ -3,17 +3,17 @@
 import React from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
-import Loading from './Loading'
+import Loading from '../Loading'
 import { BakeSessionProvider, useSessionContext } from './SessionContext'
 import toast, { Toaster } from 'react-hot-toast';
 import { Button } from '@/components/Button'
+import { BackButton } from '../../../src/components/BackButton'
 
 export default function Page() {
   const { GGBs_id } = useParams()
   if (status === 'unauthenticated') {        
      return notFound()
   }
-  // Move BakeSessionProvider to wrap the entire content
   return (
     <BakeSessionProvider>
       <PageContent GGBs_id={GGBs_id} />
@@ -30,7 +30,9 @@ function PageContent({ GGBs_id }) {
   if (!GGBs) return notFound()
 
   return (
-    <div className='flex w-full flex-col items-center justify-center space-y-4 pt-20'>
+    <div className='relative flex w-full flex-col items-center justify-center space-y-4 pt-20'>
+      <BackButton />
+      
       <Toaster />
       <p>{`${GGBs.owner} Gingerbreads Kitchen`}</p>
       

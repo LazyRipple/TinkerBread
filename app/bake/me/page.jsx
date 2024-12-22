@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
 import { BakeMeComponents } from "@/components/BakeMeComponents"
-import Loading from './Loading'
+import Loading from '../Loading'
 import { BakeSessionProvider, useSessionContext } from './SessionContext'
 import { Button } from '@/components/Button'
 import toast, { Toaster } from 'react-hot-toast';
@@ -27,6 +27,16 @@ export default function Page() {
 function PageContent({ GGBs_id }) {
   const { user, GGBs, load_status } = useSessionContext()
   const { data: session } = useSession()
+  const [cooldown, setCooldown] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCooldown((prev) => (prev === 0 ? 0 : prev - 1));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   if (load_status == 'loading') return <Loading /> 
   if (!GGBs) return notFound()
@@ -38,6 +48,11 @@ function PageContent({ GGBs_id }) {
         <BakeMeComponents />
         <button
           onClick={() => {
+            if(cooldown!=0){
+              toast.error("please wait")
+              return
+            }
+            setCooldown(5)
             handdleAddGGB(session)
           }}
         >

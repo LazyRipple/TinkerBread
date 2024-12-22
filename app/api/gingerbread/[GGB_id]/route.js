@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
 export async function GET(request, { params }) {
-  console.log('SEND API TO HERE')
-
   try {
     const GGB_id = params.GGB_id
     const GGB = await prisma.gingerbread.findFirst({

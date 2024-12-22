@@ -5,6 +5,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { FormLoading } from '@/components/FormLoading';
+import { BackButton } from '../../src/components/BackButton'
+
 
 export default  function Page() {
   const {data:session} = useSession()
@@ -52,6 +54,7 @@ export default  function Page() {
     }
   return (
     <>
+    <BackButton />
     <Toaster />
       <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
         <p>This is Setting pages</p>
