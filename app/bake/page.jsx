@@ -56,7 +56,7 @@ function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
     );
 }
 
-function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, accessoryOfThis, selectedPart, selectedDress }) {
+function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, accessoryOfThis }) {
     // Loading the textures for gingerbread model and accessory
     const modelTexture = useLoader(TextureLoader, './gingerbread/ggb1.jpg', () => {
         console.log('Texture loaded');
@@ -91,24 +91,9 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
         return null;
     }
 
-    let headAccessory = accessoryOfThis?.['head'] || null;
-    let leftAccessory = accessoryOfThis?.['left hand'] || null;
-    let rightAccessory = accessoryOfThis?.['right hand'] || null;
-
-
-    // if (index === focusedIndex && selectedPart !== null && accessoryOfThis[selectedPart] === null) {
-    //     if (selectedPart === 'head') headAccessory = selectedDress;
-    //     else if (selectedPart === 'left hand') leftAccessory = selectedDress;
-    //     else if (selectedPart === 'right hand') rightAccessory = selectedDress;
-    // }
-    useEffect(() => {
-        // Update the selected part only if focused
-        if (index === focusedIndex && selectedPart !== null && accessoryOfThis[selectedPart] === null) {
-            if (selectedPart === 'head') headAccessory = selectedDress;
-            else if (selectedPart === 'left hand') leftAccessory = selectedDress;
-            else if (selectedPart === 'right hand') rightAccessory = selectedDress;
-        }
-    }, [focusedIndex, selectedPart, selectedDress, accessoryOfThis, index]);
+    const headAccessory = accessoryOfThis[index]['head'] || null;
+    const leftAccessory = accessoryOfThis[index]['left hand'] || null;
+    const rightAccessory = accessoryOfThis[index]['right hand'] || null;
 
     // load head model 
 
@@ -193,6 +178,11 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
         'candy2': [-25.8, 0.8, -3.6],
         'christmas_tree': [-23.4, 0.7, -4]
     }
+
+    console.log('head accessory model:', headAccessoryModel, index);
+    console.log('left accessory model:', leftAccessoryModel, index);
+    console.log('right accessory model:', rightAccessoryModel, index);
+
 
 
     return (
@@ -319,12 +309,35 @@ export default function BakePage() {
     }
 
     const handleSelectPart = (part) => {
+        console.log("Part selected:", part);
         setSelectedPart(part); // Update the selected part to choose a dress
         setSelectedMode('chooseDress'); // Change mode to chooseDress
+        setTempPartsInGingerBread(partsInGingerbread)
     };
 
     const handleSelectDress = (dress) => {
+        console.log('Selected Part:', selectedPart);  // Log selectedPart
+        console.log('Selected Dress:', dress);       // Log dress
+        console.log('Focused Index:', focusedIndex); // Log focusedIndex
+
         setSelectedDress(dress);
+        updateSelectDress({ index: focusedIndex, part: selectedPart, dress: dress });
+    }
+
+    const updateSelectDress = ({ index, part, dress }) => {
+        if (!dress) return;
+        console.log('called');
+        console.log('index = ', index);
+
+
+        const updatedParts = { ...tempPartsInGingerbread };
+        console.log(updatedParts[index]);
+
+        updatedParts[index][part] = dress;
+
+        console.log(updatedParts[index]);
+
+        setTempPartsInGingerBread(updatedParts)
     }
 
     const handleConfirmDress = () => {
@@ -334,7 +347,7 @@ export default function BakePage() {
     const handleSendMessage = () => {
         setSelectedMode('thankyou');
 
-        const updatedParts = [...partsInGingerbread];
+        const updatedParts = { ...tempPartsInGingerbread };
         updatedParts[focusedIndex][selectedPart] = selectedDress;
         setPartsInGingerBread(updatedParts)
     };
@@ -345,11 +358,16 @@ export default function BakePage() {
 
     // choose parts
     const parts = ['head', 'left hand', 'right hand']
-    const [partsInGingerbread, setPartsInGingerBread] = useState([
-        { 'head': null, 'left hand': null, 'right hand': null },
-        { 'head': null, 'left hand': null, 'right hand': null },
-        { 'head': null, 'left hand': null, 'right hand': null },
-    ]);
+    const [partsInGingerbread, setPartsInGingerBread] = useState({ // parts that already been saved
+        0: { 'head': null, 'left hand': null, 'right hand': null },
+        1: { 'head': null, 'left hand': null, 'right hand': null },
+        2: { 'head': null, 'left hand': null, 'right hand': null },
+    });
+    const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState({
+        0: { 'head': null, 'left hand': null, 'right hand': null },
+        1: { 'head': null, 'left hand': null, 'right hand': null },
+        2: { 'head': null, 'left hand': null, 'right hand': null },
+    });
     const [selectedPart, setSelectedPart] = useState(null);
     const [selectedDress, setSelectedDress] = useState(null);
     const [message, setMessage] = useState('');
@@ -374,9 +392,10 @@ export default function BakePage() {
                         instance={instance}
                         index={index}
                         handleClick={handleClick}
-                        accessoryOfThis={partsInGingerbread[focusedIndex]}
+                        accessoryOfThis={partsInGingerbread}
                         selectedPart={selectedPart}
-                        selectedDress={selectedDress} />
+                        selectedDress={selectedDress}
+                        updateSelectDress={updateSelectDress} />
                 ))}
 
                 <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
