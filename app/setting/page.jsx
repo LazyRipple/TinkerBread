@@ -27,7 +27,7 @@ export default function SettingPage() {
     };
 
     return (
-        <div className="relative flex flex-col h-full min-h-screen w-full gap-6 px-6 py-8 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
+        <div className="gradient-container relative flex flex-col items-center justify-center h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg--900 text-white shadow-lg p-8">
             {/* Back Button */}
             <button
                 onClick={handleBack}
