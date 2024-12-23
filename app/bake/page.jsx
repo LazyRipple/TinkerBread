@@ -8,7 +8,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { TextureLoader } from 'three';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import '@/bake/page.css';
+import '@/style/bake.css';
 
 function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
     const positions = new globalThis.Float32Array(count * 3); // Each snowflake has x, y, z
@@ -56,7 +56,7 @@ function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
     );
 }
 
-function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, accessoryOfThis }) {
+function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) {
     // Loading the textures for gingerbread model and accessory
     const modelTexture = useLoader(TextureLoader, './gingerbread/ggb1.jpg', () => {
         console.log('Texture loaded');
@@ -91,9 +91,9 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
         return null;
     }
 
-    const headAccessory = accessoryOfThis[index]['head'] || null;
-    const leftAccessory = accessoryOfThis[index]['left hand'] || null;
-    const rightAccessory = accessoryOfThis[index]['right hand'] || null;
+    const headAccessory = tempAccessoryOfThis[index]['head'] || null;
+    const leftAccessory = tempAccessoryOfThis[index]['left hand'] || null;
+    const rightAccessory = tempAccessoryOfThis[index]['right hand'] || null;
 
     // load head model 
 
@@ -182,6 +182,8 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
     console.log('head accessory model:', headAccessoryModel, index);
     console.log('left accessory model:', leftAccessoryModel, index);
     console.log('right accessory model:', rightAccessoryModel, index);
+
+    console.log(tempAccessoryOfThis);
 
 
 
@@ -296,6 +298,9 @@ export default function BakePage() {
         setSelectedPart(null);
         setMessage(null);
         setSelectedDress(null);
+        console.log(partsInGingerbread);
+
+        setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
 
         console.log('Mode changed to inspect');
     };
@@ -310,16 +315,12 @@ export default function BakePage() {
 
     const handleSelectPart = (part) => {
         console.log("Part selected:", part);
-        setSelectedPart(part); // Update the selected part to choose a dress
-        setSelectedMode('chooseDress'); // Change mode to chooseDress
-        setTempPartsInGingerBread(partsInGingerbread)
+        setSelectedPart(part);
+        setSelectedMode('chooseDress');
+        setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
     };
 
     const handleSelectDress = (dress) => {
-        console.log('Selected Part:', selectedPart);  // Log selectedPart
-        console.log('Selected Dress:', dress);       // Log dress
-        console.log('Focused Index:', focusedIndex); // Log focusedIndex
-
         setSelectedDress(dress);
         updateSelectDress({ index: focusedIndex, part: selectedPart, dress: dress });
     }
@@ -329,14 +330,8 @@ export default function BakePage() {
         console.log('called');
         console.log('index = ', index);
 
-
         const updatedParts = { ...tempPartsInGingerbread };
-        console.log(updatedParts[index]);
-
         updatedParts[index][part] = dress;
-
-        console.log(updatedParts[index]);
-
         setTempPartsInGingerBread(updatedParts)
     }
 
@@ -345,11 +340,10 @@ export default function BakePage() {
     }
 
     const handleSendMessage = () => {
+
         setSelectedMode('thankyou');
 
-        const updatedParts = { ...tempPartsInGingerbread };
-        updatedParts[focusedIndex][selectedPart] = selectedDress;
-        setPartsInGingerBread(updatedParts)
+        setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
     };
 
     const handleInputChange = (event) => {
@@ -392,7 +386,7 @@ export default function BakePage() {
                         instance={instance}
                         index={index}
                         handleClick={handleClick}
-                        accessoryOfThis={partsInGingerbread}
+                        tempAccessoryOfThis={tempPartsInGingerbread}
                         selectedPart={selectedPart}
                         selectedDress={selectedDress}
                         updateSelectDress={updateSelectDress} />
