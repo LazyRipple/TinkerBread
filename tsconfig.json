@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*", "./app/*"]
+    },
     "lib": [
       "dom",
       "dom.iterable",
@@ -26,7 +30,9 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/**/*",
+    "next-env.d.ts"
   ],
   "exclude": [
     "node_modules"
