@@ -10,7 +10,13 @@ export default async function GingerbreadInfo(GGB_id) {
   }
 
   // get gingerbread infomation
-  const res = await (await fetch(`${process.env.BASEURL}/api/gingerbread/${GGB_id}`)).json()
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/gingerbread/${GGB_id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => response.json())
+
   if (res.message == 'no gingerbread with this id') {
     return NextResponse.json({
       data: 'none',
@@ -30,13 +36,14 @@ export default async function GingerbreadInfo(GGB_id) {
   GGB['head3'] = await processItemDataInfo(GGB_res.head3_id)
   GGB['left3_hand'] = await processItemDataInfo(GGB_res.left3_hand_id)
   GGB['right3_hand'] = await processItemDataInfo(GGB_res.right3_hand_id)
+  GGB['id'] = GGB_res.id
   return NextResponse.json({
     data: GGB,
   })
 }
 
 const processItemDataInfo = async (item_id) => {
-  if (item_id == 0) return 'none'
+  if (item_id == 0 || item_id == '') return 'none'
 
   // find itemData data
   const res = await prisma.itemData.findFirst({

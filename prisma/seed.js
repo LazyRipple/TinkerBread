@@ -4,62 +4,6 @@ async function main() {
   // Create Gingerbread parts
   const prisma = new PrismaClient()
 
-  const gingerbread0 = await prisma.gingerbread.create({
-    data: {},
-  })
-  const gingerbread1 = await prisma.gingerbread.create({
-    data: { head1_id: 1, left1_hand_id: 2, right1_hand_id: 3 },
-  })
-
-  // Create Gingerbreads
-  const gingerbreads1 = await prisma.gingerbreads.create({
-    data: {
-      GGB_type: 'holiday Special',
-      thanks_message: 'Thank you for your support!',
-      GGB_1_id: gingerbread0.id,
-      GGB_2_id: gingerbread1.id,
-    },
-  })
-
-  const gingerbreads2 = await prisma.gingerbreads.create({
-    data: {
-      GGB_type: 'girl',
-      thanks_message: 'Ho Ho Ho',
-    },
-  })
-
-  const gingerbreads3 = await prisma.gingerbreads.create({
-    data: {
-      GGB_type: 'normal',
-      thanks_message: 'Three to Missiltoe',
-    },
-  })
-
-  // Create Users
-  const user1 = await prisma.user.create({
-    data: {
-      username: 'UserOne',
-      gmail: 'userOne@gmail.com',
-      GGBs_id: gingerbreads1.id,
-    },
-  })
-
-  const user2 = await prisma.user.create({
-    data: {
-      username: 'UserTwo',
-      gmail: 'UserTwo@gmail.com',
-      GGBs_id: gingerbreads2.id,
-    },
-  })
-
-  const user3 = await prisma.user.create({
-    data: {
-      username: 'UserThree',
-      gmail: 'UserThree@gmail.com',
-      GGBs_id: gingerbreads3.id,
-    },
-  })
-
   // Create Items
   const item1 = await prisma.item.create({
     data: {
@@ -109,23 +53,25 @@ async function main() {
     },
   })
 
-  // Create ItemData
-  const itemData1 = await prisma.itemData.create({
-    data: {
-      itemId: item1.id,
-      senderId: user1.id,
-      message: 'Happy Holidays!',
-    },
+  const user1 = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/auth/signup`, {
+    method: 'POST',
+    body: JSON.stringify({
+      username: 'aisha',
+      email: 'aisha@gmail.com',
+      thanks_message: 'aisha say thx',
+      GGB_type: 'girl',
+    }),
   })
 
-  const itemData2 = await prisma.itemData.create({
-    data: {
-      itemId: item2.id,
-      senderId: user2.id,
-      message: 'Ho Ho Ho',
-    },
+  const user2 = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/auth/signup`, {
+    method: 'POST',
+    body: JSON.stringify({
+      username: 'aida',
+      email: 'aida@gmail.com',
+      thanks_message: 'aida say thx',
+      GGB_type: 'girl',
+    }),
   })
-
   console.log('Mock data created successfully!')
 }
 

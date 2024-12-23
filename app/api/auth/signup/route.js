@@ -1,53 +1,47 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
-
 const prisma = new PrismaClient()
 export async function POST(request) {
-  // please send this 4 in body
-
   try {
-    const { username, gmail, thanks_message, GGB_type } = await request.json()
+    // TODO : change this when on production
+    const allowedOrigins = ['http://localhost:3000']
+    const origin = request.headers.get('origin')
+    if (!allowedOrigins.includes(origin)) {
+      throw new Error('Forbidden: Invalid origin')
+    }
+    const user = (await request.json()).payload
 
     // find if user already signin
-    const same_gmail_user = await prisma.user.findFirst({
+    const same_email_user = await prisma.user.findFirst({
       where: {
-        gmail: gmail,
+        email: user.email,
       },
     })
-    if (same_gmail_user != null) {
-      return NextResponse.json(
-        {
-          message: 'this gmail already signup',
-        },
-        {
-          status: 400,
-        },
-      )
-    }
 
+    if (same_email_user != null) {
+      throw new Error('this email already signup')
+    }
     // create new user
     const new_gingerbread1 = await prisma.gingerbread.create({
       data: {},
     })
-
     const new_gingerbreads = await prisma.gingerbreads.create({
       data: {
-        thanks_message,
-        GGB_type,
+        thanks_message: user.thanks_message,
+        GGB_type: user.GGB_type,
         GGB_1_id: new_gingerbread1.id,
       },
     })
-
     const new_user = await prisma.user.create({
       data: {
-        username,
-        gmail,
+        username: user.username,
+        email: user.email,
         GGBs_id: new_gingerbreads.id,
       },
     })
     return NextResponse.json({
       message: 'success',
-      data: new_user.id,
+      data: new_user.link_id,
     })
   } catch (error) {
     return NextResponse.json(

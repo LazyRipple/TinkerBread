@@ -1,16 +1,20 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
-
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]/route'
 const prisma = new PrismaClient()
+
+// API for update name and thanks message
 export async function PATCH(request) {
-  // please send this 2 in body
   try {
-    const { user_id, thanks_message } = await request.json()
+    const session = await getServerSession(authOptions)
+    if (!session || !session.user.id) throw new Error('Unauthorized')
+    const { thanks_message, newname } = await request.json()
 
     // if user not in database
     const user = await prisma.user.findFirst({
       where: {
-        id: user_id,
+        id: session.user.id,
       },
     })
 
@@ -18,7 +22,15 @@ export async function PATCH(request) {
       throw new Error('no user with this user_id')
     }
 
-    const update_user = await prisma.gingerbreads.update({
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        username: newname,
+      },
+    })
+    await prisma.gingerbreads.update({
       where: {
         id: user.GGBs_id,
       },
@@ -28,7 +40,6 @@ export async function PATCH(request) {
     })
     return NextResponse.json({
       message: 'success',
-      data: update_user.id,
     })
   } catch (error) {
     return NextResponse.json(
