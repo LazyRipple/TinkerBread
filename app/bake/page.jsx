@@ -267,7 +267,7 @@ export default function BakePage() {
     ];
 
     // Mode state
-    const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view, decorate, choosePos, chooseDress, message, thankyou
+    const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view, choosePos, chooseDress, message, thankyou
     const [focusedIndex, setFocusedIndex] = useState(null);
     const [canDecorateIndex, setCanDecorateIndex] = useState(0);
 
@@ -276,6 +276,9 @@ export default function BakePage() {
         console.log('Current mode before click:', selectedMode);
 
         console.log(`can decorate index = ${canDecorateIndex}`);
+
+
+        recalculateIndex();
 
         if (selectedMode !== 'inspect') {
             console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
@@ -291,8 +294,6 @@ export default function BakePage() {
     const handleBack = () => {
         console.log('Handle back clicked, current mode:', selectedMode);
 
-        if (selectedMode === 'inspect') return;
-
         setFocusedIndex(null);
         setSelectedMode('inspect');
         setSelectedPart(null);
@@ -306,10 +307,7 @@ export default function BakePage() {
     };
 
     const handleGetDecorated = () => {
-        setSelectedMode('decorate')
-    }
-
-    const handleChoosePos = () => { // show button to choose position
+        if (focusedIndex !== canDecorateIndex) return;
         setSelectedMode('choosePos')
     }
 
@@ -342,7 +340,6 @@ export default function BakePage() {
     const handleSendMessage = () => {
 
         setSelectedMode('thankyou');
-
         setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
     };
 
@@ -372,6 +369,12 @@ export default function BakePage() {
         'right hand': ['candy2', 'christmas_tree', 'green_present'],
     };
 
+    const recalculateIndex = () => {
+        for (const part of Object.values(partsInGingerbread[canDecorateIndex])) {
+            if (part === null) return;
+        }
+        setCanDecorateIndex((prev) => prev + 1);
+    };
     return (
         <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
             <Canvas>
@@ -396,16 +399,16 @@ export default function BakePage() {
                 {/* <OrbitControls /> */}
             </Canvas>
 
-            {selectedMode !== 'inspect' && <button className="absolute top-0 left-0 bg-black text-white w-28"
-                onClick={handleBack}>
-                back</button>}
+            {selectedMode !== 'inspect' &&
+                <button className="absolute top-2 left-2 bg-red-800 text-white w-28 p-3 rounded-lg shadow-lg hover:bg-red-400 transition duration-300"
+                    onClick={handleBack}>
+                    Back
+                </button>}
 
-            {selectedMode === 'view' && <button className="absolute top-10 left-0 bg-black text-white w-28"
-                onClick={handleGetDecorated}>
-                get decorate</button>}
-
-            {selectedMode === 'decorate' && <button className="absolute top-20 left-0 bg-black text-white w-28"
-                onClick={handleChoosePos}>
+            {selectedMode === 'view' && <button
+                className="absolute top-20 left-2 bg-green-800 text-white w-28 p-3 rounded-lg shadow-lg hover:bg-green-400 transition duration-300"
+                onClick={handleGetDecorated}
+                disabled={canDecorateIndex !== focusedIndex}>
                 decorate</button>}
 
             {selectedMode === 'choosePos' && (
