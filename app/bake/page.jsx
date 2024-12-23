@@ -22,15 +22,14 @@ function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
         positions[i * 3 + 2] = Math.random() * (area.z[1] - area.z[0]) + area.z[0]; // z
     }
 
-    // Update snowflake positions each frame
     useFrame(() => {
         const array = ref.current.geometry.attributes.position.array;
         const speed = velocities.current;
 
         for (let i = 0; i < count; i++) {
-            array[i * 3 + 1] -= speed[i]; // Update y position (fall down)
+            array[i * 3 + 1] -= speed[i];
             if (array[i * 3 + 1] < area.y[0]) {
-                array[i * 3 + 1] = area.y[1]; // Reset snowflake to the top within bounds
+                array[i * 3 + 1] = area.y[1];
             }
         }
         ref.current.geometry.attributes.position.needsUpdate = true;
@@ -57,7 +56,7 @@ function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
     );
 }
 
-function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex }) {
+function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, accessoryOfThis, selectedPart, selectedDress }) {
     // Loading the textures for gingerbread model and accessory
     const modelTexture = useLoader(TextureLoader, './gingerbread/ggb1.jpg', () => {
         console.log('Texture loaded');
@@ -71,27 +70,11 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex 
         loader.setDRACOLoader(dracoLoader);
     });
 
-    // Loading the accessory model
-    const accessoryTexture = useLoader(TextureLoader, './accessory/candy.jpg', () => {
-        console.log('Accessory Texture loaded');
-    });
-    accessoryTexture.flipY = false;
-
-    const accessoryModel = useLoader(GLTFLoader, './accessory/candy.glb', (loader) => {
-        const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('./draco/');
-        loader.setDRACOLoader(dracoLoader);
-    });
-
     // Refs for controlling models and group
     const modelRef = useRef();
-    const accessoryRef = useRef();
-    const [accessoryPosition, setAccessoryPosition] = useState([-27, 0.5, 3]);
 
-    // Apply textures and set up models when they're loaded
     useEffect(() => {
         if (model && model.scene) {
-            // Applying texture to the gingerbread model
             model.scene.traverse((child) => {
                 if (child.isMesh) {
                     child.material.map = modelTexture;
@@ -101,25 +84,116 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex 
             modelRef.current = model.scene;
         }
 
-        if (accessoryModel && accessoryModel.scene) {
-            // Applying texture to accessory model (if needed)
-            accessoryModel.scene.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.map = accessoryTexture;
-                    child.material.needsUpdate = true;
-                }
-            });
-            accessoryRef.current = accessoryModel.scene;
-        }
-
-    }, [model, accessoryModel, modelTexture, accessoryTexture]);
+    }, [model, modelTexture]);
 
     // If model not loaded, return null
-    if (!model || !model.scene || !accessoryModel || !accessoryModel.scene) {
+    if (!model || !model.scene) {
         return null;
     }
 
-    console.log('loaded gingerberad');
+    let headAccessory = accessoryOfThis?.['head'] || null;
+    let leftAccessory = accessoryOfThis?.['left hand'] || null;
+    let rightAccessory = accessoryOfThis?.['right hand'] || null;
+
+
+    // if (index === focusedIndex && selectedPart !== null && accessoryOfThis[selectedPart] === null) {
+    //     if (selectedPart === 'head') headAccessory = selectedDress;
+    //     else if (selectedPart === 'left hand') leftAccessory = selectedDress;
+    //     else if (selectedPart === 'right hand') rightAccessory = selectedDress;
+    // }
+    useEffect(() => {
+        // Update the selected part only if focused
+        if (index === focusedIndex && selectedPart !== null && accessoryOfThis[selectedPart] === null) {
+            if (selectedPart === 'head') headAccessory = selectedDress;
+            else if (selectedPart === 'left hand') leftAccessory = selectedDress;
+            else if (selectedPart === 'right hand') rightAccessory = selectedDress;
+        }
+    }, [focusedIndex, selectedPart, selectedDress, accessoryOfThis, index]);
+
+    // load head model 
+
+    let headAccessoryModel = null;
+    let headAccessoryTexture = null;
+
+    if (headAccessory) {
+        headAccessoryModel = useLoader(GLTFLoader, `./accessory/${headAccessory}.glb`, (loader) => {
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('./draco/');
+            loader.setDRACOLoader(dracoLoader);
+        });
+
+        headAccessoryTexture = useLoader(TextureLoader, `./accessory/${headAccessory}.jpg`, () => {
+            console.log(`head texture of ${index} loaded`);
+        });
+        headAccessoryTexture.flipY = false;
+    }
+
+    // load head model 
+
+    let leftAccessoryModel = null;
+    let leftAccessoryTexture = null;
+
+    if (leftAccessory) {
+        leftAccessoryModel = useLoader(GLTFLoader, `./accessory/${leftAccessory}.glb`, (loader) => {
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('./draco/');
+            loader.setDRACOLoader(dracoLoader);
+        });
+
+        leftAccessoryTexture = useLoader(TextureLoader, `./accessory/${leftAccessory}.jpg`, () => {
+            console.log(`head texture of ${index} loaded`);
+        });
+        leftAccessoryTexture.flipY = false;
+    }
+
+    // load right model 
+
+    let rightAccessoryModel = null;
+    let rightAccessoryTexture = null;
+
+    if (rightAccessory) {
+        rightAccessoryModel = useLoader(GLTFLoader, `./accessory/${rightAccessory}.glb`, (loader) => {
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('./draco/');
+            loader.setDRACOLoader(dracoLoader);
+        });
+
+        rightAccessoryTexture = useLoader(TextureLoader, `./accessory/${rightAccessory}.jpg`, () => {
+            console.log(`head texture of ${index} loaded`);
+        });
+        rightAccessoryTexture.flipY = false;
+    }
+
+    useEffect(() => {
+        const updateAccessoryTexture = (accessoryModel, accessoryTexture) => {
+            if (accessoryModel && accessoryModel.scene) {
+                accessoryModel.scene.traverse((child) => {
+                    if (child.isMesh) {
+                        child.material.map = accessoryTexture;
+                        child.material.needsUpdate = true;
+                    }
+                });
+            }
+        };
+
+        updateAccessoryTexture(headAccessoryModel, headAccessoryTexture);
+        updateAccessoryTexture(leftAccessoryModel, leftAccessoryTexture);
+        updateAccessoryTexture(rightAccessoryModel, rightAccessoryTexture);
+    }, [headAccessoryModel, headAccessoryTexture, leftAccessoryModel, leftAccessoryTexture, rightAccessoryModel, rightAccessoryTexture]);
+
+
+    const position = {
+        'candy': [-27, 0.5, 3],
+        'red_present': [-29, 0.6, 3],
+        'cup': [-31, 0.6, 2.9],
+        'christmas_hat': [-24.8, 0.5, -2.8],
+        'reindeer': [-28.2, 0, -3],
+        'earpuff': [-32.25, 0.5, -2.2],
+        'green_present': [-28.2, 0.6, -3.2],
+        'candy2': [-25.8, 0.8, -3.6],
+        'christmas_tree': [-23.4, 0.7, -4]
+    }
+
 
     return (
         <group
@@ -132,14 +206,29 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex 
                 key={`ggb3Model - ${index}`}
                 object={model.scene.clone()}
                 position={[0, 0, 0]}
-                scale={[1, 1, 1]}
+                scale={1}
             />
 
-            <primitive
-                position={accessoryPosition}
-                scale={[1, 1, 1]}
-                object={accessoryModel.scene.clone()} />
+            {/* head accessory */}
+            {headAccessoryModel && <primitive
+                key={`head-accessory-${index}`}
+                position={position[headAccessory]}
+                scale={1}
+                object={headAccessoryModel.scene.clone()} />}
 
+            {/* left hand accessory */}
+            {leftAccessoryModel && <primitive
+                key={`left-accessory-${index}`}
+                position={position[leftAccessory]}
+                scale={1}
+                object={leftAccessoryModel.scene.clone()} />}
+
+            {/* right hand accessory */}
+            {rightAccessoryModel && <primitive
+                key={`right-accessory-${index}`}
+                position={position[rightAccessory]}
+                scale={1}
+                object={rightAccessoryModel.scene.clone()} />}
         </group>
     );
 };
@@ -266,9 +355,9 @@ export default function BakePage() {
     const [message, setMessage] = useState('');
 
     const dressOptions = {
-        head: ['Hat 1', 'Hat 2', 'Hat 3'],
-        'left hand': ['Glove 1', 'Glove 2'],
-        'right hand': ['Ring 1', 'Ring 2', 'Ring 3'],
+        'head': ['christmas_hat', 'reindeer', 'earpuff'],
+        'left hand': ['candy', 'red_present', 'cup'],
+        'right hand': ['candy2', 'christmas_tree', 'green_present'],
     };
 
     return (
@@ -284,10 +373,12 @@ export default function BakePage() {
                         key={index}
                         instance={instance}
                         index={index}
-                        handleClick={handleClick} />
+                        handleClick={handleClick}
+                        accessoryOfThis={partsInGingerbread[focusedIndex]}
+                        selectedPart={selectedPart}
+                        selectedDress={selectedDress} />
                 ))}
 
-                {/* Camera and Controls */}
                 <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
                 {/* <OrbitControls /> */}
             </Canvas>
@@ -309,11 +400,11 @@ export default function BakePage() {
                     {parts.map((part, index) => {
                         return (
                             <button
-                                key={index} // React key for list
-                                onClick={() => handleSelectPart(part)} // Pass the key and value
+                                key={index}
+                                onClick={() => handleSelectPart(part)}
                                 className="p-2 m-2 bg-blue-500 text-white w-28"
                             >
-                                {part} {/* Display the key */}
+                                {part}
                             </button>
                         );
                     })}
@@ -387,39 +478,36 @@ export default function BakePage() {
 function CameraController({ focusedIndex }) {
     const { camera, gl } = useThree();
 
-    // Default view and focused positions
-    const defaultPosition = new THREE.Vector3(2.604 - 1.5 + 3, 3.362 + 2, 4.1);
-    const defaultRotation = new THREE.Vector3(-0.56159 - 0.5, 0.358407 - 0.75, 0.20840);
+    const defaultPosition = new THREE.Vector3(2.104 + 2.5, 5.362, 2.1 + 5.5 - 2);
+    const defaultRotation = new THREE.Vector3(-0.56159 - 0.5, 0.358407 - 0.75, 0.20840 - 0.7);
     const focusedPositions = [
-        new THREE.Vector3(0.5, 1.149, 0.658),
-        new THREE.Vector3(1.1, 0.903, 0.658),
-        new THREE.Vector3(1.7, 0.903, 0.658),
+        new THREE.Vector3(0.8, 1, 1),
+        new THREE.Vector3(2, 2, 1.4),
+        new THREE.Vector3(3.7, 2, 3),
     ];
     const focusedRotations = [
-        new THREE.Vector3(-1.34159, 0.208407, 0.208407),
-        new THREE.Vector3(-1.34159, 0.208407, 0.208407),
-        new THREE.Vector3(-1.34159, 0.208407, 0.208407),
+        new THREE.Vector3(-3, 2, 1),
+        new THREE.Vector3(-1, 0, 1),
+        new THREE.Vector3(0, 0.208407, 0.208407),
     ];
 
-    // Camera position and rotation limits
     const positionLimit = {
-        x: 2, // How much movement can happen for X axis
-        y: 2, // How much movement can happen for Y axis
-        z: 2, // How much movement can happen for Z axis
+        x: 20,
+        y: 10,
+        z: 5,
     };
     const rotationLimit = {
-        x: 0.75, // How much rotation can happen for X axis
-        y: 0.75, // How much rotation can happen for Y axis
-        z: 0.75, // How much rotation can happen for Z axis
+        x: 2,
+        y: 2,
+        z: 2,
     };
 
-    // Camera transition logic with movement limits
     useFrame(() => {
         const targetPosition = focusedIndex !== null ? focusedPositions[focusedIndex] : defaultPosition;
         const targetRotation = focusedIndex !== null ? focusedRotations[focusedIndex] : defaultRotation;
 
         // Smoothly transition position
-        camera.position.lerp(targetPosition, 0.03);
+        camera.position.lerp(targetPosition, 0.01);
 
         // Apply limits for position (clamp the position within defined limits)
         camera.position.x = THREE.MathUtils.clamp(camera.position.x, targetPosition.x - positionLimit.x, targetPosition.x + positionLimit.x);
@@ -434,8 +522,8 @@ function CameraController({ focusedIndex }) {
 
     return (
         <OrbitControls
-            enablePan={true}
-            enableZoom={true}
+            enablePan={false}
+            enableZoom={false}
             enableRotate={true}
             enableDamping={true}
             dampingFactor={0.25}
