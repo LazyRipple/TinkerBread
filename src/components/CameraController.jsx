@@ -10,13 +10,15 @@ export const CameraController = ({ focusedIndex }) => {
     const defaultRotation = new THREE.Vector3(-0.56159 - 0.5, 0.358407 - 0.75, 0.20840 - 0.7);
     const focusedPositions = [
         new THREE.Vector3(0.8, 1, 1),
-        new THREE.Vector3(2, 2, 1.4),
-        new THREE.Vector3(3.7, 2, 3),
+        new THREE.Vector3(1.9, -0.2, 1.5),
+        // new THREE.Vector3(4, -1, 1),
+        new THREE.Vector3(2, 0.2, 1.5),
     ];
     const focusedRotations = [
         new THREE.Vector3(-3, 2, 1),
-        new THREE.Vector3(-1, 0, 1),
-        new THREE.Vector3(0, 0.208407, 0.208407),
+        new THREE.Vector3(0, -1.5, -1.5),
+        // new THREE.Vector3(1.5, -1.2, -1.5),
+        new THREE.Vector3(0, -2, -0.25),
     ];
 
     const positionLimit = {

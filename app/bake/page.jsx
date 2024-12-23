@@ -126,8 +126,8 @@ export default function BakePage() {
     return (
         <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
             <Canvas>
-                <ambientLight intensity={1.5} />
-                <ambientLight color={'#ffa35c'} intensity={1} />
+                <ambientLight intensity={4} />
+                {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
                 <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
                 <Scene />
 
@@ -147,33 +147,50 @@ export default function BakePage() {
                 {/* <OrbitControls /> */}
             </Canvas>
 
+            {/* Back */}
             {selectedMode !== 'inspect' &&
-                <button className="absolute top-2 left-2 bg-red-800 text-white w-28 p-3 rounded-lg shadow-lg hover:bg-red-400 transition duration-300"
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 text-white w-12 h-12 p-3 rounded-full shadow-lg hover:bg-red-900 transition duration-300"
                     onClick={handleBack}>
-                    Back
+                    <img src='/icon/back.webp' alt="Back" className='back w-full h-full' />
                 </button>}
 
-            {selectedMode === 'view' && <button
-                className="absolute top-20 left-2 bg-green-800 text-white w-28 p-3 rounded-lg shadow-lg hover:bg-green-400 transition duration-300"
-                onClick={handleGetDecorated}
-                disabled={canDecorateIndex !== focusedIndex}>
-                decorate</button>}
-
-            {selectedMode === 'choosePos' && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    {parts.map((part, index) => {
-                        return (
-                            <button
-                                key={index}
-                                onClick={() => handleSelectPart(part)}
-                                className="p-2 m-2 bg-blue-500 text-white w-28"
-                            >
-                                {part}
-                            </button>
-                        );
-                    })}
+            {selectedMode === 'view' && focusedIndex === canDecorateIndex && (
+                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
+                    <p className="text-lg font-semibold mb-4 text-center">
+                        Are you ready to dress your friend gingerbread? 🎄🍪
+                    </p>
+                    <button
+                        className="block mx-auto bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+                        onClick={handleGetDecorated}
+                        disabled={canDecorateIndex !== focusedIndex}
+                    >
+                        Yes, Let's Go! 🌟
+                    </button>
                 </div>
             )}
+
+
+            {selectedMode === 'choosePos' && (
+                <div className="absolute bottom-0 top-48 left-4 z-10">
+                    <p className="text-lg font-semibold mb-4 text-left">
+                        Choose your position 🎨
+                    </p>
+                    <div className="flex flex-col justify-center items-center">
+                        {parts.map((part, index) => {
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => handleSelectPart(part)}
+                                    className="p-2 m-2 bg-blue-500 text-white w-28 rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+                                >
+                                    {part}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
 
             {selectedMode === 'chooseDress' && selectedPart && (
                 <div className="absolute bottom-0 left-4 z-10">

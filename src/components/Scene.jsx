@@ -3,10 +3,12 @@ import { DRACOLoader } from 'three-stdlib';
 import { TextureLoader } from 'three';
 import { GLTFLoader } from 'three-stdlib';
 import { useRef, useEffect } from 'react';
+import * as THREE from 'three';
 
 export const Scene = () => {
     const sceneTexture = useLoader(TextureLoader, '/scene/scene.jpg');
     sceneTexture.flipY = false;
+    sceneTexture.colorSpace = THREE.SRGBColorSpace
 
     const sceneModel = useLoader(
         GLTFLoader,

@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TextureLoader } from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { toast, Toaster } from 'react-hot-toast';
+import * as THREE from 'three';
 
 function GingerbreadModel({ ggbType }) {
     const modelRef = useRef();
@@ -14,6 +15,7 @@ function GingerbreadModel({ ggbType }) {
         console.log('loaded');
     });
     texture.flipY = false;
+    texture.colorSpace = THREE.SRGBColorSpace
 
     const model = useLoader(
         GLTFLoader,

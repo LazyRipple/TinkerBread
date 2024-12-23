@@ -1,7 +1,7 @@
 import { useLoader } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { DRACOLoader, GLTFLoader } from "three-stdlib";
-import { TextureLoader } from 'three';
+import { TextureLoader, SRGBColorSpace } from 'three';
 
 export const Gingerbread = ({ instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) => {
     // Loading the textures for gingerbread model and accessory
@@ -9,6 +9,7 @@ export const Gingerbread = ({ instance, index, handleClick, focusedIndex, tempAc
         console.log('Texture loaded');
     });
     modelTexture.flipY = false;
+    modelTexture.colorSpace = SRGBColorSpace;
 
     // Loading the gingerbread model
     const model = useLoader(GLTFLoader, '/gingerbread/ggb1.glb', (loader) => {
@@ -58,6 +59,7 @@ export const Gingerbread = ({ instance, index, handleClick, focusedIndex, tempAc
             console.log(`head texture of ${index} loaded`);
         });
         headAccessoryTexture.flipY = false;
+        headAccessoryTexture.colorSpace = SRGBColorSpace;
     }
 
     // load head model 
@@ -76,6 +78,7 @@ export const Gingerbread = ({ instance, index, handleClick, focusedIndex, tempAc
             console.log(`head texture of ${index} loaded`);
         });
         leftAccessoryTexture.flipY = false;
+        leftAccessoryTexture.colorSpace = SRGBColorSpace;
     }
 
     // load right model 
@@ -94,6 +97,7 @@ export const Gingerbread = ({ instance, index, handleClick, focusedIndex, tempAc
             console.log(`head texture of ${index} loaded`);
         });
         rightAccessoryTexture.flipY = false;
+        rightAccessoryTexture.colorSpace = SRGBColorSpace
     }
 
     useEffect(() => {
