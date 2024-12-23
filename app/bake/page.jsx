@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -58,15 +58,15 @@ function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
 
 function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) {
     // Loading the textures for gingerbread model and accessory
-    const modelTexture = useLoader(TextureLoader, './gingerbread/ggb1.jpg', () => {
+    const modelTexture = useLoader(TextureLoader, '/gingerbread/ggb1.jpg', () => {
         console.log('Texture loaded');
     });
     modelTexture.flipY = false;
 
     // Loading the gingerbread model
-    const model = useLoader(GLTFLoader, './gingerbread/ggb1.glb', (loader) => {
+    const model = useLoader(GLTFLoader, '/gingerbread/ggb1.glb', (loader) => {
         const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('./draco/');
+        dracoLoader.setDecoderPath('/draco/');
         loader.setDRACOLoader(dracoLoader);
     });
 
@@ -101,13 +101,13 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
     let headAccessoryTexture = null;
 
     if (headAccessory) {
-        headAccessoryModel = useLoader(GLTFLoader, `./accessory/${headAccessory}.glb`, (loader) => {
+        headAccessoryModel = useLoader(GLTFLoader, `/accessory/${headAccessory}.glb`, (loader) => {
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('./draco/');
+            dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         });
 
-        headAccessoryTexture = useLoader(TextureLoader, `./accessory/${headAccessory}.jpg`, () => {
+        headAccessoryTexture = useLoader(TextureLoader, `/accessory/${headAccessory}.jpg`, () => {
             console.log(`head texture of ${index} loaded`);
         });
         headAccessoryTexture.flipY = false;
@@ -119,13 +119,13 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
     let leftAccessoryTexture = null;
 
     if (leftAccessory) {
-        leftAccessoryModel = useLoader(GLTFLoader, `./accessory/${leftAccessory}.glb`, (loader) => {
+        leftAccessoryModel = useLoader(GLTFLoader, `/accessory/${leftAccessory}.glb`, (loader) => {
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('./draco/');
+            dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         });
 
-        leftAccessoryTexture = useLoader(TextureLoader, `./accessory/${leftAccessory}.jpg`, () => {
+        leftAccessoryTexture = useLoader(TextureLoader, `/accessory/${leftAccessory}.jpg`, () => {
             console.log(`head texture of ${index} loaded`);
         });
         leftAccessoryTexture.flipY = false;
@@ -137,13 +137,13 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
     let rightAccessoryTexture = null;
 
     if (rightAccessory) {
-        rightAccessoryModel = useLoader(GLTFLoader, `./accessory/${rightAccessory}.glb`, (loader) => {
+        rightAccessoryModel = useLoader(GLTFLoader, `/accessory/${rightAccessory}.glb`, (loader) => {
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('./draco/');
+            dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         });
 
-        rightAccessoryTexture = useLoader(TextureLoader, `./accessory/${rightAccessory}.jpg`, () => {
+        rightAccessoryTexture = useLoader(TextureLoader, `/accessory/${rightAccessory}.jpg`, () => {
             console.log(`head texture of ${index} loaded`);
         });
         rightAccessoryTexture.flipY = false;
@@ -226,15 +226,15 @@ function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex,
 };
 
 function Scene() {
-    const sceneTexture = useLoader(TextureLoader, './scene/scene.jpg');
+    const sceneTexture = useLoader(TextureLoader, '/scene/scene.jpg');
     sceneTexture.flipY = false;
 
     const sceneModel = useLoader(
         GLTFLoader,
-        './scene/scene.glb',
+        '/scene/scene.glb',
         (loader) => {
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('./draco/');
+            dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         }
     );
