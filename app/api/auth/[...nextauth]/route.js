@@ -82,9 +82,9 @@ export const authOptions = {
         return `/bake/me`
       }
       if (url.startsWith('/')) {
-        return `${NEXT_PUBLIC_BASEURL}${url}`
+        return `'http://localhost:3000'/${url}`
       }
-      return 'http://localhost:3000' // TODO : chnage this when production
+      return 'http://localhost:3000' // TODO : change this when production
     },
   },
 }
