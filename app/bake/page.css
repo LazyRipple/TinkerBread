@@ -1,0 +1,4 @@
+.gradient-container {
+  /* animation: gradientAnimation 10s infinite ease-in-out; Adjust duration */
+  background: linear-gradient(to bottom, #0f132c, #374b82);
+}
