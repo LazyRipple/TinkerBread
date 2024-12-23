@@ -1,53 +1,7 @@
 "use client"
-import { useState, useEffect, useRef } from "react";
-import { Canvas, useLoader } from "@react-three/fiber";
-import { OrbitControls, Stage } from "@react-three/drei";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { TextureLoader } from 'three';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { useState} from "react";
 import { toast, Toaster } from 'react-hot-toast';
-
-function GingerbreadModel({ ggbType }) {
-    const modelRef = useRef();
-
-    const texture = useLoader(TextureLoader, `./gingerbread/${ggbType}.jpg`, () => {
-        console.log('loaded');
-    });
-    texture.flipY = false;
-
-    const model = useLoader(
-        GLTFLoader,
-        `./gingerbread/${ggbType}.glb`,
-        (loader) => {
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('./draco/');
-            loader.setDRACOLoader(dracoLoader);
-        }
-    );
-
-    useEffect(() => {
-        if (model && model.scene) {
-            model.scene.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.map = texture;
-                    child.material.needsUpdate = true;
-                }
-            });
-
-            modelRef.current = model.scene;
-        }
-    }, [model, texture]);
-
-    return (
-        <Canvas className="h-64 mt-4">
-            <ambientLight intensity={0.2} />
-            <Stage intensity={0.1} environment="studio">
-                <primitive object={model.scene} rotation={[Math.PI / 2, 0, 0]} />
-            </Stage>
-            <OrbitControls />
-        </Canvas>
-    );
-}
+import GingerbreadModel from "../signup/gingerbreadModel";
 
 export default function LoginSuccess() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -100,7 +54,7 @@ export default function LoginSuccess() {
                 placeholder="Enter your name"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
-                className="mt-4 w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className="mt-4 w-full rounded-md bg-gray-100 px-4 py-2 text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             />
         </>,
         "Now, let’s get cooking.",
@@ -109,7 +63,7 @@ export default function LoginSuccess() {
             <div className="relative h-72 py-0">
                 <button
                     onClick={handlePrevModel}
-                    className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 px-4 py-2 bg-red-200 rounded-full shadow hover:bg-red-300"
+                    className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-red-200 px-4 py-2 shadow hover:bg-red-300"
                 >
                     {"<"}
                 </button>
@@ -118,7 +72,7 @@ export default function LoginSuccess() {
                 />
                 <button
                     onClick={handleNextModel}
-                    className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 px-4 py-2 bg-green-200 rounded-full shadow hover:bg-green-300"
+                    className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full bg-green-200 px-4 py-2 shadow hover:bg-green-300"
                 >
                     {">"}
                 </button>
@@ -126,7 +80,7 @@ export default function LoginSuccess() {
             <div className="mt-4 text-sm font-medium">{ggbType[currentModelIndex]}</div>
             <button
                 onClick={handleConfirmModel}
-                className="mt-4 px-6 py-3 bg-green-800 text-white font-medium rounded-lg shadow-lg transform transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300"
+                className="mt-4 rounded-lg bg-green-800 px-6 py-3 font-medium text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300"
             >
                 Confirm
             </button>
@@ -140,7 +94,7 @@ export default function LoginSuccess() {
                 value={thankYouMessage}
                 onChange={(e) => setThankYouMessage(e.target.value)}
                 placeholder="Write your thank-you message"
-                className="mt-4 w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-pink-300"
+                className="mt-4 w-full rounded-md bg-gray-100 px-4 py-2 text-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-pink-300"
             ></textarea>
         </>,
         "All set! Get ready to decorate and share the holiday magic. 🎄✨",
@@ -148,9 +102,9 @@ export default function LoginSuccess() {
 
     return (
         <>
-            <div className="gradient-container relative flex flex-col items-center justify-center h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-red-900 text-blue-800 shadow-lg p-8">
+            <div className="gradient-container relative flex size-full min-h-screen flex-col items-center justify-center gap-6 bg-red-900 p-8 text-blue-800 shadow-lg md:mx-auto md:max-w-[25rem]">
                 <Toaster />
-                <div className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg text-center">
+                <div className="w-full max-w-lg rounded-lg bg-white p-8 text-center shadow-lg">
                     <div className="text-lg font-semibold">
                         {dialogues[currentStep]}
                     </div>
@@ -158,7 +112,7 @@ export default function LoginSuccess() {
                     {currentStep != 3 &&
                         <button
                             onClick={handleNext}
-                            className="mt-6 px-6 py-3 bg-green-800 text-white font-medium rounded-lg shadow-lg transform transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300"
+                            className="mt-6 rounded-lg bg-green-800 px-6 py-3 font-medium text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300"
                         >
                             {currentStep < dialogues.length - 1 ? "Next ✨" : "Let’s Start 🎄"}
                         </button>}

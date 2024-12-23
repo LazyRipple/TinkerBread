@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react';
+import ChatDialog from './chatDialog';
 
 export default function Page() {
   const session = new useSession()
@@ -42,16 +43,16 @@ export default function Page() {
           throw new Error(res.error)
         }
                 
-        // signIn('google')
+        signIn('google')
       } catch (error) {      
         toast.error(error.message)
       }
     }
   return (
-    <>
-    <Toaster />
-      <div className='mx-auto flex w-full flex-col  items-center space-y-4 py-10'>
-        <p>This is Signup pages</p>
+     <div className='mx-auto flex w-full flex-col  items-center'>
+      <div className='absolute'><Toaster /></div>
+      <ChatDialog username={username} setUsername={setUsername}
+      thxmessage={thxmessage} setThxMessage={setThxMessage} GGBType={GGBType} setGGBType={setGGBType} email={email}/>
 
       <form
         onSubmit={handleSubmit}
@@ -94,8 +95,7 @@ export default function Page() {
           Save Change
         </button>
       </form>
-      </div>
-    </>
+    </div>
   )
 }
 
