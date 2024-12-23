@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react';
-import jwt from 'jsonwebtoken';
 
 export default function Page() {
   const session = new useSession()
@@ -23,24 +22,26 @@ export default function Page() {
           throw new Error("please fill out form")
         }        
 
-        const SECRET_KEY = process.env.JWT_SECRET
-        console.log(process.env.JWT_SECRET);
+        const payload = {
+          username,
+          email,
+          thanks_message: thxmessage,
+          GGB_type: GGBType,
+        }
         
-        const token = jwt.sign({
-          username, email, thanks_message:thxmessage, GGB_type : GGBType
-        }, SECRET_KEY, { expiresIn: '10m' })
-
         const res = await (await fetch(`api/auth/signup`, {
           method: "POST",
-          body: JSON.stringify({ token }),
+           headers: {
+            'Content-Type': 'application/json',
+            Origin: window.location.origin,
+          },
+          body: JSON.stringify({ payload }),
         })).json()
         
         if(res.message == 'failed'){
           throw new Error(res.error)
         }
-        
-        console.log(res);
-        
+                
         // signIn('google')
       } catch (error) {      
         toast.error(error.message)
