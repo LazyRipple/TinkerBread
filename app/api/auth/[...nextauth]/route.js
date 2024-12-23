@@ -79,12 +79,12 @@ export const authOptions = {
     },
     redirect: async ({ url, NEXT_PUBLIC_BASEURL, user, session }) => {
       if (user?.link_id) {
-        return `/bake/me` // Custom page if user exists
+        return `/bake/me`
       }
-      // if (url.startsWith('/')) {
-      //   return `${NEXT_PUBLIC_BASEURL}${url}` // Allow valid internal routes
-      // }
-      return NEXT_PUBLIC_BASEURL
+      if (url.startsWith('/')) {
+        return `${NEXT_PUBLIC_BASEURL}${url}`
+      }
+      return 'http://localhost:3000' // TODO : chnage this when production
     },
   },
 }
