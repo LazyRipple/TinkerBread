@@ -156,6 +156,12 @@ export function BakePage({ friend_link_id }) {
     'right hand': ['candy2', 'christmas_tree', 'green_present'],
   }
 
+  const dressLabel = {
+    'christmas_hat': 'christmas hat', 'reindeer': 'reindeer', 'earpuff': 'earpuff',
+    'candy': 'candy cane', 'red_present': 'red present', 'cup': 'cup',
+    'candy2': 'candy', 'christmas_tree': 'christmas tree', 'green_present': 'green present'
+  }
+
   const recalculateIndex = () => {
     for (const part of Object.values(partsInGingerbread[canDecorateIndex])) {
       if (part === null) return
@@ -328,13 +334,12 @@ export function BakePage({ friend_link_id }) {
               <button
                 key={dress}
                 onClick={() => handleSelectDress(dress)}
-                className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${
-                  dress === selectedDress
+                className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${dress === selectedDress
                     ? 'bg-yellow-500 text-white hover:bg-yellow-600'
                     : 'bg-green-700 text-white hover:bg-green-800'
-                }`}
+                  }`}
               >
-                {dress}
+                {dressLabel[dress]}
               </button>
             ))}
           </div>
