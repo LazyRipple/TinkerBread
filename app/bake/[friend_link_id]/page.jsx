@@ -105,6 +105,7 @@ export  function BakePage({friend_link_id}) {
 
     const handleSendMessage = () => {
         setSelectedMode('thankyou');
+        setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
 
         // save to database
         const itemName = selectedDress;

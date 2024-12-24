@@ -1,6 +1,6 @@
 'use client'
 
-import React,{ useState } from 'react'
+import React,{ useState, useEffect } from 'react'
 import '@/style/bake.css';
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
@@ -50,18 +50,18 @@ export function PageContent() {
     const [focusedIndex, setFocusedIndex] = useState(null);
 
     const handleClick = (index) => {
-        console.log('Clicked index:', index);
-        console.log('Current mode before click:', selectedMode);
+        // console.log('Clicked index:', index);
+        // console.log('Current mode before click:', selectedMode);
 
         if (selectedMode !== 'inspect') {
-            console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
+            // console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
             return;
         }
 
         setFocusedIndex(index);
         setSelectedMode('view');
 
-        console.log(`Gingerbread ${index} clicked and mode changed to view`);
+        // console.log(`Gingerbread ${index} clicked and mode changed to view`);
     };
 
     const handleBack = () => {
@@ -74,47 +74,56 @@ export function PageContent() {
     };
 
     // test data
-    const data = {
-        'ggbType': 'ggb1',
-        'thanks_message': "thank you! merry christmas!!",
-        'items': [
-            { 'ggbId': 0, 'item': { 'head': { 'item': 'christmas_hat', 'name': 'Neen', 'message': "merry christmas!sawesfdsafsssssssssssssssssssssssssssssssssssssssssssssssss" }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 1, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 2, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 3, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 4, 'item': { 'head': { 'item': 'reindeer', 'name': 'beam', 'message': 'so sleepy' }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 5, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 6, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 7, 'item': { 'head': { 'item': 'earpuff', 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-            { 'ggbId': 8, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } }
-        ]
-    };
+    // const data = {
+    //     'ggbType': 'ggb1',
+    //     'thanks_message': "thank you! merry christmas!!",
+    //     'items': [
+    //         { 'ggbId': 0, 'item': { 'head': { 'item': 'christmas_hat', 'name': 'Neen', 'message': "merry christmas!sawesfdsafsssssssssssssssssssssssssssssssssssssssssssssssss" }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 1, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 2, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 3, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 4, 'item': { 'head': { 'item': 'reindeer', 'name': 'beam', 'message': 'so sleepy' }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 5, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 6, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 7, 'item': { 'head': { 'item': 'earpuff', 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+    //         { 'ggbId': 8, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } }
+    //     ]
+    // };
 
-    const ggbType = data.ggbType;
 
     // choose parts
     const [currentPage, setCurrentPage] = useState(0);
     const gingerbreadsPerPage = 3
 
-    const getParts = (page) => {
+    let getParts = (page) => {
         const startIndex = page * gingerbreadsPerPage;
         const endIndex = startIndex + gingerbreadsPerPage;
-        const selectedItems = data.items.slice(startIndex, endIndex);
-
-        console.log(selectedItems);
-
+        const selectedItems = []
 
         const initialParts = [];
         selectedItems.forEach((item) => {
             initialParts.push(item.item);
         });
 
-        console.log('this is initial part');
-        console.log(initialParts);
-
-
         return initialParts;
     };
+    
+    useEffect(()=>{
+        if(GGBs == null) return
+        getParts = (page) => {
+            const startIndex = page * gingerbreadsPerPage;
+            const endIndex = startIndex + gingerbreadsPerPage;
+            const selectedItems = GGBs.items.slice(startIndex, endIndex);
+
+            const initialParts = [];
+            selectedItems.forEach((item) => {
+                initialParts.push(item.item);
+            });
+
+            return initialParts;
+        };
+        setPartsInGingerBread(getParts(currentPage))
+    }, [GGBs])
 
     const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)); // parts that already been saved
 
@@ -137,7 +146,7 @@ export function PageContent() {
         setShowMessage(false);
         setCurrentPage((prevPage) => {
             const newPage = prevPage + 1;
-            if (newPage * gingerbreadsPerPage < data.items.length) {
+            if (newPage * gingerbreadsPerPage < GGBs.items.length) {
                 setPartsInGingerBread(getParts(newPage));
                 return newPage;
             }
@@ -146,7 +155,12 @@ export function PageContent() {
     };
 
     const hasPrev = currentPage > 0;
-    const hasNext = currentPage < Math.ceil(data.items.length / gingerbreadsPerPage) - 1;
+    const [hasNext, setHasNext] = useState(false)
+        useEffect(()=>{
+            if(GGBs == null) return
+            const next = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1;
+            setHasNext(next)
+        }, [GGBs])
 
     const canDisplayPrev = hasPrev && (selectedMode === 'inspect');
     const canDisplayNext = hasNext && (selectedMode === 'inspect');
@@ -180,7 +194,7 @@ export function PageContent() {
                 {modelInstances.map((instance, index) => (
                     <Gingerbread
                         key={index}
-                        ggbType={ggbType}
+                        ggbType={ GGBs.ggbType}
                         instance={instance}
                         index={index}
                         handleClick={handleClick}

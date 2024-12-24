@@ -18,7 +18,6 @@ export const BakeSessionProvider = ({ children }) => {
           
           const GGBRes = await fetch(`/api/gingerbreads/${userData.data.GGBs_id}/${session?.user?.link_id}`)
           const GGBData = await GGBRes.json()
-          console.log(GGBData);
           
           const GGBs = GGBData?.data
           const prepData = [
@@ -39,10 +38,7 @@ export const BakeSessionProvider = ({ children }) => {
               { ggbId: GGBs.GGB3.id, item: { head:  GGBs.GGB3.head2, 'left hand': GGBs.GGB3.left2_hand, 'right hand': GGBs.GGB3.right2_hand } },
               { ggbId: GGBs.GGB3.id, item: { head:  GGBs.GGB3.head3, 'left hand': GGBs.GGB3.left3_hand, 'right hand': GGBs.GGB3.right3_hand } },
             ])
-          }
-          console.log("==========");
-          console.log(prepData);
-          
+          }          
           
           setGGBs({
             ggbType : GGBs.GGB_type,

@@ -19,7 +19,36 @@ export const BakeSessionProvider = ({ children }) => {
             const GGBRes = await fetch(`/api/gingerbreads/${userData.data.GGBs_id}/me`)
             const GGBData = await GGBRes.json()
             
-            setGGBs(GGBData?.data ?? null)
+            const GGBs = GGBData?.data
+          const prepData = [
+            { ggbId: GGBs.GGB1.id, item: { head:  GGBs.GGB1.head1, 'left hand': GGBs.GGB1.left1_hand, 'right hand': GGBs.GGB1.right1_hand } },
+            { ggbId: GGBs.GGB1.id, item: { head:  GGBs.GGB1.head2, 'left hand': GGBs.GGB1.left2_hand, 'right hand': GGBs.GGB1.right2_hand } },
+            { ggbId: GGBs.GGB1.id, item: { head:  GGBs.GGB1.head3, 'left hand': GGBs.GGB1.left3_hand, 'right hand': GGBs.GGB1.right3_hand } },
+          ]
+          if( GGBs.GGB2 != 'none'){
+            prepData.concat([
+              { ggbId: GGBs.GGB2.id, item: { head:  GGBs.GGB2.head1, 'left hand': GGBs.GGB2.left1_hand, 'right hand': GGBs.GGB2.right1_hand } },
+              { ggbId: GGBs.GGB2.id, item: { head:  GGBs.GGB2.head2, 'left hand': GGBs.GGB2.left2_hand, 'right hand': GGBs.GGB2.right2_hand } },
+              { ggbId: GGBs.GGB2.id, item: { head:  GGBs.GGB2.head3, 'left hand': GGBs.GGB2.left3_hand, 'right hand': GGBs.GGB2.right3_hand } },
+            ])
+          }
+          if( GGBs.GGB3 != 'none'){
+            prepData.concat([
+               { ggbId: GGBs.GGB3.id, item: { head:  GGBs.GGB3.head1, 'left hand': GGBs.GGB3.left1_hand, 'right hand': GGBs.GGB3.right1_hand } },
+              { ggbId: GGBs.GGB3.id, item: { head:  GGBs.GGB3.head2, 'left hand': GGBs.GGB3.left2_hand, 'right hand': GGBs.GGB3.right2_hand } },
+              { ggbId: GGBs.GGB3.id, item: { head:  GGBs.GGB3.head3, 'left hand': GGBs.GGB3.left3_hand, 'right hand': GGBs.GGB3.right3_hand } },
+            ])
+          }          
+          
+          setGGBs({
+            ggbType : GGBs.GGB_type,
+            GGBs_id : GGBs.GGBs_id,
+            thanks_message : GGBs.thanks_message,
+            GGBs_id : GGBs.GGBs_id,
+            is_decorate : GGBs.is_decorate,
+            owner : GGBs.owner,
+            items:prepData
+          })       
             setLoadStatus('loaded')
           }
           
