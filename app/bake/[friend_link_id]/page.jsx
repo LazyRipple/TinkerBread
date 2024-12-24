@@ -105,8 +105,6 @@ export  function BakePage({friend_link_id}) {
 
     const handleSendMessage = () => {
         setSelectedMode('thankyou');
-        setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
-
         // save to database
         const itemName = selectedDress;
         const tempL = selectedPart.split(" ")
@@ -115,6 +113,9 @@ export  function BakePage({friend_link_id}) {
         const res = handdleAddItem(session, id, GGBs.GGBs_id, itemName, position, message )   
         if(res=='success')    {
             setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
+            GGBs.is_decorate = "T"
+        }else{
+            setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
         }
     };
 
@@ -274,7 +275,7 @@ export  function BakePage({friend_link_id}) {
                     <img src='/icon/back.webp' alt="Back" className='size-full' />
                 </button>}
 
-            {selectedMode === 'view' && isThisCanDecorate(focusedIndex) && (
+            {selectedMode === 'view' && GGBs.is_decorate == "F" && isThisCanDecorate(focusedIndex) && (
                 <div className="absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg">
                     <p className="mb-4 text-center text-lg font-semibold">
                         Ready to help dress up your friend&apos;s gingerbread? 🎄🍪

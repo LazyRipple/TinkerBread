@@ -104,7 +104,9 @@ export default function ChatDialog({
                     {">"}
                 </button>
             </div>
-            <div className="mt-4 text-sm font-medium">{ggbType[currentModelIndex]}</div>
+            <div className="mt-4 text-sm font-medium">{
+                ggbType[currentModelIndex] == "ggb1" ? "Joy" : ggbType[currentModelIndex] == "ggb2" ? "Adam" : ggbType[currentModelIndex] == "ggb3" ? "Eve" :  "Holly"
+                }</div>
             <button
                 onClick={handleConfirmModel}
                 className="mt-4 rounded-lg bg-green-800 px-6 py-3 font-medium text-white shadow-lg transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300"
@@ -125,6 +127,7 @@ export default function ChatDialog({
             ></textarea>
         </>,
         "All set! Get ready to decorate and share the holiday magic. 🎄✨",
+        "Please Login with your email",
     ];
 
     return (

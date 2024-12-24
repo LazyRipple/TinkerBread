@@ -5,14 +5,18 @@ import { OrbitControls, Stage } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { TextureLoader } from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { SRGBColorSpace } from 'three';
 
 export default function GingerbreadModel({ ggbType }) {
+
     const modelRef = useRef();
 
     const texture = useLoader(TextureLoader, `./gingerbread/${ggbType}.jpg`, () => {
         console.log('loaded');
     });
     texture.flipY = false;
+    texture.colorSpace = SRGBColorSpace;
+
 
     const model = useLoader(
         GLTFLoader,
