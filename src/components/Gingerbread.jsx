@@ -3,16 +3,21 @@ import { useEffect, useRef } from "react";
 import { DRACOLoader, GLTFLoader } from "three-stdlib";
 import { TextureLoader, SRGBColorSpace } from 'three';
 
-export const Gingerbread = ({ instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) => {
+export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) => {
+
+    console.log('temp access');
+
+    console.log(tempAccessoryOfThis);
+
     // Loading the textures for gingerbread model and accessory
-    const modelTexture = useLoader(TextureLoader, '/gingerbread/ggb1.jpg', () => {
+    const modelTexture = useLoader(TextureLoader, `/gingerbread/${ggbType}.jpg`, () => {
         console.log('Texture loaded');
     });
     modelTexture.flipY = false;
     modelTexture.colorSpace = SRGBColorSpace;
 
     // Loading the gingerbread model
-    const model = useLoader(GLTFLoader, '/gingerbread/ggb1.glb', (loader) => {
+    const model = useLoader(GLTFLoader, `/gingerbread/${ggbType}.glb`, (loader) => {
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath('/draco/');
         loader.setDRACOLoader(dracoLoader);

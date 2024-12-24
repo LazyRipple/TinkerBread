@@ -95,18 +95,56 @@ export default function BakePage() {
         setMessage(event.target.value);
     };
 
+    // test data
+    const data = {
+        'ggbType': 'ggb1',
+        'thanks_message': "thank you! merry christmas!!",
+        'items': [
+            { 'ggbId': 0, 'item': { 'head': 'christmas_hat', 'left hand': null, 'right hand': null } },
+            { 'ggbId': 1, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 2, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 3, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 4, 'item': { 'head': 'reindeer', 'left hand': null, 'right hand': null } },
+            { 'ggbId': 5, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 6, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 7, 'item': { 'head': 'earpuff', 'left hand': null, 'right hand': null } },
+            { 'ggbId': 8, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+        ]
+    }
+
+    // load thank you message
+    const thankYouMessage = data.thanks_message;
+    const ggbType = data.ggbType;
+
     // choose parts
+    const [currentPage, setCurrentPage] = useState(0);
+    const gingerbreadsPerPage = 3
+
+    const getParts = (page) => {
+        const startIndex = page * gingerbreadsPerPage;
+        const endIndex = startIndex + gingerbreadsPerPage;
+        const selectedItems = data.items.slice(startIndex, endIndex);
+
+        console.log(selectedItems);
+
+
+        const initialParts = [];
+        selectedItems.forEach((item) => {
+            initialParts.push(item.item);
+        });
+
+        console.log('this is initial part');
+        console.log(initialParts);
+
+
+        return initialParts;
+    };
+
+
     const parts = ['head', 'left hand', 'right hand']
-    const [partsInGingerbread, setPartsInGingerBread] = useState({ // parts that already been saved
-        0: { 'head': null, 'left hand': null, 'right hand': null },
-        1: { 'head': null, 'left hand': null, 'right hand': null },
-        2: { 'head': null, 'left hand': null, 'right hand': null },
-    });
-    const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState({
-        0: { 'head': null, 'left hand': null, 'right hand': null },
-        1: { 'head': null, 'left hand': null, 'right hand': null },
-        2: { 'head': null, 'left hand': null, 'right hand': null },
-    });
+    const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)); // parts that already been saved
+    const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState(JSON.parse(JSON.stringify(partsInGingerbread)));
+
     const [selectedPart, setSelectedPart] = useState(null);
     const [selectedDress, setSelectedDress] = useState(null);
     const [message, setMessage] = useState('');
@@ -129,7 +167,32 @@ export default function BakePage() {
         return partsInGingerbread[focusedIndex][part] !== null;
     }
 
-    const thankYouMessage = "thank you! merry christmas!!"
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => {
+            if (prevPage > 0) {
+                const newPage = prevPage - 1;
+                setPartsInGingerBread(getParts(newPage));
+                setTempPartsInGingerBread(getParts(newPage));
+                return newPage;
+            }
+            return prevPage;
+        });
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prevPage) => {
+            const newPage = prevPage + 1;
+            if (newPage * gingerbreadsPerPage < data.items.length) {
+                setPartsInGingerBread(getParts(newPage));
+                setTempPartsInGingerBread(getParts(newPage));
+                return newPage;
+            }
+            return prevPage;
+        });
+    };
+
+    const hasPrev = currentPage > 0;
+    const hasNext = currentPage < Math.ceil(data.items.length / gingerbreadsPerPage) - 1;
 
 
     return (
@@ -143,6 +206,7 @@ export default function BakePage() {
                 {modelInstances.map((instance, index) => (
                     <Gingerbread
                         key={index}
+                        ggbType={ggbType}
                         instance={instance}
                         index={index}
                         handleClick={handleClick}
@@ -283,6 +347,22 @@ export default function BakePage() {
                     </button>
                 </div>
             )}
+
+            {/* Navigation arrows */}
+            <div className="flex justify-between mt-4 w-1/2">
+                {hasPrev && <button
+                    onClick={handlePrev}
+                    className={`p-2 rounded-fullbg-blue-500 hover:bg-blue-700 text-white`}
+                >
+                    Prev
+                </button>}
+                {hasNext && <button
+                    onClick={handleNext}
+                    className={`p-2 rounded-fullbg-blue-500 hover:bg-blue-700 text-white`}
+                >
+                    Next
+                </button>}
+            </div>
 
         </div >
     );
