@@ -1,30 +1,30 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { Howl } from 'howler';
+'use client'
+import { useEffect, useState } from 'react'
+import { Howl } from 'howler'
 
 const MusicPlayer = () => {
-    const [audioLoaded, setAudioLoaded] = useState(false);
+  const [audioLoaded, setAudioLoaded] = useState(false)
 
-    useEffect(() => {
-        const audio = new Howl({
-            src: ['/bgm.mp3'],
-            loop: true,
-            volume: 0.05,
-        });
+  useEffect(() => {
+    const audio = new Howl({
+      src: ['/bgm.mp3'],
+      loop: true,
+      volume: 0.02,
+    })
 
-        audio.play();
-        setAudioLoaded(true);
+    audio.play()
+    setAudioLoaded(true)
 
-        return () => {
-            audio.stop();
-        };
-    }, []);
-
-    if (!audioLoaded) {
-        return <div>Loading Music...</div>;
+    return () => {
+      audio.stop()
     }
+  }, [])
 
-    return null;
-};
+  if (!audioLoaded) {
+    return <></>
+  }
 
-export default MusicPlayer;
+  return null
+}
+
+export default MusicPlayer
