@@ -200,7 +200,7 @@ export default function BakePage() {
     const canDisplayNext = hasNext && (selectedMode === 'inspect');
 
     return (
-        <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
+        <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6  bg-blue-50 text-blue-800 shadow-lg">
             <Canvas>
                 <ambientLight intensity={4.5} />
                 {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}

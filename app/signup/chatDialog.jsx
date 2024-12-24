@@ -129,7 +129,7 @@ export default function ChatDialog({
 
     return (
         <>
-            <div className="gradient-container relative flex size-full min-h-screen flex-col items-center justify-center gap-6 bg-red-900 p-8 text-blue-800 shadow-lg md:mx-auto md:max-w-[25rem]">
+            <div className="gradient-container relative flex size-full min-h-screen flex-col items-center justify-center gap-6 bg-red-900 p-8 text-blue-800 shadow-lg ">
                 <Toaster />
                 <div className="w-full max-w-lg rounded-lg bg-white p-8 text-center shadow-lg">
                     <div className="text-lg font-semibold">

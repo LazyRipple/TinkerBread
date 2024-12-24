@@ -150,7 +150,7 @@ export default function LoginSuccess() {
 
     return (
         <>
-            <div className="gradient-container relative flex flex-col items-center justify-center h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-red-900 text-blue-800 shadow-lg p-8">
+            <div className="gradient-container relative flex flex-col items-center justify-center h-full min-h-screen w-full gap-6  bg-red-900 text-blue-800 shadow-lg p-8">
                 <Toaster />
                 <div className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg text-center">
                     <div className="text-lg font-semibold">

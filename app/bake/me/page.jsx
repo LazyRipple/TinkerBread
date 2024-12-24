@@ -16,6 +16,7 @@ import { Scene } from '@/components/Scene.jsx';
 import { Gingerbread } from '@/components/GingerbreadMe.jsx';
 import { OrbitControls } from '@react-three/drei';
 import { Arrow3D } from '@/components/Arrow';
+import Link from 'next/link';
 
 
 export default function Page() {
@@ -165,7 +166,7 @@ export function PageContent() {
     if (load_status == 'loading') return <Loading /> 
     if (!GGBs) return notFound()
     return (
-        <div className="gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50 text-blue-800 shadow-lg md:mx-auto md:max-w-[25rem]">
+        <div className="gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50 text-blue-800 shadow-lg">
           <Toaster />
           <p className="absolute top-16 z-30 w-full text-center font-bold text-white">{`${user?.username}'s TinkerBreads`}</p>
           
@@ -199,10 +200,12 @@ export function PageContent() {
 
             {/* Home */}
             {selectedMode === 'inspect' &&
+            <Link href="/" className='absolute'>
                 <button className="absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900"
                     onClick={handleBack}>
                     <img src='/icon/home.webp' alt="Home" className='size-full' />
-                </button>}
+                </button>
+              </Link>}
 
             {/* Back */}
             {selectedMode !== 'inspect' &&
@@ -242,6 +245,7 @@ export function PageContent() {
                 className="absolute right-4 top-4 rounded-xl border-2 border-white bg-red-800 px-4 py-2 text-white shadow-lg transition duration-300 hover:bg-[#FFD889] hover:text-red-800"
                 onClick={() => {
                    toast.success(`copied link: "${shareLink}"`)
+                   // TODO : change link on production
                   const link = `http://localhost:3000/bake/${shareLink}`
                     navigator.clipboard.writeText(link)
                 }}
