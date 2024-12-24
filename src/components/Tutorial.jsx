@@ -15,7 +15,7 @@ export function TutorialModal({ isVisible, onClose, tutorialPages }) {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="relative border-2 border-white bg-green-700 rounded-lg shadow-xl p-6 w-96">
+            <div className="relative border-2 border-white bg-green-700 rounded-2xl shadow-xl p-6 max-w-md w-[90%]">
                 {/* Close Button */}
                 <button
                     className="absolute top-4 right-4 text-white font-bold hover:text-red-700 focus:outline-none"
