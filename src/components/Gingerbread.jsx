@@ -5,10 +5,6 @@ import { TextureLoader, SRGBColorSpace } from 'three';
 
 export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) => {
 
-    console.log('temp access');
-
-    console.log(tempAccessoryOfThis);
-
     // Loading the textures for gingerbread model and accessory
     const modelTexture = useLoader(TextureLoader, `/gingerbread/${ggbType}.jpg`, () => {
         console.log('Texture loaded');

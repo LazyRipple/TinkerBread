@@ -49,6 +49,7 @@ export default function BakePage() {
         setSelectedPart(null);
         setMessage(null);
         setSelectedDress(null);
+        console.log(partsInGingerbread);
 
         setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
 
@@ -127,10 +128,17 @@ export default function BakePage() {
         const endIndex = startIndex + gingerbreadsPerPage;
         const selectedItems = data.items.slice(startIndex, endIndex);
 
+        console.log(selectedItems);
+
+
         const initialParts = [];
         selectedItems.forEach((item) => {
             initialParts.push(item.item);
         });
+
+        console.log('this is initial part');
+        console.log(initialParts);
+
 
         return initialParts;
     };
@@ -156,11 +164,6 @@ export default function BakePage() {
         }
         setCanDecorateIndex((prev) => prev + 1);
     };
-
-    const isThisCanDecorate = (index) => {
-        const tmp = currentPage * gingerbreadsPerPage + index;
-        return tmp === index;
-    }
 
 
     function isPartFull(part) {
@@ -232,125 +235,6 @@ export default function BakePage() {
                     onClick={handleBack}>
                     <img src='/icon/back.webp' alt="Back" className='back w-full h-full' />
                 </button>}
-
-            {selectedMode === 'view' && isThisCanDecorate(focusedIndex) && (
-                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
-                    <p className="text-lg font-semibold mb-4 text-center">
-                        Are you ready to dress your friend gingerbread? 🎄🍪
-                    </p>
-                    <button
-                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
-                        onClick={handleGetDecorated}
-                    >
-                        Yes, Let's Go! 🌟
-                    </button>
-                </div>
-            )}
-
-
-            {selectedMode === 'choosePos' && (
-                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-72">
-                    {/* Title */}
-                    <p className="text-lg font-semibold mb-4 text-center">
-                        Choose your position 🎨
-                    </p>
-
-                    {/* Position selection buttons */}
-                    <div className="flex flex-col justify-center items-center gap-2">
-                        {parts.map((part, index) => {
-                            return (
-                                !isPartFull(part) && (
-                                    <button
-                                        key={index}
-                                        onClick={() => handleSelectPart(part)}
-                                        className="p-2 bg-green-700 text-white w-full rounded-lg shadow-md hover:bg-green-800 transition duration-300"
-                                    >
-                                        {part}
-                                    </button>
-                                )
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
-
-
-            {selectedMode === 'chooseDress' && selectedPart && (
-                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
-                    {/* Title */}
-                    <div className="text-lg font-semibold mb-4 text-center">
-                        {`Choose an accessory 🎨`}
-                    </div>
-
-                    {/* Dress options */}
-                    <div className="flex flex-col justify-center gap-3 w-full items-center">
-                        {dressOptions[selectedPart].map((dress) => (
-                            <button
-                                key={dress}
-                                onClick={() => handleSelectDress(dress)}
-                                className={`p-2 w-full rounded-lg shadow-md transition duration-300 ${dress === selectedDress
-                                    ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                    : 'bg-green-700 text-white hover:bg-green-800'
-                                    }`}
-                            >
-                                {dress}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Confirm button */}
-                    <button
-                        className="mt-4 block mx-auto w-full bg-red-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-red-800 transition duration-300"
-                        onClick={handleConfirmDress}
-                    >
-                        Confirm 🌟
-                    </button>
-                </div>
-            )}
-
-
-            {selectedMode === 'message' && (
-                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
-                    {/* Title */}
-                    <div className="text-lg font-semibold text-center mb-3">
-                        Send some messages🎄
-                    </div>
-
-                    {/* Message input area */}
-                    <textarea
-                        className="w-full h-32 border-2 border-pink-900 rounded-md p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700 resize-none"
-                        value={message}
-                        onChange={(e) => {
-                            if (e.target.value.length <= 100) {
-                                handleInputChange(e);
-                            }
-                        }}
-                        placeholder="Type your message here..."
-                    />
-
-                    {/* Send button */}
-                    <button
-                        className="mt-4 block mx-auto bg-green-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
-                        onClick={handleSendMessage}
-                    >
-                        Send 🌟
-                    </button>
-                </div>
-            )}
-
-
-            {selectedMode === 'thankyou' && (
-                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
-                    <p className="text-lg font-semibold mb-4 text-center" >{thankYouMessage}
-                    </p>
-                    <button
-                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
-                        onClick={handleBack}
-                    >
-                        Back to kitchen
-                    </button>
-                </div>
-            )}
 
         </div >
     );
