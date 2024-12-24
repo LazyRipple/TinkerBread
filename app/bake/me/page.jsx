@@ -12,6 +12,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function Page() {
   const { GGBs_id } = useParams()
+  const shareLink = `http://localhost:3000/bake/${GGBs_id}`
 
 
   if (status === 'unauthenticated') {        
@@ -28,6 +29,7 @@ function PageContent({ GGBs_id }) {
   const { user, GGBs, load_status } = useSessionContext()
   const { data: session } = useSession()
   const [cooldown, setCooldown] = useState(0)
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,12 +42,13 @@ function PageContent({ GGBs_id }) {
 
   if (load_status == 'loading') return <Loading /> 
   if (!GGBs) return notFound()
-
+  
+  const shareLink = `${session.user.link_id}`
   return (
     <div className='flex w-full flex-col items-center justify-center space-y-4 pt-20'>
       <Toaster />
         <p>{`${user?.username}'s Gingerbreads Kitchen`}</p>
-        <BakeMeComponents />
+        <BakeMeComponents shareLink={shareLink} />
         <button
           onClick={() => {
             if(cooldown!=0){
