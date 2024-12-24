@@ -17,7 +17,7 @@ export default function BakePage() {
     ];
 
     // Mode state
-    const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view, choosePos, chooseDress, message, thankyou
+    const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view
     const [focusedIndex, setFocusedIndex] = useState(null);
 
     const handleClick = (index) => {
@@ -162,18 +162,25 @@ export default function BakePage() {
                 {canDisplayNext && <Arrow3D key={'next'} arrow={'next'} position={[6.3, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handleNext} />}
             </Canvas>
 
+            {/* Home */}
+            {selectedMode === 'inspect' &&
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
+                    onClick={handleBack}>
+                    <img src='/icon/home.webp' alt="Home" className='w-full h-full' />
+                </button>}
+
             {/* Back */}
             {selectedMode !== 'inspect' &&
-                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 text-white w-12 h-12 p-3 rounded-full shadow-lg hover:bg-red-900 transition duration-300"
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-[#FFD889] text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
                     onClick={handleBack}>
-                    <img src='/icon/back.webp' alt="Back" className='back w-full h-full' />
+                    <img src='/icon/back.webp' alt="Back" className='w-full h-full' />
                 </button>}
 
             {/* Friend's message */}
             {showMessage && (
-                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
+                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-red-800 p-5 rounded-xl shadow-lg w-80">
                     <button
-                        className="absolute top-2 right-2 text-pink-900 font-bold hover:text-red-500 transition duration-300"
+                        className="absolute top-2 right-2 text-red-800 font-bold hover:text-red-500 transition duration-300"
                         onClick={handleCloseMessage}
                     >
                         ×
@@ -187,6 +194,14 @@ export default function BakePage() {
                 </div>
             )}
 
+            <button
+                className="absolute top-4 right-4 border-2 border-white bg-red-800 hover:bg-[#FFD889] hover:text-red-800 text-white py-2 px-4 rounded-xl shadow-lg transition duration-300"
+                onClick={() => {
+                    alert('Link shared!');
+                }}
+            >
+                Share Link
+            </button>
 
         </div >
     );

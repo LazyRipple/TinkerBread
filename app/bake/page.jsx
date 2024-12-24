@@ -159,7 +159,7 @@ export default function BakePage() {
 
     const isThisCanDecorate = (index) => {
         const tmp = currentPage * gingerbreadsPerPage + index;
-        return tmp === index;
+        return tmp === canDecorateIndex;
     }
 
 
@@ -228,15 +228,15 @@ export default function BakePage() {
 
             {/* Back */}
             {selectedMode !== 'inspect' &&
-                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 text-white w-12 h-12 p-3 rounded-full shadow-lg hover:bg-red-900 transition duration-300"
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
                     onClick={handleBack}>
-                    <img src='/icon/back.webp' alt="Back" className='back w-full h-full' />
+                    <img src='/icon/back.webp' alt="Back" className='w-full h-full' />
                 </button>}
 
             {selectedMode === 'view' && isThisCanDecorate(focusedIndex) && (
                 <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
                     <p className="text-lg font-semibold mb-4 text-center">
-                        Are you ready to dress your friend gingerbread? 🎄🍪
+                        Ready to help dress up your friend's gingerbread? 🎄🍪
                     </p>
                     <button
                         className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"

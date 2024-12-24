@@ -2,18 +2,3 @@
   /* animation: gradientAnimation 10s infinite ease-in-out; Adjust duration */
   background: linear-gradient(to bottom, #0f132c, #374b82);
 }
-
-.back {
-  filter: invert(100%);
-}
-
-/* 3D Button effect */
-.btn-3d {
-  transform: perspective(400px) rotateX(12deg) rotateY(10deg);
-  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.1), 0px 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-.btn-3d:hover {
-  transform: perspective(400px) rotateX(2deg) rotateY(0deg);
-  box-shadow: 4px 8px 14px rgba(0, 0, 0, 0.1), 0px 4px 20px rgba(0, 0, 0, 0.2);
-}
