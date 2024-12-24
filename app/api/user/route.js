@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
+import authOptions from '../auth/[...nextauth]/authOption'
 const prisma = new PrismaClient()
 
 // API for update name and thanks message
