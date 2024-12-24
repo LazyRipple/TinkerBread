@@ -80,9 +80,9 @@ const authOptions = {
         return `/bake/me`
       }
       if (url.startsWith('/')) {
-        return `http://localhost:3000/${url}`
+        return `https://tinker-bread.vercel.app/${url}`
       }
-      return 'http://localhost:3000' // TODO : change this when production
+      return 'https://tinker-bread.vercel.app/' // TODO : change this when production
     },
   },
 }
