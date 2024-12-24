@@ -38,11 +38,11 @@ export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedInde
     // If model not loaded, return null
     if (!model || !model.scene) {
         return null;
-    }
-
-    const headAccessory = tempAccessoryOfThis[index]['head'] || null;
-    const leftAccessory = tempAccessoryOfThis[index]['left hand'] || null;
-    const rightAccessory = tempAccessoryOfThis[index]['right hand'] || null;
+    }    
+    
+    const headAccessory = tempAccessoryOfThis[index] != null ? tempAccessoryOfThis[index]['head'] : null;
+    const leftAccessory = tempAccessoryOfThis[index] != null ? tempAccessoryOfThis[index]['left hand'] : null;
+    const rightAccessory = tempAccessoryOfThis[index]!= null ? tempAccessoryOfThis[index]['right hand'] : null;
 
     // load head model 
 
@@ -50,12 +50,14 @@ export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedInde
     let headAccessoryTexture = null;
 
     if (headAccessory) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         headAccessoryModel = useLoader(GLTFLoader, `/accessory/${headAccessory}.glb`, (loader) => {
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         });
 
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         headAccessoryTexture = useLoader(TextureLoader, `/accessory/${headAccessory}.jpg`, () => {
             console.log(`head texture of ${index} loaded`);
         });
@@ -69,12 +71,14 @@ export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedInde
     let leftAccessoryTexture = null;
 
     if (leftAccessory) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         leftAccessoryModel = useLoader(GLTFLoader, `/accessory/${leftAccessory}.glb`, (loader) => {
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         });
 
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         leftAccessoryTexture = useLoader(TextureLoader, `/accessory/${leftAccessory}.jpg`, () => {
             console.log(`head texture of ${index} loaded`);
         });
@@ -88,12 +92,14 @@ export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedInde
     let rightAccessoryTexture = null;
 
     if (rightAccessory) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         rightAccessoryModel = useLoader(GLTFLoader, `/accessory/${rightAccessory}.glb`, (loader) => {
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath('/draco/');
             loader.setDRACOLoader(dracoLoader);
         });
 
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         rightAccessoryTexture = useLoader(TextureLoader, `/accessory/${rightAccessory}.jpg`, () => {
             console.log(`head texture of ${index} loaded`);
         });
@@ -101,6 +107,7 @@ export const Gingerbread = ({ ggbType, instance, index, handleClick, focusedInde
         rightAccessoryTexture.colorSpace = SRGBColorSpace
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         const updateAccessoryTexture = (accessoryModel, accessoryTexture) => {
             if (accessoryModel && accessoryModel.scene) {

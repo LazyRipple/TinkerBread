@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 export const handdleAddItem = async (session, id, GGBs_id, itemName, position, message) => {
-  const router = new Router()
+  const router = useRouter
   try {
     // TODO : better way to fetch ?
     const res = await (
@@ -9,7 +9,7 @@ export const handdleAddItem = async (session, id, GGBs_id, itemName, position, m
         method: 'PATCH',
         body: JSON.stringify({
           GGBs_id: GGBs_id,
-          itemName, // TODO : change to item_name
+          itemName,
           message,
           position: position,
         }),
@@ -20,9 +20,10 @@ export const handdleAddItem = async (session, id, GGBs_id, itemName, position, m
       throw new Error(res.error)
     }
     toast.success('Done baking the decoration!')
-    router.refresh()
+    return 'success'
   } catch (error) {
     toast.error(error.message)
+    return 'failed'
   }
 }
 
@@ -36,7 +37,7 @@ export const data = {
   ggbType: 'ggb1',
   thanks_message: 'thank you! merry christmas!!',
   items: [
-    { ggbId: '0000', item: { head: 'christmas_hat', 'left hand': null, 'right hand': null } },
+    { ggbId: 0, item: { head: 'christmas_hat', 'left hand': null, 'right hand': null } },
     { ggbId: 1, item: { head: null, 'left hand': null, 'right hand': null } },
     { ggbId: 2, item: { head: null, 'left hand': null, 'right hand': null } },
     { ggbId: 3, item: { head: null, 'left hand': null, 'right hand': null } },

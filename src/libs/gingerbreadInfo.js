@@ -9,8 +9,8 @@ export default async function GingerbreadInfo(GGB_id, meStr) {
     })
   }
 
-  // get gingerbread infomation
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/gingerbread/${GGB_id}`, {
+  // get gingerbread infomation API JSON BUG FIXED
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/api/gingerbread/${GGB_id}?nocache=${Date.now()}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -24,7 +24,6 @@ export default async function GingerbreadInfo(GGB_id, meStr) {
   }
 
   const GGB_res = res.data
-
   // get each item infomation
   let GGB = {}
   GGB['head1'] = await processItemDataInfo(GGB_res.head1_id, meStr)
@@ -59,5 +58,5 @@ const processItemDataInfo = async (item_id, meStr) => {
       sender: res.senderName,
       item: res.itemName,
     }
-  return res.message
+  return res.itemName
 }

@@ -86,7 +86,7 @@ export async function PATCH(request, { params }) {
     // add new Item data
     const new_item = await prisma.itemData.create({
       data: {
-        itemName: itemName,
+        itemName,
         senderName: session.user.username,
         message: message,
       },

@@ -105,15 +105,16 @@ export  function BakePage({friend_link_id}) {
 
     const handleSendMessage = () => {
         setSelectedMode('thankyou');
-        setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
 
         // save to database
         const itemName = selectedDress;
         const tempL = selectedPart.split(" ")
         const position = `${tempL[0]}${focusedIndex+1}${tempL.length > 1 ? "_"+ tempL[1] : ""}`
-        const id = GGBs.items[(3*currentPage) + focusedIndex].id       
-        
-        handdleAddItem(session, id, GGBs.GGBs_id, itemName, position, message )        
+        const id = GGBs.items[(3*currentPage) + focusedIndex].ggbId               
+        const res = handdleAddItem(session, id, GGBs.GGBs_id, itemName, position, message )   
+        if(res=='success')    {
+            setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
+        }
     };
 
     const handleInputChange = (event) => {
@@ -124,10 +125,10 @@ export  function BakePage({friend_link_id}) {
     const [currentPage, setCurrentPage] = useState(0);
     const gingerbreadsPerPage = 3
 
-   const getParts = (page) => {
+    let getParts = (page) => {
         const startIndex = page * gingerbreadsPerPage;
         const endIndex = startIndex + gingerbreadsPerPage;
-        const selectedItems = GGBs.items.slice(startIndex, endIndex);
+        const selectedItems = []
 
         const initialParts = [];
         selectedItems.forEach((item) => {
@@ -136,7 +137,24 @@ export  function BakePage({friend_link_id}) {
 
         return initialParts;
     };
-        
+    
+    useEffect(()=>{
+        if(GGBs == null) return
+        getParts = (page) => {
+            const startIndex = page * gingerbreadsPerPage;
+            const endIndex = startIndex + gingerbreadsPerPage;
+            const selectedItems = GGBs.items.slice(startIndex, endIndex);
+
+            const initialParts = [];
+            selectedItems.forEach((item) => {
+                initialParts.push(item.item);
+            });
+
+            return initialParts;
+        };
+        setPartsInGingerBread(getParts(currentPage))
+        setTempPartsInGingerBread(getParts(currentPage))
+    }, [GGBs])
 
 
     const parts = ['head', 'left hand', 'right hand']
@@ -197,7 +215,12 @@ export  function BakePage({friend_link_id}) {
     };
 
     const hasPrev = currentPage > 0;
-    const hasNext = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1;
+    const [hasNext, setHasNext] = useState(false)
+    useEffect(()=>{
+        if(GGBs == null) return
+        const next = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1;
+        setHasNext(next)
+    }, [GGBs])
 
     const canDisplayPrev = hasPrev && (selectedMode === 'inspect');
     const canDisplayNext = hasNext && (selectedMode === 'inspect');
