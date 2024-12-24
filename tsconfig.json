@@ -33,7 +33,7 @@
     "**/*.tsx",
     "src/**/*",
     "next-env.d.ts"
-  ],
+, "app/bake/me/BakeMoreGingerbread.js"  ],
   "exclude": [
     "node_modules"
   ]

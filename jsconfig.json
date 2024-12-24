@@ -5,5 +5,5 @@
       "@/*": ["./src/*", "./app/*"] 
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "app/bake/me/BakeMoreGingerbread.js"]
 }

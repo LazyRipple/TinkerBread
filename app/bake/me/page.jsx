@@ -8,15 +8,14 @@ import { BakeMeComponents } from '@/components/BakeMeComponents'
 import Loading from '../Loading'
 import { BakeSessionProvider, useSessionContext } from './SessionContext'
 import toast, { Toaster } from 'react-hot-toast'
-import BakeMoreGingerbread from '@/components/BakeMoreGingerbread'
 import { Canvas } from '@react-three/fiber'
 import { Snow } from '@/components/Snow.jsx'
 import { CameraController } from '@/components/CameraController.jsx'
 import { Scene } from '@/components/Scene.jsx'
 import { Gingerbread } from '@/components/GingerbreadMe.jsx'
-import { OrbitControls } from '@react-three/drei'
 import { Arrow3D } from '@/components/Arrow'
 import Link from 'next/link'
+import BakeMoreGingerbread from './BakeMoreGingerbread'
 
 export default function Page() {
   const { GGBs_id } = useParams()
@@ -134,7 +133,7 @@ export function PageContent() {
     if (GGBs == null) return
     const next = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1
     setHasNext(next)
-  }, [GGBs])
+  }, [GGBs, currentPage])
 
   const canDisplayPrev = hasPrev && selectedMode === 'inspect'
   const canDisplayNext = hasNext && selectedMode === 'inspect'

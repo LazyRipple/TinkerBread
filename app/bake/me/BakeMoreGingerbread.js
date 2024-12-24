@@ -1,5 +1,5 @@
 'use client'
-import { Button } from './Button'
+import { Button } from '../../../src/components/Button'
 import React, { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -42,7 +42,7 @@ const handdleAddGGB = async (session) => {
     if (res.message == 'failed') {
       throw new Error(res.error)
     }
-    router.push(`/bake/me`)
+    window.location.reload()
   } catch (error) {
     toast.error(error.message)
   }

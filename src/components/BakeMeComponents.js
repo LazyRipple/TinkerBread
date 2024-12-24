@@ -1,5 +1,4 @@
 'use client'
-import { signOut } from 'next-auth/react'
 import { VisitFriendButton } from '@/components/VisitFriendButton'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/Button'
@@ -14,14 +13,6 @@ export function BakeMeComponents({ shareLink }) {
       <Link href='/setting'>
         <Button text='Setting' />
       </Link>
-      <button
-        onClick={() => {
-          signOut()
-          router.push('/')
-        }}
-      >
-        <Button text='Sign Out' />
-      </button>
     </div>
   )
 }

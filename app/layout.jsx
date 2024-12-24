@@ -3,7 +3,6 @@ import '@/global.css'
 import { SessionProvider } from '@/components/sessionProvider'
 import { getServerSession } from 'next-auth'
 
-
 export const metadata = {
   title: 'TinkerBread',
   description: 'Decorate friends gingerbreads. Send a love through the Christmas.',
@@ -20,9 +19,10 @@ export default async function RootLayout({ children }) {
       <head />
       <body>
         {/* To avoid FOUT with styled-components wrap Layout with StyledComponentsRegistry https://beta.nextjs.org/docs/styling/css-in-js#styled-components */}
-        
-          <Layout><SessionProvider session={session}>{children}</SessionProvider></Layout>
-        
+
+        <Layout>
+          <SessionProvider session={session}>{children}</SessionProvider>
+        </Layout>
       </body>
     </html>
   )
