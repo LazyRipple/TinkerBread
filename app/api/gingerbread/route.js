@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import authOptions from '../auth/[...nextauth]/authOption'
+import authOptions from '@/api/auth/[...nextauth]/authOption'
 const prisma = new PrismaClient()
 export async function POST(request) {
   try {
