@@ -36,9 +36,9 @@ export async function GET(request, { params }) {
       thanks_message: GGBs.thanks_message,
     }
 
-    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id)).json()).data
-    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id)).json()).data
-    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
+    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id, 'friend')).json()).data
+    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id, 'friend')).json()).data
+    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id, 'friend')).json()).data
     data['is_decorate'] = GGBs.senders.indexOf(SendUser.id) == -1 ? 'F' : 'T'
     data['owner'] = user.username
     data['GGBs_id'] = GGBs.id

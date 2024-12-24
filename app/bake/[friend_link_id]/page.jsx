@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
 import Loading from '../Loading'
@@ -15,7 +15,7 @@ import { CameraController } from '@/components/CameraController.jsx';
 import { Scene } from '@/components/Scene.jsx';
 import { Gingerbread } from '@/components/Gingerbread.jsx';
 import { Arrow3D } from '@/components/Arrow';
-import { modelInstances , data} from '@/components/BakeFriendComp';
+import { modelInstances } from '@/components/BakeFriendComp';
 
 
 export default function Page() {
@@ -39,27 +39,27 @@ export  function BakePage({friend_link_id}) {
     const [canDecorateIndex, setCanDecorateIndex] = useState(0);
 
     const handleClick = (index) => {
-        console.log('Clicked index:', index);
-        console.log('Current mode before click:', selectedMode);
+        // console.log('Clicked index:', index);
+        // console.log('Current mode before click:', selectedMode);
 
-        console.log(`can decorate index = ${canDecorateIndex}`);
+        // console.log(`can decorate index = ${canDecorateIndex}`);
 
 
         recalculateIndex();
 
         if (selectedMode !== 'inspect') {
-            console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
+            // console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
             return;
         }
 
         setFocusedIndex(index);
         setSelectedMode('view');
 
-        console.log(`Gingerbread ${index} clicked and mode changed to view`);
+        // console.log(`Gingerbread ${index} clicked and mode changed to view`);
     };
 
     const handleBack = () => {
-        console.log('Handle back clicked, current mode:', selectedMode);
+        // console.log('Handle back clicked, current mode:', selectedMode);
 
         setFocusedIndex(null);
         setSelectedMode('inspect');
@@ -69,7 +69,7 @@ export  function BakePage({friend_link_id}) {
 
         setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
 
-        console.log('Mode changed to inspect');
+        // console.log('Mode changed to inspect');
     };
 
     const handleGetDecorated = () => {
@@ -78,7 +78,7 @@ export  function BakePage({friend_link_id}) {
     }
 
     const handleSelectPart = (part) => {
-        console.log("Part selected:", part);
+        // console.log("Part selected:", part);
         setSelectedPart(part);
         setSelectedMode('chooseDress');
         setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
@@ -91,8 +91,8 @@ export  function BakePage({friend_link_id}) {
 
     const updateSelectDress = ({ index, part, dress }) => {
         if (!dress) return;
-        console.log('called');
-        console.log('index = ', index);
+        // console.log('called');
+        // console.log('index = ', index);
 
         const updatedParts = { ...tempPartsInGingerbread };
         updatedParts[index][part] = dress;
@@ -106,39 +106,28 @@ export  function BakePage({friend_link_id}) {
     const handleSendMessage = () => {
         setSelectedMode('thankyou');
         setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
-        console.log("dataaaaa =========");
-        const item_name = selectedDress;
+
+        // save to database
+        const itemName = selectedDress;
         const tempL = selectedPart.split(" ")
         const position = `${tempL[0]}${focusedIndex+1}${tempL.length > 1 ? "_"+ tempL[1] : ""}`
-        const id = currentPage == 0 ? 
-        "GGBs.GGB1.id" : (
-           currentPage == 0 ? "GGBs.GGB2.id" :"GGBs.GGB3.id" 
-        )
-        console.log("GGBs.ID", id);
+        const id = GGBs.items[(3*currentPage) + focusedIndex].id       
         
-        
-        handdleAddItem(session, id, GGBs.GGBs_id, item_name,  position, message )
-        // save to database
-        
-        
+        handdleAddItem(session, id, GGBs.GGBs_id, itemName, position, message )        
     };
 
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
 
-    // load thank you message
-    const thankYouMessage = data.thanks_message;
-    const ggbType = data.ggbType;
-
     // choose parts
     const [currentPage, setCurrentPage] = useState(0);
     const gingerbreadsPerPage = 3
 
-    const getParts = (page) => {
+   const getParts = (page) => {
         const startIndex = page * gingerbreadsPerPage;
         const endIndex = startIndex + gingerbreadsPerPage;
-        const selectedItems = data.items.slice(startIndex, endIndex);
+        const selectedItems = GGBs.items.slice(startIndex, endIndex);
 
         const initialParts = [];
         selectedItems.forEach((item) => {
@@ -147,6 +136,7 @@ export  function BakePage({friend_link_id}) {
 
         return initialParts;
     };
+        
 
 
     const parts = ['head', 'left hand', 'right hand']
@@ -193,11 +183,11 @@ export  function BakePage({friend_link_id}) {
     };
 
     const handleNext = () => {
-        console.log('next');
+        // console.log('next');
 
         setCurrentPage((prevPage) => {
             const newPage = prevPage + 1;
-            if (newPage * gingerbreadsPerPage < data.items.length) {
+            if (newPage * gingerbreadsPerPage < GGBs.items.length) {
                 setPartsInGingerBread(getParts(newPage));
                 setTempPartsInGingerBread(getParts(newPage));
                 return newPage;
@@ -207,7 +197,7 @@ export  function BakePage({friend_link_id}) {
     };
 
     const hasPrev = currentPage > 0;
-    const hasNext = currentPage < Math.ceil(data.items.length / gingerbreadsPerPage) - 1;
+    const hasNext = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1;
 
     const canDisplayPrev = hasPrev && (selectedMode === 'inspect');
     const canDisplayNext = hasNext && (selectedMode === 'inspect');
@@ -227,7 +217,7 @@ export  function BakePage({friend_link_id}) {
                 {modelInstances.map((instance, index) => (
                     <Gingerbread
                         key={index}
-                        ggbType={ggbType}
+                        ggbType={GGBs.ggbType}
                         instance={instance}
                         index={index}
                         handleClick={handleClick}
@@ -368,7 +358,7 @@ export  function BakePage({friend_link_id}) {
 
             {selectedMode === 'thankyou' && (
                 <div className="absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg">
-                    <p className="mb-4 text-center text-lg font-semibold" >{thankYouMessage}
+                    <p className="mb-4 text-center text-lg font-semibold" >{GGBs.thanks_message}
                     </p>
                     <button
                         className="mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800"

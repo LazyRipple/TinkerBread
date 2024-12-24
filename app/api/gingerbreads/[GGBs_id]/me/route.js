@@ -22,9 +22,9 @@ export async function GET(request, { params }) {
       thanks_message: GGBs.thanks_message,
     }
 
-    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id)).json()).data
-    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id)).json()).data
-    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
+    data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id, 'me')).json()).data
+    data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id, 'me')).json()).data
+    data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id, 'me')).json()).data
     return NextResponse.json({
       message: 'success',
       data: data,

@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast'
-
-export const handdleAddItem = async (session, id, GGBs_id, item_name, position, message) => {
+import Router from 'next/router'
+export const handdleAddItem = async (session, id, GGBs_id, itemName, position, message) => {
+  const router = new Router()
   try {
     // TODO : better way to fetch ?
     const res = await (
@@ -8,8 +9,8 @@ export const handdleAddItem = async (session, id, GGBs_id, item_name, position, 
         method: 'PATCH',
         body: JSON.stringify({
           GGBs_id: GGBs_id,
-          item_id: '1', // TODO : change to item_name
-          item_message: message,
+          itemName, // TODO : change to item_name
+          message,
           position: position,
         }),
       })
@@ -19,6 +20,7 @@ export const handdleAddItem = async (session, id, GGBs_id, item_name, position, 
       throw new Error(res.error)
     }
     toast.success('Done baking the decoration!')
+    router.refresh()
   } catch (error) {
     toast.error(error.message)
   }

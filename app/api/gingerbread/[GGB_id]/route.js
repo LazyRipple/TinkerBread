@@ -47,7 +47,7 @@ export async function PATCH(request, { params }) {
     if (!session || !session.user.id) throw new Error('Unauthorized')
 
     const GGB_id = params.GGB_id
-    const { GGBs_id, item_id, item_message, position } = await request.json()
+    const { GGBs_id, itemName, message, position } = await request.json()
     // check if user valid and not already decorate
     const GGBs = await prisma.gingerbreads.findFirst({
       where: {
@@ -69,17 +69,6 @@ export async function PATCH(request, { params }) {
       throw new Error('gingerbread id is incorrect')
     }
 
-    // check if item valid
-    const is_item_id_valid =
-      (await prisma.item.findFirst({
-        where: {
-          id: parseInt(item_id),
-        },
-      })) == null
-    if (is_item_id_valid) {
-      throw new Error('item_id not valid')
-    }
-
     // check if GGB already has item in position
     if (!positions.includes(position)) {
       throw new Error('position not valid')
@@ -97,9 +86,9 @@ export async function PATCH(request, { params }) {
     // add new Item data
     const new_item = await prisma.itemData.create({
       data: {
-        itemId: parseInt(item_id),
-        senderId: session.user.id,
-        message: item_message,
+        itemName: itemName,
+        senderName: session.user.username,
+        message: message,
       },
     })
 
