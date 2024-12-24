@@ -68,7 +68,7 @@ export function PageContent() {
   const [currentPage, setCurrentPage] = useState(0)
   const gingerbreadsPerPage = 3
 
-  var getParts = (page) => {
+  const getParts = (page) => {
     const startIndex = page * gingerbreadsPerPage
     const endIndex = startIndex + gingerbreadsPerPage
     const selectedItems = GGBs != null ? GGBs.items.slice(startIndex, endIndex) : []
@@ -189,7 +189,7 @@ export function PageContent() {
       </Canvas>
 
       <button
-        className='absolute right-3 bottom-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
+        className='absolute bottom-3 right-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
         style={{ opacity: hide ? 0.2 : 1 }}
         onClick={() => {
           setHide(!hide)
