@@ -58,8 +58,3 @@ export default function Page() {
     </>
   )
 }
-
-const options = [
-  'normal',
-  'girl'
-]
