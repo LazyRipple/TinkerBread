@@ -123,10 +123,19 @@ export default function BakePage() {
         }
         setCanDecorateIndex((prev) => prev + 1);
     };
+
+
+    function isPartFull(part) {
+        return partsInGingerbread[focusedIndex][part] !== null;
+    }
+
+    const thankYouMessage = "thank you! merry christmas!!"
+
+
     return (
         <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
             <Canvas>
-                <ambientLight intensity={4} />
+                <ambientLight intensity={4.5} />
                 {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
                 <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
                 <Scene />
@@ -160,7 +169,7 @@ export default function BakePage() {
                         Are you ready to dress your friend gingerbread? 🎄🍪
                     </p>
                     <button
-                        className="block mx-auto bg-green-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
                         onClick={handleGetDecorated}
                         disabled={canDecorateIndex !== focusedIndex}
                     >
@@ -171,20 +180,25 @@ export default function BakePage() {
 
 
             {selectedMode === 'choosePos' && (
-                <div className="absolute bottom-0 top-48 left-4 z-10">
-                    <p className="text-lg font-semibold mb-4 text-left">
+                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-72">
+                    {/* Title */}
+                    <p className="text-lg font-semibold mb-4 text-center">
                         Choose your position 🎨
                     </p>
-                    <div className="flex flex-col justify-center items-center">
+
+                    {/* Position selection buttons */}
+                    <div className="flex flex-col justify-center items-center gap-2">
                         {parts.map((part, index) => {
                             return (
-                                <button
-                                    key={index}
-                                    onClick={() => handleSelectPart(part)}
-                                    className="p-2 m-2 bg-blue-500 text-white w-28 rounded-md shadow-md hover:bg-blue-600 transition duration-300"
-                                >
-                                    {part}
-                                </button>
+                                !isPartFull(part) && (
+                                    <button
+                                        key={index}
+                                        onClick={() => handleSelectPart(part)}
+                                        className="p-2 bg-green-700 text-white w-full rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                                    >
+                                        {part}
+                                    </button>
+                                )
                             );
                         })}
                     </div>
@@ -193,65 +207,83 @@ export default function BakePage() {
 
 
             {selectedMode === 'chooseDress' && selectedPart && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    <div className="p-2 text-white">{`Choose a dress for ${selectedPart}`}</div>
-                    {dressOptions[selectedPart].map((dress) => (
-                        <button
-                            key={dress}
-                            onClick={() => handleSelectDress(dress)}
-                            className={`p-2 m-2 w-28 ${dress === selectedDress ? 'bg-blue-500' : 'bg-green-500'
-                                } text-white`}
-                        >
-                            {dress}
-                        </button>
-                    ))}
+                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
+                    {/* Title */}
+                    <div className="text-lg font-semibold mb-4 text-center">
+                        {`Choose an accessory 🎨`}
+                    </div>
 
+                    {/* Dress options */}
+                    <div className="flex flex-col justify-center gap-3 w-full items-center">
+                        {dressOptions[selectedPart].map((dress) => (
+                            <button
+                                key={dress}
+                                onClick={() => handleSelectDress(dress)}
+                                className={`p-2 w-full rounded-lg shadow-md transition duration-300 ${dress === selectedDress
+                                    ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                                    : 'bg-green-700 text-white hover:bg-green-800'
+                                    }`}
+                            >
+                                {dress}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Confirm button */}
                     <button
-                        className="p-2 mt-4 bg-yellow-500 text-white w-28"
+                        className="mt-4 block mx-auto w-full bg-red-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-red-800 transition duration-300"
                         onClick={handleConfirmDress}
                     >
-                        Confirm
+                        Confirm 🌟
                     </button>
                 </div>
             )}
 
+
             {selectedMode === 'message' && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    <div className="p-2 text-white">Send a message to the gingerbread owner:</div>
+                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
+                    {/* Title */}
+                    <div className="text-lg font-semibold text-center mb-3">
+                        Send some messages🎄
+                    </div>
 
                     {/* Message input area */}
                     <textarea
-                        className="p-2 m-2 w-80 h-32 border rounded-md text-black"
+                        className="w-full h-32 border-2 border-pink-900 rounded-md p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700 resize-none"
                         value={message}
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                            if (e.target.value.length <= 100) {
+                                handleInputChange(e);
+                            }
+                        }}
                         placeholder="Type your message here..."
                     />
 
                     {/* Send button */}
                     <button
-                        className="p-2 m-2 bg-green-500 text-white w-28"
+                        className="mt-4 block mx-auto bg-green-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
                         onClick={handleSendMessage}
                     >
-                        Send
+                        Send 🌟
                     </button>
                 </div>
             )}
+
 
             {selectedMode === 'thankyou' && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    <div className="p-2 text-white">Thank you for your message!</div>
-
-                    {/* Go back to inspect button */}
+                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
+                    <p className="text-lg font-semibold mb-4 text-center" >{thankYouMessage}
+                    </p>
                     <button
-                        className="p-2 m-2 bg-black text-white w-28"
+                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
                         onClick={handleBack}
+                        disabled={canDecorateIndex !== focusedIndex}
                     >
-                        Back to Inspect
+                        Back to kitchen
                     </button>
                 </div>
             )}
 
-
-        </div>
+        </div >
     );
 }
