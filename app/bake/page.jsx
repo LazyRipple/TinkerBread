@@ -226,6 +226,13 @@ export default function BakePage() {
                 {canDisplayNext && <Arrow3D key={'next'} arrow={'next'} position={[6.3, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handleNext} />}
             </Canvas>
 
+            {/* Home */}
+            {selectedMode === 'inspect' &&
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
+                    onClick={handleBack}>
+                    <img src='/icon/home.webp' alt="Home" className='w-full h-full' />
+                </button>}
+
             {/* Back */}
             {selectedMode !== 'inspect' &&
                 <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
