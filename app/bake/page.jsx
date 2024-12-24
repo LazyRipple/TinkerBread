@@ -6,6 +6,8 @@ import { Snow } from '@/components/Snow.jsx';
 import { CameraController } from '@/components/CameraController.jsx';
 import { Scene } from '@/components/Scene.jsx';
 import { Gingerbread } from '@/components/Gingerbread.jsx';
+import { OrbitControls } from '@react-three/drei';
+import { Arrow3D } from '@/components/Arrow';
 
 export default function BakePage() {
     const modelInstances = [
@@ -88,6 +90,7 @@ export default function BakePage() {
     const handleSendMessage = () => {
 
         setSelectedMode('thankyou');
+        // save to database
         setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
     };
 
@@ -180,6 +183,8 @@ export default function BakePage() {
     };
 
     const handleNext = () => {
+        console.log('next');
+
         setCurrentPage((prevPage) => {
             const newPage = prevPage + 1;
             if (newPage * gingerbreadsPerPage < data.items.length) {
@@ -218,6 +223,8 @@ export default function BakePage() {
 
                 <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
                 {/* <OrbitControls /> */}
+                {hasPrev && <Arrow3D key={'prev'} arrow={'prev'} position={[4.75, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handlePrev} />}
+                {hasNext && <Arrow3D key={'next'} arrow={'next'} position={[6.3, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handleNext} />}
             </Canvas>
 
             {/* Back */}
@@ -348,8 +355,9 @@ export default function BakePage() {
                 </div>
             )}
 
+
             {/* Navigation arrows */}
-            <div className="flex justify-between mt-4 w-1/2">
+            {/* <div className="flex justify-between mt-4 w-1/2">
                 {hasPrev && <button
                     onClick={handlePrev}
                     className={`p-2 rounded-fullbg-blue-500 hover:bg-blue-700 text-white`}
@@ -362,7 +370,7 @@ export default function BakePage() {
                 >
                     Next
                 </button>}
-            </div>
+            </div> */}
 
         </div >
     );

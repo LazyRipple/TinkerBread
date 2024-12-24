@@ -5,14 +5,14 @@ import { GLTFLoader } from 'three-stdlib';
 import { useRef, useEffect } from 'react';
 import { SRGBColorSpace } from 'three';
 
-export const Scene = () => {
-    const sceneTexture = useLoader(TextureLoader, '/scene/scene.jpg');
+export const Arrow3D = ({ arrow, position, onClick, rotation }) => {
+    const sceneTexture = useLoader(TextureLoader, `/icon/${arrow}.jpg`);
     sceneTexture.flipY = false;
-    sceneTexture.colorSpace = SRGBColorSpace
+    sceneTexture.colorSpace = SRGBColorSpace;
 
     const sceneModel = useLoader(
         GLTFLoader,
-        '/scene/scene.glb',
+        `/icon/${arrow}.glb`,
         (loader) => {
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath('/draco/');
@@ -20,7 +20,7 @@ export const Scene = () => {
         }
     );
 
-    const modelRef = useRef();
+    const groupRef = useRef();
 
     useEffect(() => {
         if (sceneModel && sceneModel.scene) {
@@ -30,12 +30,21 @@ export const Scene = () => {
                     child.material.needsUpdate = true;
                 }
             });
-
-            modelRef.current = sceneModel.scene;
         }
     }, [sceneModel, sceneTexture]);
 
     if (!sceneModel) return null;
 
-    return <primitive object={sceneModel.scene} scale={0.1} position={[1, -3, 5]} />
+    console.log('arrow loaded');
+
+    return (
+        <group
+            ref={groupRef}
+            position={position}
+            rotation={rotation}
+            onPointerDown={onClick}
+        >
+            <primitive object={sceneModel.scene.clone()} scale={0.2} />
+        </group>
+    );
 };
