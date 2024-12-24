@@ -68,10 +68,10 @@ export function PageContent() {
   const [currentPage, setCurrentPage] = useState(0)
   const gingerbreadsPerPage = 3
 
-  let getParts = (page) => {
+  var getParts = (page) => {
     const startIndex = page * gingerbreadsPerPage
     const endIndex = startIndex + gingerbreadsPerPage
-    const selectedItems = []
+    const selectedItems = GGBs != null ? GGBs.items.slice(startIndex, endIndex) : []
 
     const initialParts = []
     selectedItems.forEach((item) => {
@@ -81,24 +81,11 @@ export function PageContent() {
     return initialParts
   }
 
+  const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)) // parts that already been saved
+
   useEffect(() => {
-    if (GGBs == null) return
-    getParts = (page) => {
-      const startIndex = page * gingerbreadsPerPage
-      const endIndex = startIndex + gingerbreadsPerPage
-      const selectedItems = GGBs.items.slice(startIndex, endIndex)
-
-      const initialParts = []
-      selectedItems.forEach((item) => {
-        initialParts.push(item.item)
-      })
-
-      return initialParts
-    }
     setPartsInGingerBread(getParts(currentPage))
   }, [GGBs])
-
-  const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)) // parts that already been saved
 
   const [selectedPart, setSelectedPart] = useState(null)
   const [selectedDress, setSelectedDress] = useState(null)

@@ -125,10 +125,10 @@ export function BakePage({ friend_link_id }) {
   const [currentPage, setCurrentPage] = useState(0)
   const gingerbreadsPerPage = 3
 
-  let getParts = (page) => {
+  const getParts = (page) => {
     const startIndex = page * gingerbreadsPerPage
     const endIndex = startIndex + gingerbreadsPerPage
-    const selectedItems = []
+    const selectedItems = GGBs != null ? GGBs.items.slice(startIndex, endIndex) : []
 
     const initialParts = []
     selectedItems.forEach((item) => {
@@ -138,27 +138,13 @@ export function BakePage({ friend_link_id }) {
     return initialParts
   }
 
-  useEffect(() => {
-    if (GGBs == null) return
-    getParts = (page) => {
-      const startIndex = page * gingerbreadsPerPage
-      const endIndex = startIndex + gingerbreadsPerPage
-      const selectedItems = GGBs.items.slice(startIndex, endIndex)
-
-      const initialParts = []
-      selectedItems.forEach((item) => {
-        initialParts.push(item.item)
-      })
-
-      return initialParts
-    }
-    setPartsInGingerBread(getParts(currentPage))
-    setTempPartsInGingerBread(getParts(currentPage))
-  }, [GGBs])
-
   const parts = ['head', 'left hand', 'right hand']
   const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)) // parts that already been saved
   const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState(JSON.parse(JSON.stringify(partsInGingerbread)))
+  useEffect(() => {
+    setPartsInGingerBread(getParts(currentPage))
+    setTempPartsInGingerBread(getParts(currentPage))
+  }, [GGBs])
 
   const [selectedPart, setSelectedPart] = useState(null)
   const [selectedDress, setSelectedDress] = useState(null)
