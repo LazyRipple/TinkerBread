@@ -25,6 +25,12 @@ export async function GET(request, { params }) {
       },
     })
 
+    const SendUser = await prisma.user.findFirst({
+      where: {
+        link_id: user_id,
+      },
+    })
+
     let data = {
       GGB_type: GGBs.GGB_type,
       thanks_message: GGBs.thanks_message,
@@ -33,7 +39,7 @@ export async function GET(request, { params }) {
     data['GGB1'] = (await (await GingerbreadInfo(GGBs.GGB_1_id)).json()).data
     data['GGB2'] = (await (await GingerbreadInfo(GGBs.GGB_2_id)).json()).data
     data['GGB3'] = (await (await GingerbreadInfo(GGBs.GGB_3_id)).json()).data
-    data['is_decorate'] = GGBs.senders.indexOf(user_id) == -1 ? 'F' : 'T'
+    data['is_decorate'] = GGBs.senders.indexOf(SendUser.id) == -1 ? 'F' : 'T'
     data['owner'] = user.username
     data['GGBs_id'] = GGBs.id
     return NextResponse.json({

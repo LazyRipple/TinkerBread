@@ -8,14 +8,11 @@ import { Scene } from '@/components/Scene.jsx';
 import { Gingerbread } from '@/components/Gingerbread.jsx';
 import { OrbitControls } from '@react-three/drei';
 import { Arrow3D } from '@/components/Arrow';
+import { modelInstances , data} from '@/components/BakeFriendComp';
+import Link from 'next/link';
+import { Toaster } from 'react-hot-toast';
 
 export default function BakePage() {
-    const modelInstances = [
-        { position: [2.3, 0, -0.9], scale: 0.1 },
-        { position: [2.9, 0, -0.9], scale: 0.1 },
-        { position: [3.5, 0, -0.9], scale: 0.1 },
-    ];
-
     // Mode state
     const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view, choosePos, chooseDress, message, thankyou
     const [focusedIndex, setFocusedIndex] = useState(null);
@@ -96,23 +93,6 @@ export default function BakePage() {
     const handleInputChange = (event) => {
         setMessage(event.target.value);
     };
-
-    // test data
-    const data = {
-        'ggbType': 'ggb1',
-        'thanks_message': "thank you! merry christmas!!",
-        'items': [
-            { 'ggbId': 0, 'item': { 'head': 'christmas_hat', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 1, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 2, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 3, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 4, 'item': { 'head': 'reindeer', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 5, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 6, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 7, 'item': { 'head': 'earpuff', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 8, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-        ]
-    }
 
     // load thank you message
     const thankYouMessage = data.thanks_message;
@@ -200,7 +180,9 @@ export default function BakePage() {
     const canDisplayNext = hasNext && (selectedMode === 'inspect');
 
     return (
-        <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6  bg-blue-50 text-blue-800 shadow-lg">
+        <div className="gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50  text-blue-800 shadow-lg">
+            <Toaster />
+            <p className="absolute top-16 z-30 w-full text-center font-bold text-white">{`${GGBs?.owner}'s TinkerBreads`}</p>
             <Canvas>
                 <ambientLight intensity={4.5} />
                 {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
@@ -228,49 +210,52 @@ export default function BakePage() {
 
             {/* Home */}
             {selectedMode === 'inspect' &&
-                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
+            <Link href={'/'} className='absolute left-3 top-3 font-semibold hover:underline'>
+                <button className="absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900"
                     onClick={handleBack}>
-                    <img src='/icon/home.webp' alt="Home" className='w-full h-full' />
-                </button>}
+                    <img src='/icon/home.webp' alt="Home" className='size-full' />
+                </button>
+            </Link>
+            }
 
             {/* Back */}
             {selectedMode !== 'inspect' &&
-                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
+                <button className="absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900"
                     onClick={handleBack}>
-                    <img src='/icon/back.webp' alt="Back" className='w-full h-full' />
+                    <img src='/icon/back.webp' alt="Back" className='size-full' />
                 </button>}
 
             {selectedMode === 'view' && isThisCanDecorate(focusedIndex) && (
-                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
-                    <p className="text-lg font-semibold mb-4 text-center">
-                        Ready to help dress up your friend's gingerbread? 🎄🍪
+                <div className="absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg">
+                    <p className="mb-4 text-center text-lg font-semibold">
+                        Ready to help dress up your friend&apos;s gingerbread? 🎄🍪
                     </p>
                     <button
-                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                        className="mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800"
                         onClick={handleGetDecorated}
                     >
-                        Yes, Let's Go! 🌟
+                        Yes, Let&apos;s Go! 🌟
                     </button>
                 </div>
             )}
 
 
             {selectedMode === 'choosePos' && (
-                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-72">
+                <div className="absolute left-5 top-20 z-10 w-72 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg">
                     {/* Title */}
-                    <p className="text-lg font-semibold mb-4 text-center">
+                    <p className="mb-4 text-center text-lg font-semibold">
                         Choose your position 🎨
                     </p>
 
                     {/* Position selection buttons */}
-                    <div className="flex flex-col justify-center items-center gap-2">
+                    <div className="flex flex-col items-center justify-center gap-2">
                         {parts.map((part, index) => {
                             return (
                                 !isPartFull(part) && (
                                     <button
                                         key={index}
                                         onClick={() => handleSelectPart(part)}
-                                        className="p-2 bg-green-700 text-white w-full rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                                        className="w-full rounded-lg bg-green-700 p-2 text-white shadow-md transition duration-300 hover:bg-green-800"
                                     >
                                         {part}
                                     </button>
@@ -283,19 +268,19 @@ export default function BakePage() {
 
 
             {selectedMode === 'chooseDress' && selectedPart && (
-                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
+                <div className="absolute left-5 top-20 z-10 w-60 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg">
                     {/* Title */}
-                    <div className="text-lg font-semibold mb-4 text-center">
+                    <div className="mb-4 text-center text-lg font-semibold">
                         {`Choose an accessory 🎨`}
                     </div>
 
                     {/* Dress options */}
-                    <div className="flex flex-col justify-center gap-3 w-full items-center">
+                    <div className="flex w-full flex-col items-center justify-center gap-3">
                         {dressOptions[selectedPart].map((dress) => (
                             <button
                                 key={dress}
                                 onClick={() => handleSelectDress(dress)}
-                                className={`p-2 w-full rounded-lg shadow-md transition duration-300 ${dress === selectedDress
+                                className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${dress === selectedDress
                                     ? 'bg-yellow-500 text-white hover:bg-yellow-600'
                                     : 'bg-green-700 text-white hover:bg-green-800'
                                     }`}
@@ -307,7 +292,7 @@ export default function BakePage() {
 
                     {/* Confirm button */}
                     <button
-                        className="mt-4 block mx-auto w-full bg-red-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-red-800 transition duration-300"
+                        className="mx-auto mt-4 block w-full rounded-lg bg-red-700 px-6 py-2 text-white shadow-md transition duration-300 hover:bg-red-800"
                         onClick={handleConfirmDress}
                     >
                         Confirm 🌟
@@ -317,15 +302,15 @@ export default function BakePage() {
 
 
             {selectedMode === 'message' && (
-                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
+                <div className="absolute left-5 top-20 z-10 w-60 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg">
                     {/* Title */}
-                    <div className="text-lg font-semibold text-center mb-3">
+                    <div className="mb-3 text-center text-lg font-semibold">
                         Send some messages🎄
                     </div>
 
                     {/* Message input area */}
                     <textarea
-                        className="w-full h-32 border-2 border-pink-900 rounded-md p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700 resize-none"
+                        className="h-32 w-full resize-none rounded-md border-2 border-pink-900 p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700"
                         value={message}
                         onChange={(e) => {
                             if (e.target.value.length <= 100) {
@@ -337,7 +322,7 @@ export default function BakePage() {
 
                     {/* Send button */}
                     <button
-                        className="mt-4 block mx-auto bg-green-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                        className="mx-auto mt-4 block rounded-lg bg-green-700 px-6 py-2 text-white shadow-md transition duration-300 hover:bg-green-800"
                         onClick={handleSendMessage}
                     >
                         Send 🌟
@@ -347,11 +332,11 @@ export default function BakePage() {
 
 
             {selectedMode === 'thankyou' && (
-                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
-                    <p className="text-lg font-semibold mb-4 text-center" >{thankYouMessage}
+                <div className="absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg">
+                    <p className="mb-4 text-center text-lg font-semibold" >{thankYouMessage}
                     </p>
                     <button
-                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                        className="mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800"
                         onClick={handleBack}
                     >
                         Back to kitchen
