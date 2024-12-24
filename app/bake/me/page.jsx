@@ -30,7 +30,7 @@ export default function Page() {
   )
 }
 
-export function PageContent() {
+function PageContent() {
   const { user, GGBs, load_status } = useSessionContext()
   const { data: session } = useSession()
   const [hide, setHide] = useState(false)

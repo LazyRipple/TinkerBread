@@ -24,14 +24,14 @@ export default function Page() {
   }
   return (
     <BakeSessionProvider>
-      <BakePage friend_link_id={friend_link_id} />
+      <BakePage friend_link={friend_link_id} />
     </BakeSessionProvider>
   )
 }
 
-export function BakePage({ friend_link_id }) {
+function BakePage({ friend_link }) {
   // Mode state
-  const { GGBs, load_status } = useSessionContext(friend_link_id)
+  const { GGBs, load_status } = useSessionContext(friend_link || 'x')
   const { data: session } = useSession()
   const [selectedMode, setSelectedMode] = useState('inspect') // inspect, view, choosePos, chooseDress, message, thankyou
   const [focusedIndex, setFocusedIndex] = useState(null)
@@ -157,9 +157,15 @@ export function BakePage({ friend_link_id }) {
   }
 
   const dressLabel = {
-    'christmas_hat': 'christmas hat', 'reindeer': 'reindeer', 'earpuff': 'earpuff',
-    'candy': 'candy cane', 'red_present': 'red present', 'cup': 'cup',
-    'candy2': 'candy', 'christmas_tree': 'christmas tree', 'green_present': 'green present'
+    christmas_hat: 'christmas hat',
+    reindeer: 'reindeer',
+    earpuff: 'earpuff',
+    candy: 'candy cane',
+    red_present: 'red present',
+    cup: 'cup',
+    candy2: 'candy',
+    christmas_tree: 'christmas tree',
+    green_present: 'green present',
   }
 
   const recalculateIndex = () => {
@@ -334,10 +340,11 @@ export function BakePage({ friend_link_id }) {
               <button
                 key={dress}
                 onClick={() => handleSelectDress(dress)}
-                className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${dress === selectedDress
+                className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${
+                  dress === selectedDress
                     ? 'bg-yellow-500 text-white hover:bg-yellow-600'
                     : 'bg-green-700 text-white hover:bg-green-800'
-                  }`}
+                }`}
               >
                 {dressLabel[dress]}
               </button>
