@@ -5,7 +5,7 @@ import '@/style/bake.css';
 import { Snow } from '@/components/Snow.jsx';
 import { CameraController } from '@/components/CameraController.jsx';
 import { Scene } from '@/components/Scene.jsx';
-import { Gingerbread } from '@/components/Gingerbread.jsx';
+import { Gingerbread } from '@/components/GingerbreadMe.jsx';
 import { OrbitControls } from '@react-three/drei';
 import { Arrow3D } from '@/components/Arrow';
 
@@ -19,16 +19,10 @@ export default function BakePage() {
     // Mode state
     const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view, choosePos, chooseDress, message, thankyou
     const [focusedIndex, setFocusedIndex] = useState(null);
-    const [canDecorateIndex, setCanDecorateIndex] = useState(0);
 
     const handleClick = (index) => {
         console.log('Clicked index:', index);
         console.log('Current mode before click:', selectedMode);
-
-        console.log(`can decorate index = ${canDecorateIndex}`);
-
-
-        recalculateIndex();
 
         if (selectedMode !== 'inspect') {
             console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
@@ -42,60 +36,12 @@ export default function BakePage() {
     };
 
     const handleBack = () => {
-        console.log('Handle back clicked, current mode:', selectedMode);
-
+        setShowMessage(false);
         setFocusedIndex(null);
         setSelectedMode('inspect');
         setSelectedPart(null);
         setMessage(null);
         setSelectedDress(null);
-        console.log(partsInGingerbread);
-
-        setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
-
-        console.log('Mode changed to inspect');
-    };
-
-    const handleGetDecorated = () => {
-        if (focusedIndex !== canDecorateIndex) return;
-        setSelectedMode('choosePos')
-    }
-
-    const handleSelectPart = (part) => {
-        console.log("Part selected:", part);
-        setSelectedPart(part);
-        setSelectedMode('chooseDress');
-        setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
-    };
-
-    const handleSelectDress = (dress) => {
-        setSelectedDress(dress);
-        updateSelectDress({ index: focusedIndex, part: selectedPart, dress: dress });
-    }
-
-    const updateSelectDress = ({ index, part, dress }) => {
-        if (!dress) return;
-        console.log('called');
-        console.log('index = ', index);
-
-        const updatedParts = { ...tempPartsInGingerbread };
-        updatedParts[index][part] = dress;
-        setTempPartsInGingerBread(updatedParts)
-    }
-
-    const handleConfirmDress = () => {
-        setSelectedMode('message');
-    }
-
-    const handleSendMessage = () => {
-
-        setSelectedMode('thankyou');
-        // save to database
-        setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
-    };
-
-    const handleInputChange = (event) => {
-        setMessage(event.target.value);
     };
 
     // test data
@@ -103,20 +49,18 @@ export default function BakePage() {
         'ggbType': 'ggb1',
         'thanks_message': "thank you! merry christmas!!",
         'items': [
-            { 'ggbId': 0, 'item': { 'head': 'christmas_hat', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 1, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 2, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 3, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 4, 'item': { 'head': 'reindeer', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 5, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 6, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 7, 'item': { 'head': 'earpuff', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 8, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 0, 'item': { 'head': { 'item': 'christmas_hat', 'name': 'Neen', 'message': "merry christmas!sawesfdsafsssssssssssssssssssssssssssssssssssssssssssssssss" }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 1, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 2, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 3, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 4, 'item': { 'head': { 'item': 'reindeer', 'name': 'beam', 'message': 'so sleepy' }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 5, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 6, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 7, 'item': { 'head': { 'item': 'earpuff', 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 8, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } }
         ]
-    }
+    };
 
-    // load thank you message
-    const thankYouMessage = data.thanks_message;
     const ggbType = data.ggbType;
 
     // choose parts
@@ -143,39 +87,17 @@ export default function BakePage() {
         return initialParts;
     };
 
-
-    const parts = ['head', 'left hand', 'right hand']
     const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)); // parts that already been saved
-    const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState(JSON.parse(JSON.stringify(partsInGingerbread)));
 
     const [selectedPart, setSelectedPart] = useState(null);
     const [selectedDress, setSelectedDress] = useState(null);
-    const [message, setMessage] = useState('');
-
-    const dressOptions = {
-        'head': ['christmas_hat', 'reindeer', 'earpuff'],
-        'left hand': ['candy', 'red_present', 'cup'],
-        'right hand': ['candy2', 'christmas_tree', 'green_present'],
-    };
-
-    const recalculateIndex = () => {
-        for (const part of Object.values(partsInGingerbread[canDecorateIndex])) {
-            if (part === null) return;
-        }
-        setCanDecorateIndex((prev) => prev + 1);
-    };
-
-
-    function isPartFull(part) {
-        return partsInGingerbread[focusedIndex][part] !== null;
-    }
 
     const handlePrev = () => {
+        setShowMessage(false);
         setCurrentPage((prevPage) => {
             if (prevPage > 0) {
                 const newPage = prevPage - 1;
                 setPartsInGingerBread(getParts(newPage));
-                setTempPartsInGingerBread(getParts(newPage));
                 return newPage;
             }
             return prevPage;
@@ -183,13 +105,11 @@ export default function BakePage() {
     };
 
     const handleNext = () => {
-        console.log('next');
-
+        setShowMessage(false);
         setCurrentPage((prevPage) => {
             const newPage = prevPage + 1;
             if (newPage * gingerbreadsPerPage < data.items.length) {
                 setPartsInGingerBread(getParts(newPage));
-                setTempPartsInGingerBread(getParts(newPage));
                 return newPage;
             }
             return prevPage;
@@ -201,6 +121,17 @@ export default function BakePage() {
 
     const canDisplayPrev = hasPrev && (selectedMode === 'inspect');
     const canDisplayNext = hasNext && (selectedMode === 'inspect');
+
+    const [showMessage, setShowMessage] = useState(false);
+
+    const handleCloseMessage = () => {
+        setShowMessage(false);
+        setName('');
+        setMessage('');
+    }
+
+    const [name, setName] = useState('')
+    const [message, setMessage] = useState('')
 
     return (
         <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
@@ -217,10 +148,12 @@ export default function BakePage() {
                         instance={instance}
                         index={index}
                         handleClick={handleClick}
-                        tempAccessoryOfThis={tempPartsInGingerbread}
+                        accessoryOfThis={partsInGingerbread}
                         selectedPart={selectedPart}
                         selectedDress={selectedDress}
-                        updateSelectDress={updateSelectDress} />
+                        setName={setName}
+                        setMessage={setMessage}
+                        setShowMessage={setShowMessage} />
                 ))}
 
                 <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
@@ -235,6 +168,25 @@ export default function BakePage() {
                     onClick={handleBack}>
                     <img src='/icon/back.webp' alt="Back" className='back w-full h-full' />
                 </button>}
+
+            {/* Friend's message */}
+            {showMessage && (
+                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
+                    <button
+                        className="absolute top-2 right-2 text-pink-900 font-bold hover:text-red-500 transition duration-300"
+                        onClick={handleCloseMessage}
+                    >
+                        ×
+                    </button>
+                    <p className="text-sm font-semibold mb-2">
+                        <span className="font-bold">From:</span> {name}
+                    </p>
+                    <p className="text-base break-words">
+                        {message}
+                    </p>
+                </div>
+            )}
+
 
         </div >
     );
