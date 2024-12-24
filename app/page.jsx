@@ -67,32 +67,32 @@ const tutorialPages = [
   {
     topic: 'Make a gingerbread.',
     description: 'Create your little gingerbread character.',
-    image: '/images/tutorial1.png',
+    image: '/tutorial/1.jpg',
   },
   {
     topic: 'Share your ID.',
     description: 'Hit ‘Copy ID’ and send it to your friend.',
-    image: '/images/tutorial2.png',
+    image: '/tutorial/2.jpg',
   },
   {
     topic: 'Visit your friend’s kitchen.',
     description: 'Got their ID? Paste it into the box and check out their kitchen!',
-    image: '/images/tutorial3.png',
+    image: '/tutorial/3.jpg',
   },
   {
     topic: 'Decorate their gingerbread.',
     description: 'Pick a gingerbread,  some cute accessories, and send a message!',
-    image: '/images/tutorial3.png',
+    image: '/tutorial/4.jpg',
   },
   {
     topic: 'Check your kitchen.',
     description: 'Messages show up in your kitchen. Click on the accessories to see them!',
-    image: '/images/tutorial3.png',
+    image: '/tutorial/5.jpg',
   },
   {
     topic: 'Bake more gingerbread!',
     description:
       'If all of your gingerbread is fully dressed , hit ‘Bake More’ to make a new one. You can see it by clicking on the gloves!',
-    image: '/images/tutorial3.png',
+    image: '/tutorial/6.jpg',
   },
 ]
