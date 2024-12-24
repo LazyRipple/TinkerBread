@@ -49,26 +49,11 @@ model Gingerbread {
   right3_hand_id String @default("")
 }
 
-model Item {
-  id               Int    @id @default(autoincrement())
-  item_name        String @default("")
-  item_model       String @default("")
-  item_description String @default("")
-  item_position    String @default("")
-  x_position       Float  @default(0)
-  y_position       Float  @default(0)
-  z_position       Float  @default(0)
-  x_rotation       Float  @default(0)
-  y_rotation       Float  @default(0)
-  z_rotation       Float  @default(0)
-  scale            Float  @default(0)
-}
-
 model ItemData {
-  id       String  @id @default(uuid())
-  itemId   Int     @default(0)
-  senderId String  @default("")
-  message  String?
+  id         String  @id @default(uuid())
+  itemName   String  @default("")
+  senderName String  @default("")
+  message    String?
 }
 
 // MUST HAVE : when use social media login like google

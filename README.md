@@ -83,7 +83,7 @@ npx prisma migrate dev --name init
 
 // Run Migration and Seed
 npx prisma migrate dev --name mock_data
-npx run seed
+// npx run seed : DB is not with seed anymore, I will write doc later
 
 ```
 
