@@ -1,270 +1,279 @@
 'use client'
 
-import React,{ useState, useEffect } from 'react'
-import '@/style/bake.css';
+import React, { useState, useEffect } from 'react'
+import '@/style/bake.css'
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
-import { BakeMeComponents } from "@/components/BakeMeComponents"
+import { BakeMeComponents } from '@/components/BakeMeComponents'
 import Loading from '../Loading'
 import { BakeSessionProvider, useSessionContext } from './SessionContext'
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast'
 import BakeMoreGingerbread from '@/components/BakeMoreGingerbread'
-import { Canvas } from '@react-three/fiber';
-import { Snow } from '@/components/Snow.jsx';
-import { CameraController } from '@/components/CameraController.jsx';
-import { Scene } from '@/components/Scene.jsx';
-import { Gingerbread } from '@/components/GingerbreadMe.jsx';
-import { OrbitControls } from '@react-three/drei';
-import { Arrow3D } from '@/components/Arrow';
-import Link from 'next/link';
-
+import { Canvas } from '@react-three/fiber'
+import { Snow } from '@/components/Snow.jsx'
+import { CameraController } from '@/components/CameraController.jsx'
+import { Scene } from '@/components/Scene.jsx'
+import { Gingerbread } from '@/components/GingerbreadMe.jsx'
+import { OrbitControls } from '@react-three/drei'
+import { Arrow3D } from '@/components/Arrow'
+import Link from 'next/link'
 
 export default function Page() {
   const { GGBs_id } = useParams()
 
-  if (status === 'unauthenticated') {        
-     return notFound()
+  if (status === 'unauthenticated') {
+    return notFound()
   }
   return (
     <BakeSessionProvider>
       <PageContent GGBs_id={GGBs_id} />
-    </BakeSessionProvider >
+    </BakeSessionProvider>
   )
 }
 
 export function PageContent() {
   const { user, GGBs, load_status } = useSessionContext()
   const { data: session } = useSession()
+  const [hide, setHide] = useState(false)
 
-  
-    const shareLink = `${session.user.link_id}`
+  const shareLink = `${session.user.link_id}`
 
-    const modelInstances = [
-        { position: [2.3, 0, -0.9], scale: 0.1 },
-        { position: [2.9, 0, -0.9], scale: 0.1 },
-        { position: [3.5, 0, -0.9], scale: 0.1 },
-    ];
+  const modelInstances = [
+    { position: [2.3, 0, -0.9], scale: 0.1 },
+    { position: [2.9, 0, -0.9], scale: 0.1 },
+    { position: [3.5, 0, -0.9], scale: 0.1 },
+  ]
 
-    // Mode state
-    const [selectedMode, setSelectedMode] = useState('inspect'); // inspect, view
-    const [focusedIndex, setFocusedIndex] = useState(null);
+  // Mode state
+  const [selectedMode, setSelectedMode] = useState('inspect') // inspect, view
+  const [focusedIndex, setFocusedIndex] = useState(null)
 
-    const handleClick = (index) => {
-        // console.log('Clicked index:', index);
-        // console.log('Current mode before click:', selectedMode);
-
-        if (selectedMode !== 'inspect') {
-            // console.log(`Gingerbread ${index} clicked in ${selectedMode} mode!`);
-            return;
-        }
-
-        setFocusedIndex(index);
-        setSelectedMode('view');
-
-        // console.log(`Gingerbread ${index} clicked and mode changed to view`);
-    };
-
-    const handleBack = () => {
-        setShowMessage(false);
-        setFocusedIndex(null);
-        setSelectedMode('inspect');
-        setSelectedPart(null);
-        setMessage(null);
-        setSelectedDress(null);
-    };
-
-    // test data
-    // const data = {
-    //     'ggbType': 'ggb1',
-    //     'thanks_message': "thank you! merry christmas!!",
-    //     'items': [
-    //         { 'ggbId': 0, 'item': { 'head': { 'item': 'christmas_hat', 'name': 'Neen', 'message': "merry christmas!sawesfdsafsssssssssssssssssssssssssssssssssssssssssssssssss" }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 1, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 2, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 3, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 4, 'item': { 'head': { 'item': 'reindeer', 'name': 'beam', 'message': 'so sleepy' }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 5, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 6, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 7, 'item': { 'head': { 'item': 'earpuff', 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
-    //         { 'ggbId': 8, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } }
-    //     ]
-    // };
-
-
-    // choose parts
-    const [currentPage, setCurrentPage] = useState(0);
-    const gingerbreadsPerPage = 3
-
-    let getParts = (page) => {
-        const startIndex = page * gingerbreadsPerPage;
-        const endIndex = startIndex + gingerbreadsPerPage;
-        const selectedItems = []
-
-        const initialParts = [];
-        selectedItems.forEach((item) => {
-            initialParts.push(item.item);
-        });
-
-        return initialParts;
-    };
-    
-    useEffect(()=>{
-        if(GGBs == null) return
-        getParts = (page) => {
-            const startIndex = page * gingerbreadsPerPage;
-            const endIndex = startIndex + gingerbreadsPerPage;
-            const selectedItems = GGBs.items.slice(startIndex, endIndex);
-
-            const initialParts = [];
-            selectedItems.forEach((item) => {
-                initialParts.push(item.item);
-            });
-
-            return initialParts;
-        };
-        setPartsInGingerBread(getParts(currentPage))
-    }, [GGBs])
-
-    const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)); // parts that already been saved
-
-    const [selectedPart, setSelectedPart] = useState(null);
-    const [selectedDress, setSelectedDress] = useState(null);
-
-    const handlePrev = () => {
-        setShowMessage(false);
-        setCurrentPage((prevPage) => {
-            if (prevPage > 0) {
-                const newPage = prevPage - 1;
-                setPartsInGingerBread(getParts(newPage));
-                return newPage;
-            }
-            return prevPage;
-        });
-    };
-
-    const handleNext = () => {
-        setShowMessage(false);
-        setCurrentPage((prevPage) => {
-            const newPage = prevPage + 1;
-            if (newPage * gingerbreadsPerPage < GGBs.items.length) {
-                setPartsInGingerBread(getParts(newPage));
-                return newPage;
-            }
-            return prevPage;
-        });
-    };
-
-    const hasPrev = currentPage > 0;
-    const [hasNext, setHasNext] = useState(false)
-        useEffect(()=>{
-            if(GGBs == null) return
-            const next = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1;
-            setHasNext(next)
-        }, [GGBs])
-
-    const canDisplayPrev = hasPrev && (selectedMode === 'inspect');
-    const canDisplayNext = hasNext && (selectedMode === 'inspect');
-
-    const [showMessage, setShowMessage] = useState(false);
-
-    const handleCloseMessage = () => {
-        setShowMessage(false);
-        setName('');
-        setMessage('');
+  const handleClick = (index) => {
+    if (selectedMode !== 'inspect') {
+      return
     }
+    setFocusedIndex(index)
+    setSelectedMode('view')
+  }
 
-    const [name, setName] = useState('')
-    const [message, setMessage] = useState('')
+  const handleBack = () => {
+    setShowMessage(false)
+    setFocusedIndex(null)
+    setSelectedMode('inspect')
+    setSelectedPart(null)
+    setMessage(null)
+    setSelectedDress(null)
+  }
 
-    // return
-    if (load_status == 'loading') return <Loading /> 
-    if (!GGBs) return notFound()
-    return (
-        <div className="gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50 text-blue-800 shadow-lg">
-          <Toaster />
-          <p className="absolute top-16 z-30 w-full text-center font-bold text-white">{`${user?.username}'s TinkerBreads`}</p>
-          
-          
-            <Canvas>
-                <ambientLight intensity={4.5} />
-                {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
-                <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
-                <Scene />
+  // choose parts
+  const [currentPage, setCurrentPage] = useState(0)
+  const gingerbreadsPerPage = 3
 
-                {modelInstances.map((instance, index) => (
-                    <Gingerbread
-                        key={index}
-                        ggbType={ GGBs.ggbType}
-                        instance={instance}
-                        index={index}
-                        handleClick={handleClick}
-                        accessoryOfThis={partsInGingerbread}
-                        selectedPart={selectedPart}
-                        selectedDress={selectedDress}
-                        setName={setName}
-                        setMessage={setMessage}
-                        setShowMessage={setShowMessage} />
-                ))}
+  let getParts = (page) => {
+    const startIndex = page * gingerbreadsPerPage
+    const endIndex = startIndex + gingerbreadsPerPage
+    const selectedItems = []
 
-                <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
-                {/* <OrbitControls /> */}
-                {canDisplayPrev && <Arrow3D key={'prev'} arrow={'prev'} position={[4.75, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handlePrev} />}
-                {canDisplayNext && <Arrow3D key={'next'} arrow={'next'} position={[6.3, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handleNext} />}
-            </Canvas>
+    const initialParts = []
+    selectedItems.forEach((item) => {
+      initialParts.push(item.item)
+    })
 
-            {/* Home */}
-            {selectedMode === 'inspect' &&
-            <Link href="/" className='absolute'>
-                <button className="absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900"
-                    onClick={handleBack}>
-                    <img src='/icon/home.webp' alt="Home" className='size-full' />
-                </button>
-              </Link>}
+    return initialParts
+  }
 
-            {/* Back */}
-            {selectedMode !== 'inspect' &&
-                <button className="absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-[#FFD889]"
-                    onClick={handleBack}>
-                    <img src='/icon/back.webp' alt="Back" className='size-full' />
-                </button>}
+  useEffect(() => {
+    if (GGBs == null) return
+    getParts = (page) => {
+      const startIndex = page * gingerbreadsPerPage
+      const endIndex = startIndex + gingerbreadsPerPage
+      const selectedItems = GGBs.items.slice(startIndex, endIndex)
 
-            {/* Friend's message */}
-            {showMessage && (
-                <div className="absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-red-800 shadow-lg">
-                    <button
-                        className="absolute right-2 top-2 font-bold text-red-800 transition duration-300 hover:text-red-500"
-                        onClick={handleCloseMessage}
-                    >
-                        ×
-                    </button>
-                    <p className="mb-2 text-sm font-semibold">
-                        <span className="font-bold">From:</span> {name}
-                    </p>
-                    <p className="break-words text-base">
-                        {message}
-                    </p>
-                </div>
-            )}
+      const initialParts = []
+      selectedItems.forEach((item) => {
+        initialParts.push(item.item)
+      })
 
-            {/* Manu */}
-            {selectedMode === 'inspect' &&
-            <div className="absolute bottom-4 left-4 z-50 flex flex-col space-y-2">
-              <BakeMeComponents shareLink={shareLink} />
-              <BakeMoreGingerbread session={session} />
-            </div>
-          }
+      return initialParts
+    }
+    setPartsInGingerBread(getParts(currentPage))
+  }, [GGBs])
 
-            {/* Share Link */}
-            <button
-                className="absolute right-4 top-4 rounded-xl border-2 border-white bg-red-800 px-4 py-2 text-white shadow-lg transition duration-300 hover:bg-[#FFD889] hover:text-red-800"
-                onClick={() => {
-                   toast.success(`copied link: "${shareLink}"`)
-                    navigator.clipboard.writeText(shareLink)
-                }}
-            >
-                Copy ID
-            </button>
+  const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)) // parts that already been saved
 
-        </div >
-    );
+  const [selectedPart, setSelectedPart] = useState(null)
+  const [selectedDress, setSelectedDress] = useState(null)
+
+  const handlePrev = () => {
+    setShowMessage(false)
+    setCurrentPage((prevPage) => {
+      if (prevPage > 0) {
+        const newPage = prevPage - 1
+        setPartsInGingerBread(getParts(newPage))
+        return newPage
+      }
+      return prevPage
+    })
+  }
+
+  const handleNext = () => {
+    setShowMessage(false)
+    setCurrentPage((prevPage) => {
+      const newPage = prevPage + 1
+      if (newPage * gingerbreadsPerPage < GGBs.items.length) {
+        setPartsInGingerBread(getParts(newPage))
+        return newPage
+      }
+      return prevPage
+    })
+  }
+
+  const hasPrev = currentPage > 0
+  const [hasNext, setHasNext] = useState(false)
+  useEffect(() => {
+    if (GGBs == null) return
+    const next = currentPage < Math.ceil(GGBs.items.length / gingerbreadsPerPage) - 1
+    setHasNext(next)
+  }, [GGBs])
+
+  const canDisplayPrev = hasPrev && selectedMode === 'inspect'
+  const canDisplayNext = hasNext && selectedMode === 'inspect'
+
+  const [showMessage, setShowMessage] = useState(false)
+
+  const handleCloseMessage = () => {
+    setShowMessage(false)
+    setName('')
+    setMessage('')
+  }
+
+  const [name, setName] = useState('')
+  const [message, setMessage] = useState('')
+
+  // return
+  if (load_status == 'loading') return <Loading />
+  if (!GGBs) return notFound()
+  return (
+    <div className='gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50 text-blue-800 shadow-lg'>
+      <Toaster />
+      <p className='absolute top-16 z-30 w-full text-center font-bold text-white'>{`${user?.username}'s TinkerBreads`}</p>
+
+      <Canvas>
+        <ambientLight intensity={4.5} />
+        {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
+        <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
+        <Scene />
+
+        {modelInstances.map((instance, index) => (
+          <Gingerbread
+            key={index}
+            ggbType={GGBs.ggbType}
+            instance={instance}
+            index={index}
+            handleClick={handleClick}
+            accessoryOfThis={partsInGingerbread}
+            selectedPart={selectedPart}
+            selectedDress={selectedDress}
+            setName={setName}
+            setMessage={setMessage}
+            setShowMessage={setShowMessage}
+          />
+        ))}
+
+        <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
+        {/* <OrbitControls /> */}
+        {canDisplayPrev && (
+          <Arrow3D
+            key={'prev'}
+            arrow={'prev'}
+            position={[4.75, 0, 0.2]}
+            rotation={[0, (Math.PI * 3) / 2, 0]}
+            onClick={handlePrev}
+          />
+        )}
+        {canDisplayNext && (
+          <Arrow3D
+            key={'next'}
+            arrow={'next'}
+            position={[6.3, 0, 0.2]}
+            rotation={[0, (Math.PI * 3) / 2, 0]}
+            onClick={handleNext}
+          />
+        )}
+      </Canvas>
+
+      <button
+        className='absolute right-3 bottom-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
+        style={{ opacity: hide ? 0.2 : 1 }}
+        onClick={() => {
+          setHide(!hide)
+        }}
+      >
+        {hide ? (
+          <img src='/icon/hide.png' alt='hide' className='size-full invert' />
+        ) : (
+          <img src='/icon/nothide.png' alt='nothide' className='size-full invert' />
+        )}
+      </button>
+
+      {/* Home */}
+      {selectedMode === 'inspect' && !hide && (
+        <Link href='/' className='absolute'>
+          <button
+            className='absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
+            onClick={handleBack}
+          >
+            <img src='/icon/home.webp' alt='Home' className='size-full' />
+          </button>
+        </Link>
+      )}
+
+      {/* Back */}
+      {selectedMode !== 'inspect' && !hide && (
+        <button
+          className='absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-[#FFD889]'
+          onClick={handleBack}
+        >
+          <img src='/icon/back.webp' alt='Back' className='size-full' />
+        </button>
+      )}
+
+      {/* Friend's message */}
+      {showMessage && !hide && (
+        <div className='absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-red-800 shadow-lg'>
+          <button
+            className='absolute right-2 top-2 font-bold text-red-800 transition duration-300 hover:text-red-500'
+            onClick={handleCloseMessage}
+          >
+            ×
+          </button>
+          <p className='mb-2 text-sm font-semibold'>
+            <span className='font-bold'>From:</span> {name}
+          </p>
+          <p className='break-words text-base'>{message}</p>
+        </div>
+      )}
+
+      {/* Manu */}
+      {selectedMode === 'inspect' && !hide && (
+        <div className='absolute bottom-4 left-4 z-50 flex flex-col space-y-2'>
+          <BakeMeComponents shareLink={shareLink} />
+          <BakeMoreGingerbread session={session} />
+        </div>
+      )}
+
+      {/* Share Link */}
+      {!hide && (
+        <button
+          className='absolute right-4 top-4 rounded-xl border-2 border-white bg-red-800 px-4 py-2 text-white shadow-lg transition duration-300 hover:bg-[#FFD889] hover:text-red-800'
+          onClick={() => {
+            toast.success(`copied link: "${shareLink}"`)
+            navigator.clipboard.writeText(shareLink)
+          }}
+        >
+          Copy ID
+        </button>
+      )}
+    </div>
+  )
 }
