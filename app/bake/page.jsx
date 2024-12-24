@@ -1,263 +1,13 @@
 "use client";
-import { useEffect, useRef, useState } from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { useLoader } from '@react-three/fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { TextureLoader } from 'three';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useState } from 'react';
+import { Canvas } from '@react-three/fiber';
 import '@/style/bake.css';
-
-function Snow({ count = 2000, area = { x: [0, 10], y: [0, 10], z: [0, 10] } }) {
-    const positions = new globalThis.Float32Array(count * 3); // Each snowflake has x, y, z
-    const velocities = useRef(new Array(count).fill(0).map(() => Math.random() * 0.02 + 0.01)); // Snowfall speed
-    const ref = useRef();
-
-    // Generate random positions within the specified area
-    for (let i = 0; i < count; i++) {
-        positions[i * 3] = Math.random() * (area.x[1] - area.x[0]) + area.x[0]; // x
-        positions[i * 3 + 1] = Math.random() * (area.y[1] - area.y[0]) + area.y[0]; // y
-        positions[i * 3 + 2] = Math.random() * (area.z[1] - area.z[0]) + area.z[0]; // z
-    }
-
-    useFrame(() => {
-        const array = ref.current.geometry.attributes.position.array;
-        const speed = velocities.current;
-
-        for (let i = 0; i < count; i++) {
-            array[i * 3 + 1] -= speed[i];
-            if (array[i * 3 + 1] < area.y[0]) {
-                array[i * 3 + 1] = area.y[1];
-            }
-        }
-        ref.current.geometry.attributes.position.needsUpdate = true;
-    });
-
-    return (
-        <points ref={ref}>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    count={count}
-                    array={positions}
-                    itemSize={3}
-                />
-            </bufferGeometry>
-            <pointsMaterial
-                color="white"
-                size={0.1}
-                sizeAttenuation
-                transparent
-                opacity={0.5}
-            />
-        </points>
-    );
-}
-
-function GingerbreadWithDecoration({ instance, index, handleClick, focusedIndex, tempAccessoryOfThis }) {
-    // Loading the textures for gingerbread model and accessory
-    const modelTexture = useLoader(TextureLoader, '/gingerbread/ggb1.jpg', () => {
-        console.log('Texture loaded');
-    });
-    modelTexture.flipY = false;
-
-    // Loading the gingerbread model
-    const model = useLoader(GLTFLoader, '/gingerbread/ggb1.glb', (loader) => {
-        const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('/draco/');
-        loader.setDRACOLoader(dracoLoader);
-    });
-
-    // Refs for controlling models and group
-    const modelRef = useRef();
-
-    useEffect(() => {
-        if (model && model.scene) {
-            model.scene.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.map = modelTexture;
-                    child.material.needsUpdate = true;
-                }
-            });
-            modelRef.current = model.scene;
-        }
-
-    }, [model, modelTexture]);
-
-    // If model not loaded, return null
-    if (!model || !model.scene) {
-        return null;
-    }
-
-    const headAccessory = tempAccessoryOfThis[index]['head'] || null;
-    const leftAccessory = tempAccessoryOfThis[index]['left hand'] || null;
-    const rightAccessory = tempAccessoryOfThis[index]['right hand'] || null;
-
-    // load head model 
-
-    let headAccessoryModel = null;
-    let headAccessoryTexture = null;
-
-    if (headAccessory) {
-        headAccessoryModel = useLoader(GLTFLoader, `/accessory/${headAccessory}.glb`, (loader) => {
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('/draco/');
-            loader.setDRACOLoader(dracoLoader);
-        });
-
-        headAccessoryTexture = useLoader(TextureLoader, `/accessory/${headAccessory}.jpg`, () => {
-            console.log(`head texture of ${index} loaded`);
-        });
-        headAccessoryTexture.flipY = false;
-    }
-
-    // load head model 
-
-    let leftAccessoryModel = null;
-    let leftAccessoryTexture = null;
-
-    if (leftAccessory) {
-        leftAccessoryModel = useLoader(GLTFLoader, `/accessory/${leftAccessory}.glb`, (loader) => {
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('/draco/');
-            loader.setDRACOLoader(dracoLoader);
-        });
-
-        leftAccessoryTexture = useLoader(TextureLoader, `/accessory/${leftAccessory}.jpg`, () => {
-            console.log(`head texture of ${index} loaded`);
-        });
-        leftAccessoryTexture.flipY = false;
-    }
-
-    // load right model 
-
-    let rightAccessoryModel = null;
-    let rightAccessoryTexture = null;
-
-    if (rightAccessory) {
-        rightAccessoryModel = useLoader(GLTFLoader, `/accessory/${rightAccessory}.glb`, (loader) => {
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('/draco/');
-            loader.setDRACOLoader(dracoLoader);
-        });
-
-        rightAccessoryTexture = useLoader(TextureLoader, `/accessory/${rightAccessory}.jpg`, () => {
-            console.log(`head texture of ${index} loaded`);
-        });
-        rightAccessoryTexture.flipY = false;
-    }
-
-    useEffect(() => {
-        const updateAccessoryTexture = (accessoryModel, accessoryTexture) => {
-            if (accessoryModel && accessoryModel.scene) {
-                accessoryModel.scene.traverse((child) => {
-                    if (child.isMesh) {
-                        child.material.map = accessoryTexture;
-                        child.material.needsUpdate = true;
-                    }
-                });
-            }
-        };
-
-        updateAccessoryTexture(headAccessoryModel, headAccessoryTexture);
-        updateAccessoryTexture(leftAccessoryModel, leftAccessoryTexture);
-        updateAccessoryTexture(rightAccessoryModel, rightAccessoryTexture);
-    }, [headAccessoryModel, headAccessoryTexture, leftAccessoryModel, leftAccessoryTexture, rightAccessoryModel, rightAccessoryTexture]);
-
-
-    const position = {
-        'candy': [-27, 0.5, 3],
-        'red_present': [-29, 0.6, 3],
-        'cup': [-31, 0.6, 2.9],
-        'christmas_hat': [-24.8, 0.5, -2.8],
-        'reindeer': [-28.2, 0, -3],
-        'earpuff': [-32.25, 0.5, -2.2],
-        'green_present': [-28.2, 0.6, -3.2],
-        'candy2': [-25.8, 0.8, -3.6],
-        'christmas_tree': [-23.4, 0.7, -4]
-    }
-
-    console.log('head accessory model:', headAccessoryModel, index);
-    console.log('left accessory model:', leftAccessoryModel, index);
-    console.log('right accessory model:', rightAccessoryModel, index);
-
-    console.log(tempAccessoryOfThis);
-
-
-
-    return (
-        <group
-            scale={instance.scale}
-            position={instance.position}
-            onClick={() => handleClick(index)}
-            focusedIndex={focusedIndex}>
-
-            <primitive
-                key={`ggb3Model - ${index}`}
-                object={model.scene.clone()}
-                position={[0, 0, 0]}
-                scale={1}
-            />
-
-            {/* head accessory */}
-            {headAccessoryModel && <primitive
-                key={`head-accessory-${index}`}
-                position={position[headAccessory]}
-                scale={1}
-                object={headAccessoryModel.scene.clone()} />}
-
-            {/* left hand accessory */}
-            {leftAccessoryModel && <primitive
-                key={`left-accessory-${index}`}
-                position={position[leftAccessory]}
-                scale={1}
-                object={leftAccessoryModel.scene.clone()} />}
-
-            {/* right hand accessory */}
-            {rightAccessoryModel && <primitive
-                key={`right-accessory-${index}`}
-                position={position[rightAccessory]}
-                scale={1}
-                object={rightAccessoryModel.scene.clone()} />}
-        </group>
-    );
-};
-
-function Scene() {
-    const sceneTexture = useLoader(TextureLoader, '/scene/scene.jpg');
-    sceneTexture.flipY = false;
-
-    const sceneModel = useLoader(
-        GLTFLoader,
-        '/scene/scene.glb',
-        (loader) => {
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('/draco/');
-            loader.setDRACOLoader(dracoLoader);
-        }
-    );
-
-    const modelRef = useRef();
-
-    useEffect(() => {
-        if (sceneModel && sceneModel.scene) {
-            sceneModel.scene.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.map = sceneTexture;
-                    child.material.needsUpdate = true;
-                }
-            });
-
-            modelRef.current = sceneModel.scene;
-        }
-    }, [sceneModel, sceneTexture]);
-
-    if (!sceneModel) return null;
-
-    return <primitive object={sceneModel.scene} scale={0.1} position={[1, -3, 5]} />
-}
+import { Snow } from '@/components/Snow.jsx';
+import { CameraController } from '@/components/CameraController.jsx';
+import { Scene } from '@/components/Scene.jsx';
+import { Gingerbread } from '@/components/Gingerbread.jsx';
+import { OrbitControls } from '@react-three/drei';
+import { Arrow3D } from '@/components/Arrow';
 
 export default function BakePage() {
     const modelInstances = [
@@ -299,7 +49,6 @@ export default function BakePage() {
         setSelectedPart(null);
         setMessage(null);
         setSelectedDress(null);
-        console.log(partsInGingerbread);
 
         setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)));
 
@@ -340,6 +89,7 @@ export default function BakePage() {
     const handleSendMessage = () => {
 
         setSelectedMode('thankyou');
+        // save to database
         setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)));
     };
 
@@ -347,18 +97,49 @@ export default function BakePage() {
         setMessage(event.target.value);
     };
 
+    // test data
+    const data = {
+        'ggbType': 'ggb1',
+        'thanks_message': "thank you! merry christmas!!",
+        'items': [
+            { 'ggbId': 0, 'item': { 'head': 'christmas_hat', 'left hand': null, 'right hand': null } },
+            { 'ggbId': 1, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 2, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 3, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 4, 'item': { 'head': 'reindeer', 'left hand': null, 'right hand': null } },
+            { 'ggbId': 5, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 6, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 7, 'item': { 'head': 'earpuff', 'left hand': null, 'right hand': null } },
+            { 'ggbId': 8, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+        ]
+    }
+
+    // load thank you message
+    const thankYouMessage = data.thanks_message;
+    const ggbType = data.ggbType;
+
     // choose parts
+    const [currentPage, setCurrentPage] = useState(0);
+    const gingerbreadsPerPage = 3
+
+    const getParts = (page) => {
+        const startIndex = page * gingerbreadsPerPage;
+        const endIndex = startIndex + gingerbreadsPerPage;
+        const selectedItems = data.items.slice(startIndex, endIndex);
+
+        const initialParts = [];
+        selectedItems.forEach((item) => {
+            initialParts.push(item.item);
+        });
+
+        return initialParts;
+    };
+
+
     const parts = ['head', 'left hand', 'right hand']
-    const [partsInGingerbread, setPartsInGingerBread] = useState({ // parts that already been saved
-        0: { 'head': null, 'left hand': null, 'right hand': null },
-        1: { 'head': null, 'left hand': null, 'right hand': null },
-        2: { 'head': null, 'left hand': null, 'right hand': null },
-    });
-    const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState({
-        0: { 'head': null, 'left hand': null, 'right hand': null },
-        1: { 'head': null, 'left hand': null, 'right hand': null },
-        2: { 'head': null, 'left hand': null, 'right hand': null },
-    });
+    const [partsInGingerbread, setPartsInGingerBread] = useState(getParts(currentPage)); // parts that already been saved
+    const [tempPartsInGingerbread, setTempPartsInGingerBread] = useState(JSON.parse(JSON.stringify(partsInGingerbread)));
+
     const [selectedPart, setSelectedPart] = useState(null);
     const [selectedDress, setSelectedDress] = useState(null);
     const [message, setMessage] = useState('');
@@ -375,17 +156,61 @@ export default function BakePage() {
         }
         setCanDecorateIndex((prev) => prev + 1);
     };
+
+    const isThisCanDecorate = (index) => {
+        const tmp = currentPage * gingerbreadsPerPage + index;
+        return tmp === canDecorateIndex;
+    }
+
+
+    function isPartFull(part) {
+        return partsInGingerbread[focusedIndex][part] !== null;
+    }
+
+    const handlePrev = () => {
+        setCurrentPage((prevPage) => {
+            if (prevPage > 0) {
+                const newPage = prevPage - 1;
+                setPartsInGingerBread(getParts(newPage));
+                setTempPartsInGingerBread(getParts(newPage));
+                return newPage;
+            }
+            return prevPage;
+        });
+    };
+
+    const handleNext = () => {
+        console.log('next');
+
+        setCurrentPage((prevPage) => {
+            const newPage = prevPage + 1;
+            if (newPage * gingerbreadsPerPage < data.items.length) {
+                setPartsInGingerBread(getParts(newPage));
+                setTempPartsInGingerBread(getParts(newPage));
+                return newPage;
+            }
+            return prevPage;
+        });
+    };
+
+    const hasPrev = currentPage > 0;
+    const hasNext = currentPage < Math.ceil(data.items.length / gingerbreadsPerPage) - 1;
+
+    const canDisplayPrev = hasPrev && (selectedMode === 'inspect');
+    const canDisplayNext = hasNext && (selectedMode === 'inspect');
+
     return (
         <div className="gradient-container relative flex flex-col h-full min-h-screen w-full gap-6 md:mx-auto md:max-w-[25rem] bg-blue-50 text-blue-800 shadow-lg">
             <Canvas>
-                <ambientLight intensity={1.5} />
-                <ambientLight color={'#ffa35c'} intensity={1} />
+                <ambientLight intensity={4.5} />
+                {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
                 <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
                 <Scene />
 
                 {modelInstances.map((instance, index) => (
-                    <GingerbreadWithDecoration
+                    <Gingerbread
                         key={index}
+                        ggbType={ggbType}
                         instance={instance}
                         index={index}
                         handleClick={handleClick}
@@ -397,157 +222,143 @@ export default function BakePage() {
 
                 <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
                 {/* <OrbitControls /> */}
+                {canDisplayPrev && <Arrow3D key={'prev'} arrow={'prev'} position={[4.75, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handlePrev} />}
+                {canDisplayNext && <Arrow3D key={'next'} arrow={'next'} position={[6.3, 0, 0.2]} rotation={[0, Math.PI * 3 / 2, 0]} onClick={handleNext} />}
             </Canvas>
 
-            {selectedMode !== 'inspect' &&
-                <button className="absolute top-2 left-2 bg-red-800 text-white w-28 p-3 rounded-lg shadow-lg hover:bg-red-400 transition duration-300"
+            {/* Home */}
+            {selectedMode === 'inspect' &&
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
                     onClick={handleBack}>
-                    Back
+                    <img src='/icon/home.webp' alt="Home" className='w-full h-full' />
                 </button>}
 
-            {selectedMode === 'view' && <button
-                className="absolute top-20 left-2 bg-green-800 text-white w-28 p-3 rounded-lg shadow-lg hover:bg-green-400 transition duration-300"
-                onClick={handleGetDecorated}
-                disabled={canDecorateIndex !== focusedIndex}>
-                decorate</button>}
+            {/* Back */}
+            {selectedMode !== 'inspect' &&
+                <button className="absolute border-2 border-white top-3 left-3 bg-red-800 hover:bg-red-900 text-white w-12 h-12 p-3 rounded-full shadow-lg transition duration-300"
+                    onClick={handleBack}>
+                    <img src='/icon/back.webp' alt="Back" className='w-full h-full' />
+                </button>}
 
-            {selectedMode === 'choosePos' && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    {parts.map((part, index) => {
-                        return (
-                            <button
-                                key={index}
-                                onClick={() => handleSelectPart(part)}
-                                className="p-2 m-2 bg-blue-500 text-white w-28"
-                            >
-                                {part}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
-
-            {selectedMode === 'chooseDress' && selectedPart && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    <div className="p-2 text-white">{`Choose a dress for ${selectedPart}`}</div>
-                    {dressOptions[selectedPart].map((dress) => (
-                        <button
-                            key={dress}
-                            onClick={() => handleSelectDress(dress)}
-                            className={`p-2 m-2 w-28 ${dress === selectedDress ? 'bg-blue-500' : 'bg-green-500'
-                                } text-white`}
-                        >
-                            {dress}
-                        </button>
-                    ))}
-
+            {selectedMode === 'view' && isThisCanDecorate(focusedIndex) && (
+                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
+                    <p className="text-lg font-semibold mb-4 text-center">
+                        Ready to help dress up your friend's gingerbread? 🎄🍪
+                    </p>
                     <button
-                        className="p-2 mt-4 bg-yellow-500 text-white w-28"
-                        onClick={handleConfirmDress}
+                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                        onClick={handleGetDecorated}
                     >
-                        Confirm
+                        Yes, Let's Go! 🌟
                     </button>
                 </div>
             )}
 
+
+            {selectedMode === 'choosePos' && (
+                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-72">
+                    {/* Title */}
+                    <p className="text-lg font-semibold mb-4 text-center">
+                        Choose your position 🎨
+                    </p>
+
+                    {/* Position selection buttons */}
+                    <div className="flex flex-col justify-center items-center gap-2">
+                        {parts.map((part, index) => {
+                            return (
+                                !isPartFull(part) && (
+                                    <button
+                                        key={index}
+                                        onClick={() => handleSelectPart(part)}
+                                        className="p-2 bg-green-700 text-white w-full rounded-lg shadow-md hover:bg-green-800 transition duration-300"
+                                    >
+                                        {part}
+                                    </button>
+                                )
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+
+            {selectedMode === 'chooseDress' && selectedPart && (
+                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
+                    {/* Title */}
+                    <div className="text-lg font-semibold mb-4 text-center">
+                        {`Choose an accessory 🎨`}
+                    </div>
+
+                    {/* Dress options */}
+                    <div className="flex flex-col justify-center gap-3 w-full items-center">
+                        {dressOptions[selectedPart].map((dress) => (
+                            <button
+                                key={dress}
+                                onClick={() => handleSelectDress(dress)}
+                                className={`p-2 w-full rounded-lg shadow-md transition duration-300 ${dress === selectedDress
+                                    ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                                    : 'bg-green-700 text-white hover:bg-green-800'
+                                    }`}
+                            >
+                                {dress}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Confirm button */}
+                    <button
+                        className="mt-4 block mx-auto w-full bg-red-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-red-800 transition duration-300"
+                        onClick={handleConfirmDress}
+                    >
+                        Confirm 🌟
+                    </button>
+                </div>
+            )}
+
+
             {selectedMode === 'message' && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    <div className="p-2 text-white">Send a message to the gingerbread owner:</div>
+                <div className="absolute top-20 left-5 z-10 bg-[#FFD889] text-pink-900 border-2 border-white p-4 rounded-xl shadow-lg w-60">
+                    {/* Title */}
+                    <div className="text-lg font-semibold text-center mb-3">
+                        Send some messages🎄
+                    </div>
 
                     {/* Message input area */}
                     <textarea
-                        className="p-2 m-2 w-80 h-32 border rounded-md text-black"
+                        className="w-full h-32 border-2 border-pink-900 rounded-md p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700 resize-none"
                         value={message}
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                            if (e.target.value.length <= 100) {
+                                handleInputChange(e);
+                            }
+                        }}
                         placeholder="Type your message here..."
                     />
 
                     {/* Send button */}
                     <button
-                        className="p-2 m-2 bg-green-500 text-white w-28"
+                        className="mt-4 block mx-auto bg-green-700 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
                         onClick={handleSendMessage}
                     >
-                        Send
+                        Send 🌟
                     </button>
                 </div>
             )}
+
 
             {selectedMode === 'thankyou' && (
-                <div className="absolute bottom-0 left-4 z-10">
-                    <div className="p-2 text-white">Thank you for your message!</div>
-
-                    {/* Go back to inspect button */}
+                <div className="absolute top-20 left-7 border-2 border-white bg-[#FFD889] text-pink-900 p-5 rounded-xl shadow-lg w-80">
+                    <p className="text-lg font-semibold mb-4 text-center" >{thankYouMessage}
+                    </p>
                     <button
-                        className="p-2 m-2 bg-black text-white w-28"
+                        className="block mx-auto bg-green-700 text-white px-5 py-2 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
                         onClick={handleBack}
                     >
-                        Back to Inspect
+                        Back to kitchen
                     </button>
                 </div>
             )}
 
-
-        </div>
-    );
-}
-
-function CameraController({ focusedIndex }) {
-    const { camera, gl } = useThree();
-
-    const defaultPosition = new THREE.Vector3(2.104 + 2.5, 5.362, 2.1 + 5.5 - 2);
-    const defaultRotation = new THREE.Vector3(-0.56159 - 0.5, 0.358407 - 0.75, 0.20840 - 0.7);
-    const focusedPositions = [
-        new THREE.Vector3(0.8, 1, 1),
-        new THREE.Vector3(2, 2, 1.4),
-        new THREE.Vector3(3.7, 2, 3),
-    ];
-    const focusedRotations = [
-        new THREE.Vector3(-3, 2, 1),
-        new THREE.Vector3(-1, 0, 1),
-        new THREE.Vector3(0, 0.208407, 0.208407),
-    ];
-
-    const positionLimit = {
-        x: 20,
-        y: 10,
-        z: 5,
-    };
-    const rotationLimit = {
-        x: 2,
-        y: 2,
-        z: 2,
-    };
-
-    useFrame(() => {
-        const targetPosition = focusedIndex !== null ? focusedPositions[focusedIndex] : defaultPosition;
-        const targetRotation = focusedIndex !== null ? focusedRotations[focusedIndex] : defaultRotation;
-
-        // Smoothly transition position
-        camera.position.lerp(targetPosition, 0.01);
-
-        // Apply limits for position (clamp the position within defined limits)
-        camera.position.x = THREE.MathUtils.clamp(camera.position.x, targetPosition.x - positionLimit.x, targetPosition.x + positionLimit.x);
-        camera.position.y = THREE.MathUtils.clamp(camera.position.y, targetPosition.y - positionLimit.y, targetPosition.y + positionLimit.y);
-        camera.position.z = THREE.MathUtils.clamp(camera.position.z, targetPosition.z - positionLimit.z, targetPosition.z + positionLimit.z);
-
-        // Smoothly transition rotation
-        camera.rotation.x = THREE.MathUtils.clamp(camera.rotation.x, targetRotation.x - rotationLimit.x, targetRotation.x + rotationLimit.x);
-        camera.rotation.y = THREE.MathUtils.clamp(camera.rotation.y, targetRotation.y - rotationLimit.y, targetRotation.y + rotationLimit.y);
-        camera.rotation.z = THREE.MathUtils.clamp(camera.rotation.z, targetRotation.z - rotationLimit.z, targetRotation.z + rotationLimit.z);
-    });
-
-    return (
-        <OrbitControls
-            enablePan={false}
-            enableZoom={false}
-            enableRotate={true}
-            enableDamping={true}
-            dampingFactor={0.25}
-            minPolarAngle={Math.PI / 4}
-            maxPolarAngle={Math.PI / 3}
-            minDistance={1}
-            maxDistance={5}
-            args={[camera, gl.domElement]}
-        />
+        </div >
     );
 }

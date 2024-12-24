@@ -17,6 +17,7 @@ export default function BakeMoreGingerbread({ session }) {
     <button
       onClick={() => {
         if (cooldown != 0) {
+          toast.dismiss()
           toast.error('please wait')
           return
         }
@@ -24,7 +25,7 @@ export default function BakeMoreGingerbread({ session }) {
         handdleAddGGB(session)
       }}
     >
-      <Button text='Bake More Gingerbread' />
+      <Button text='Bake More' />
     </button>
   )
 }
