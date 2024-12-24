@@ -55,7 +55,7 @@ export default function Home() {
                 <button
                     className="w-44 border-2 border-white bg-red-800 hover:bg-[#FFD889] hover:text-red-800 text-white py-2 px-4 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl focus:outline-none"
                 >
-                    Login with Google
+                    Log in
                 </button>
                 <button
                     onClick={() => setModalVisible(true)}
