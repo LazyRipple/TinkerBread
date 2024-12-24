@@ -98,21 +98,42 @@ export default function BakePage() {
     };
 
     // test data
-    const data = {
+    const transformData = (data) => {
+        const transformedItems = data.items.map(item => ({
+            ggbId: item.ggbId,
+            item: {
+                'head': item.item['head']?.item || null,
+                'left hand': item.item['left hand']?.item || null,
+                'right hand': item.item['right hand']?.item || null,
+            }
+        }));
+        return {
+            ...data,
+            items: transformedItems
+        };
+    };
+
+    // Original data
+    const beforeData = {
         'ggbType': 'ggb1',
         'thanks_message': "thank you! merry christmas!!",
         'items': [
-            { 'ggbId': 0, 'item': { 'head': 'christmas_hat', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 1, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 2, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 3, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 4, 'item': { 'head': 'reindeer', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 5, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 6, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
-            { 'ggbId': 7, 'item': { 'head': 'earpuff', 'left hand': null, 'right hand': null } },
-            { 'ggbId': 8, 'item': { 'head': null, 'left hand': null, 'right hand': null } },
+            { 'ggbId': 0, 'item': { 'head': { 'item': 'christmas_hat', 'name': 'Neen', 'message': "merry christmas!sawesfdsafsssssssssssssssssssssssssssssssssssssssssssssssss" }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 1, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 2, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 3, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 4, 'item': { 'head': { 'item': 'reindeer', 'name': 'beam', 'message': 'so sleepy' }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 5, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 6, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 7, 'item': { 'head': { 'item': 'earpuff', 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } },
+            { 'ggbId': 8, 'item': { 'head': { 'item': null, 'name': null, 'message': null }, 'left hand': { 'item': null, 'name': null, 'message': null }, 'right hand': { 'item': null, 'name': null, 'message': null } } }
         ]
-    }
+    };
+
+    // Transformed data
+    const data = transformData(beforeData);
+    console.log(data);
+
 
     // load thank you message
     const thankYouMessage = data.thanks_message;
