@@ -15,7 +15,7 @@ import { Scene } from '@/components/Scene.jsx'
 import { Gingerbread } from '@/components/GingerbreadMe.jsx'
 import { Arrow3D } from '@/components/Arrow'
 import Link from 'next/link'
-import BakeMoreGingerbread from './BakeMoreGingerbread'
+import BakeMoreGingerbread, { Textbox } from './BakeMoreGingerbread'
 
 export default function Page() {
   const { GGBs_id } = useParams()
@@ -145,6 +145,7 @@ function PageContent() {
         <Loading />
       ) : (
         <div className='gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50 text-blue-800 shadow-lg'>
+          <Textbox />
           <Toaster />
           <p className='absolute top-16 z-30 w-full text-center font-bold text-white'>{`${user?.username}'s TinkerBreads`}</p>
 
