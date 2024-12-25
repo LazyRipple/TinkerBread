@@ -138,7 +138,7 @@ function PageContent() {
 
   // return
   // if (load_status == 'loading' && GGBs == null) return <Loading />
-  if (!GGBs) return notFound()
+  if (load_status != 'loading' && !GGBs) return notFound()
   return (
     <>
       {load_status == 'loading' && GGBs == null ? (

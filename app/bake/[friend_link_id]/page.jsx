@@ -222,7 +222,7 @@ function BakePage({ friend_link }) {
   const canDisplayNext = hasNext && selectedMode === 'inspect'
 
   // if (load_status == 'loading' && GGBs == null) return <Loading />
-  if (!GGBs) return notFound()
+  if (load_status != 'loading' && !GGBs) return notFound()
   return (
     <>
       {load_status == 'loading' && GGBs == null ? (
