@@ -101,14 +101,14 @@ function BakePage({ friend_link }) {
     setSelectedMode('message')
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     setSelectedMode('thankyou')
     // save to database
     const itemName = selectedDress
     const tempL = selectedPart.split(' ')
     const position = `${tempL[0]}${focusedIndex + 1}${tempL.length > 1 ? '_' + tempL[1] : ''}`
     const id = GGBs.items[3 * currentPage + focusedIndex].ggbId
-    const res = handdleAddItem(session, id, GGBs.GGBs_id, itemName, position, message)
+    const res = await handdleAddItem(session, id, GGBs.GGBs_id, itemName, position, message)
     if (res == 'success') {
       setPartsInGingerBread(JSON.parse(JSON.stringify(tempPartsInGingerbread)))
       GGBs.is_decorate = 'T'
