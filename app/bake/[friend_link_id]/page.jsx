@@ -102,7 +102,6 @@ function BakePage({ friend_link }) {
   }
 
   const handleSendMessage = async () => {
-    setSelectedMode('thankyou')
     // save to database
     const itemName = selectedDress
     const tempL = selectedPart.split(' ')
@@ -115,6 +114,7 @@ function BakePage({ friend_link }) {
     } else {
       setTempPartsInGingerBread(JSON.parse(JSON.stringify(partsInGingerbread)))
     }
+    setSelectedMode('thankyou')
   }
 
   const handleInputChange = (event) => {
