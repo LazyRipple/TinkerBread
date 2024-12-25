@@ -137,7 +137,7 @@ function PageContent() {
   const [message, setMessage] = useState('')
 
   // return
-  if (load_status == 'loading') return <Loading />
+  if (load_status == 'loading' && GGBs == null) return <Loading />
   if (!GGBs) return notFound()
   return (
     <div className='gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50 text-blue-800 shadow-lg'>
