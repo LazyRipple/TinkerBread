@@ -5,7 +5,7 @@ export async function POST(request) {
   try {
     // TODO : change this when on production
     // const allowedOrigins = ['http://localhost:3000']
-    const allowedOrigins = ['https://tinker-bread.vercel.app/']
+    const allowedOrigins = ['https://tinker-bread.vercel.app']
     const origin = request.headers.get('origin')
     if (!allowedOrigins.includes(origin)) {
       throw new Error('Forbidden: Invalid origin')
