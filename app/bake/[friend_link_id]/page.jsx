@@ -221,184 +221,190 @@ function BakePage({ friend_link }) {
   const canDisplayPrev = hasPrev && selectedMode === 'inspect'
   const canDisplayNext = hasNext && selectedMode === 'inspect'
 
-  if (load_status == 'loading' && GGBs == null) return <Loading />
+  // if (load_status == 'loading' && GGBs == null) return <Loading />
   if (!GGBs) return notFound()
   return (
-    <div className='gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50  text-blue-800 shadow-lg'>
-      <Toaster />
-      <p className='absolute top-16 z-30 w-full text-center font-bold text-white'>{`${GGBs?.owner}'s TinkerBreads`}</p>
-      <Canvas>
-        <ambientLight intensity={4.5} />
-        {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
-        <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
-        <Scene />
+    <>
+      {load_status == 'loading' && GGBs == null ? (
+        <Loading />
+      ) : (
+        <div className='gradient-container relative flex size-full min-h-screen flex-col gap-6 bg-blue-50  text-blue-800 shadow-lg'>
+          <Toaster />
+          <p className='absolute top-16 z-30 w-full text-center font-bold text-white'>{`${GGBs?.owner}'s TinkerBreads`}</p>
+          <Canvas>
+            <ambientLight intensity={4.5} />
+            {/* <ambientLight color={'#ffa35c'} intensity={1} /> */}
+            <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
+            <Scene />
 
-        {modelInstances.map((instance, index) => (
-          <Gingerbread
-            key={index}
-            ggbType={GGBs.ggbType}
-            instance={instance}
-            index={index}
-            handleClick={handleClick}
-            tempAccessoryOfThis={tempPartsInGingerbread}
-            selectedPart={selectedPart}
-            selectedDress={selectedDress}
-            updateSelectDress={updateSelectDress}
-          />
-        ))}
-
-        <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
-        {/* <OrbitControls /> */}
-        {canDisplayPrev && (
-          <Arrow3D
-            key={'prev'}
-            arrow={'prev'}
-            position={[4.75, 0, 0.2]}
-            rotation={[0, (Math.PI * 3) / 2, 0]}
-            onClick={handlePrev}
-          />
-        )}
-        {canDisplayNext && (
-          <Arrow3D
-            key={'next'}
-            arrow={'next'}
-            position={[6.3, 0, 0.2]}
-            rotation={[0, (Math.PI * 3) / 2, 0]}
-            onClick={handleNext}
-          />
-        )}
-      </Canvas>
-
-      {/* Home */}
-      {selectedMode === 'inspect' && (
-        <Link href={'/'} className='absolute left-3 top-3 font-semibold hover:underline'>
-          <button
-            className='absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
-            onClick={handleBack}
-          >
-            <img src='/icon/home.webp' alt='Home' className='size-full' />
-          </button>
-        </Link>
-      )}
-
-      {/* Back */}
-      {selectedMode !== 'inspect' && (
-        <button
-          className='absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
-          onClick={handleBack}
-        >
-          <img src='/icon/back.webp' alt='Back' className='size-full' />
-        </button>
-      )}
-
-      {selectedMode === 'view' && GGBs.is_decorate == 'F' && isThisCanDecorate(focusedIndex) && (
-        <div className='absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg'>
-          <p className='mb-4 text-center text-lg font-semibold'>
-            Ready to help dress up your friend&apos;s gingerbread? 🎄🍪
-          </p>
-          <button
-            className='mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800'
-            onClick={handleGetDecorated}
-          >
-            Yes, Let&apos;s Go! 🌟
-          </button>
-        </div>
-      )}
-
-      {selectedMode === 'choosePos' && (
-        <div className='absolute left-5 top-20 z-10 w-72 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg'>
-          {/* Title */}
-          <p className='mb-4 text-center text-lg font-semibold'>Choose your position 🎨</p>
-
-          {/* Position selection buttons */}
-          <div className='flex flex-col items-center justify-center gap-2'>
-            {parts.map((part, index) => {
-              return (
-                !isPartFull(part) && (
-                  <button
-                    key={index}
-                    onClick={() => handleSelectPart(part)}
-                    className='w-full rounded-lg bg-green-700 p-2 text-white shadow-md transition duration-300 hover:bg-green-800'
-                  >
-                    {part}
-                  </button>
-                )
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {selectedMode === 'chooseDress' && selectedPart && (
-        <div className='absolute left-5 top-20 z-10 w-60 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg'>
-          {/* Title */}
-          <div className='mb-4 text-center text-lg font-semibold'>{`Choose an accessory 🎨`}</div>
-
-          {/* Dress options */}
-          <div className='flex w-full flex-col items-center justify-center gap-3'>
-            {dressOptions[selectedPart].map((dress) => (
-              <button
-                key={dress}
-                onClick={() => handleSelectDress(dress)}
-                className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${
-                  dress === selectedDress
-                    ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-                    : 'bg-green-700 text-white hover:bg-green-800'
-                }`}
-              >
-                {dressLabel[dress]}
-              </button>
+            {modelInstances.map((instance, index) => (
+              <Gingerbread
+                key={index}
+                ggbType={GGBs.ggbType}
+                instance={instance}
+                index={index}
+                handleClick={handleClick}
+                tempAccessoryOfThis={tempPartsInGingerbread}
+                selectedPart={selectedPart}
+                selectedDress={selectedDress}
+                updateSelectDress={updateSelectDress}
+              />
             ))}
-          </div>
 
-          {/* Confirm button */}
-          <button
-            className='mx-auto mt-4 block w-full rounded-lg bg-red-700 px-6 py-2 text-white shadow-md transition duration-300 hover:bg-red-800'
-            onClick={handleConfirmDress}
-          >
-            Confirm 🌟
-          </button>
+            <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
+            {/* <OrbitControls /> */}
+            {canDisplayPrev && (
+              <Arrow3D
+                key={'prev'}
+                arrow={'prev'}
+                position={[4.75, 0, 0.2]}
+                rotation={[0, (Math.PI * 3) / 2, 0]}
+                onClick={handlePrev}
+              />
+            )}
+            {canDisplayNext && (
+              <Arrow3D
+                key={'next'}
+                arrow={'next'}
+                position={[6.3, 0, 0.2]}
+                rotation={[0, (Math.PI * 3) / 2, 0]}
+                onClick={handleNext}
+              />
+            )}
+          </Canvas>
+
+          {/* Home */}
+          {selectedMode === 'inspect' && (
+            <Link href={'/'} className='absolute left-3 top-3 font-semibold hover:underline'>
+              <button
+                className='absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
+                onClick={handleBack}
+              >
+                <img src='/icon/home.webp' alt='Home' className='size-full' />
+              </button>
+            </Link>
+          )}
+
+          {/* Back */}
+          {selectedMode !== 'inspect' && (
+            <button
+              className='absolute left-3 top-3 size-12 rounded-full border-2 border-white bg-red-800 p-3 text-white shadow-lg transition duration-300 hover:bg-red-900'
+              onClick={handleBack}
+            >
+              <img src='/icon/back.webp' alt='Back' className='size-full' />
+            </button>
+          )}
+
+          {selectedMode === 'view' && GGBs.is_decorate == 'F' && isThisCanDecorate(focusedIndex) && (
+            <div className='absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg'>
+              <p className='mb-4 text-center text-lg font-semibold'>
+                Ready to help dress up your friend&apos;s gingerbread? 🎄🍪
+              </p>
+              <button
+                className='mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800'
+                onClick={handleGetDecorated}
+              >
+                Yes, Let&apos;s Go! 🌟
+              </button>
+            </div>
+          )}
+
+          {selectedMode === 'choosePos' && (
+            <div className='absolute left-5 top-20 z-10 w-72 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg'>
+              {/* Title */}
+              <p className='mb-4 text-center text-lg font-semibold'>Choose your position 🎨</p>
+
+              {/* Position selection buttons */}
+              <div className='flex flex-col items-center justify-center gap-2'>
+                {parts.map((part, index) => {
+                  return (
+                    !isPartFull(part) && (
+                      <button
+                        key={index}
+                        onClick={() => handleSelectPart(part)}
+                        className='w-full rounded-lg bg-green-700 p-2 text-white shadow-md transition duration-300 hover:bg-green-800'
+                      >
+                        {part}
+                      </button>
+                    )
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {selectedMode === 'chooseDress' && selectedPart && (
+            <div className='absolute left-5 top-20 z-10 w-60 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg'>
+              {/* Title */}
+              <div className='mb-4 text-center text-lg font-semibold'>{`Choose an accessory 🎨`}</div>
+
+              {/* Dress options */}
+              <div className='flex w-full flex-col items-center justify-center gap-3'>
+                {dressOptions[selectedPart].map((dress) => (
+                  <button
+                    key={dress}
+                    onClick={() => handleSelectDress(dress)}
+                    className={`w-full rounded-lg p-2 shadow-md transition duration-300 ${
+                      dress === selectedDress
+                        ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                        : 'bg-green-700 text-white hover:bg-green-800'
+                    }`}
+                  >
+                    {dressLabel[dress]}
+                  </button>
+                ))}
+              </div>
+
+              {/* Confirm button */}
+              <button
+                className='mx-auto mt-4 block w-full rounded-lg bg-red-700 px-6 py-2 text-white shadow-md transition duration-300 hover:bg-red-800'
+                onClick={handleConfirmDress}
+              >
+                Confirm 🌟
+              </button>
+            </div>
+          )}
+
+          {selectedMode === 'message' && (
+            <div className='absolute left-5 top-20 z-10 w-60 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg'>
+              {/* Title */}
+              <div className='mb-3 text-center text-lg font-semibold'>Send some messages🎄</div>
+
+              {/* Message input area */}
+              <textarea
+                className='h-32 w-full resize-none rounded-md border-2 border-pink-900 p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700'
+                value={message}
+                onChange={(e) => {
+                  if (e.target.value.length <= 100) {
+                    handleInputChange(e)
+                  }
+                }}
+                placeholder='Type your message here...'
+              />
+
+              {/* Send button */}
+              <button
+                className='mx-auto mt-4 block rounded-lg bg-green-700 px-6 py-2 text-white shadow-md transition duration-300 hover:bg-green-800'
+                onClick={handleSendMessage}
+              >
+                Send 🌟
+              </button>
+            </div>
+          )}
+
+          {selectedMode === 'thankyou' && (
+            <div className='absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg'>
+              <p className='mb-4 text-center text-lg font-semibold'>{GGBs.thanks_message}</p>
+              <button
+                className='mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800'
+                onClick={handleBack}
+              >
+                Back to kitchen
+              </button>
+            </div>
+          )}
         </div>
       )}
-
-      {selectedMode === 'message' && (
-        <div className='absolute left-5 top-20 z-10 w-60 rounded-xl border-2 border-white bg-[#FFD889] p-4 text-pink-900 shadow-lg'>
-          {/* Title */}
-          <div className='mb-3 text-center text-lg font-semibold'>Send some messages🎄</div>
-
-          {/* Message input area */}
-          <textarea
-            className='h-32 w-full resize-none rounded-md border-2 border-pink-900 p-3 text-pink-900 placeholder:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-700'
-            value={message}
-            onChange={(e) => {
-              if (e.target.value.length <= 100) {
-                handleInputChange(e)
-              }
-            }}
-            placeholder='Type your message here...'
-          />
-
-          {/* Send button */}
-          <button
-            className='mx-auto mt-4 block rounded-lg bg-green-700 px-6 py-2 text-white shadow-md transition duration-300 hover:bg-green-800'
-            onClick={handleSendMessage}
-          >
-            Send 🌟
-          </button>
-        </div>
-      )}
-
-      {selectedMode === 'thankyou' && (
-        <div className='absolute left-7 top-20 w-80 rounded-xl border-2 border-white bg-[#FFD889] p-5 text-pink-900 shadow-lg'>
-          <p className='mb-4 text-center text-lg font-semibold'>{GGBs.thanks_message}</p>
-          <button
-            className='mx-auto block rounded-lg bg-green-700 px-5 py-2 text-white shadow-md transition duration-300 hover:bg-green-800'
-            onClick={handleBack}
-          >
-            Back to kitchen
-          </button>
-        </div>
-      )}
-    </div>
+    </>
   )
 }
