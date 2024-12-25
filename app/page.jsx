@@ -33,7 +33,6 @@ export default function Page() {
         ) : (
           <GoogleSignInButton />
         )}
-
         <button
           onClick={() => setModalVisible(true)}
           className='w-44 rounded-xl border-2 border-white bg-red-800 px-4 py-2 text-white shadow-lg transition duration-300 hover:scale-105 hover:bg-[#FFD889] hover:text-red-800 hover:shadow-xl focus:outline-none'
@@ -46,6 +45,7 @@ export default function Page() {
         >
           Credits
         </button>
+
         {status == 'authenticated' && (
           <button
             onClick={() => signOut()}
@@ -54,6 +54,7 @@ export default function Page() {
             Sign Out
           </button>
         )}
+        <p className='text-white'>available from 25 DEC to 7 JUN</p>
       </div>
 
       <TutorialModal isVisible={isModalVisible} onClose={() => setModalVisible(false)} tutorialPages={tutorialPages} />
