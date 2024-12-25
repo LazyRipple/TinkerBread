@@ -38,7 +38,7 @@ function BakePage({ friend_link }) {
   const [canDecorateIndex, setCanDecorateIndex] = useState(0)
 
   const handleClick = (index) => {
-    // console.log('Clicked index:', index);
+    // console.log('Clicked index:', index)
     // console.log('Current mode before click:', selectedMode);
 
     // console.log(`can decorate index = ${canDecorateIndex}`);
@@ -144,7 +144,7 @@ function BakePage({ friend_link }) {
   useEffect(() => {
     setPartsInGingerBread(getParts(currentPage))
     setTempPartsInGingerBread(getParts(currentPage))
-  }, [GGBs])
+  }, [GGBs, currentPage])
 
   const [selectedPart, setSelectedPart] = useState(null)
   const [selectedDress, setSelectedDress] = useState(null)
