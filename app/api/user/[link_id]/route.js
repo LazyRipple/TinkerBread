@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
 
-const prisma = new PrismaClient()
+const prisma = global.prisma || new PrismaClient()
 
 // API to get user data
 export async function GET(request, { params }) {

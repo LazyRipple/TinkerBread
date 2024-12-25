@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const prisma = global.prisma || new PrismaClient()
 
 export default async function GingerbreadInfo(GGB_id, meStr) {
   if (GGB_id == 'none') {

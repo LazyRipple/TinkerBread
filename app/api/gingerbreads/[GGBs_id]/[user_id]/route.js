@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client')
 import GingerbreadInfo from '../../../../../src/libs/gingerbreadInfo'
 import { NextResponse } from 'next/server'
 
-const prisma = new PrismaClient()
+const prisma = global.prisma || new PrismaClient()
 
 // GET : get your gingerbread infomation
 export async function GET(request, { params }) {

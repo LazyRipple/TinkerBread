@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client')
 
 async function main() {
   // Create Gingerbread parts
-  const prisma = new PrismaClient()
+  const prisma = global.prisma || new PrismaClient()
 
   // Create Items
   const item1 = await prisma.item.create({

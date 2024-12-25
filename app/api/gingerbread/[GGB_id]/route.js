@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import authOptions from '@/api/auth/[...nextauth]/authOption'
 
-const prisma = new PrismaClient()
+const prisma = global.prisma || new PrismaClient()
 export async function GET(request, { params }) {
   try {
     const GGB_id = params.GGB_id

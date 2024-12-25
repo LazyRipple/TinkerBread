@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 import { NextResponse } from 'next/server'
-const prisma = new PrismaClient()
+const prisma = global.prisma || new PrismaClient()
 export async function POST(request) {
   try {
     // TODO : change this when on production
