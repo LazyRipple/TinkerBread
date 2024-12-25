@@ -12,8 +12,11 @@ export const BakeSessionProvider = ({ children }) => {
     const fetchUser = async () => {
       if (status === 'authenticated' && session?.user?.link_id) {
         try {
+          console.log('start fetch')
+
           const userRes = await fetch(`/api/user/${friend_link_id}`)
           const userData = await userRes.json()
+          console.log('done user')
 
           const GGBRes = await fetch(`/api/gingerbreads/${userData.data.GGBs_id}/${session?.user?.link_id}`)
           const GGBData = await GGBRes.json()
@@ -66,6 +69,8 @@ export const BakeSessionProvider = ({ children }) => {
             ])
           }
 
+          console.log('done GGB')
+
           setGGBs({
             ggbType: GGBs.GGB_type,
             GGBs_id: GGBs.GGBs_id,
@@ -76,6 +81,7 @@ export const BakeSessionProvider = ({ children }) => {
             items: prepData,
           })
           setLoadStatus('loaded')
+          console.log('done load')
         } catch (error) {
           setLoadStatus('error')
         }
