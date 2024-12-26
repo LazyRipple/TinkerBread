@@ -4,7 +4,10 @@ const prisma = global.prisma || new PrismaClient()
 export async function POST(request) {
   try {
     // TODO : change this when on production
-    const allowedOrigins = ['*']
+    if (!process.env.ALLOW_ORIGIN) {
+      throw new Error('Forbidden: Invalid origin')
+    }
+    const allowedOrigins = process.env.ALLOW_ORIGIN.split(',')
     const origin = request.headers.get('origin')
     if (!allowedOrigins.includes(origin)) {
       throw new Error('Forbidden: Invalid origin')
