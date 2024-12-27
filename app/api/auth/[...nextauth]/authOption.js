@@ -80,9 +80,9 @@ const authOptions = {
         return `/bake/me`
       }
       if (url.startsWith('/')) {
-        return `https://tinkerbread.netlify.app/${url}`
+        return `https://tinkerbread.moosatae.space/${url}`
       }
-      return 'https://tinkerbread.netlify.app/' // TODO : change this when production
+      return 'https://tinkerbread.moosatae.space/' // TODO : change this when production
     },
   },
 }
