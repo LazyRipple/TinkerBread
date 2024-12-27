@@ -20,6 +20,7 @@ export const BakeSessionProvider = ({ children }) => {
             const GGBData = await GGBRes.json()
 
             const GGBs = GGBData?.data
+            console.log(GGBs)
 
             let prepData = [
               {
