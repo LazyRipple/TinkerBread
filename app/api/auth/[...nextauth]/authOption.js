@@ -76,13 +76,10 @@ const authOptions = {
       return session
     },
     redirect: async ({ url, NEXT_PUBLIC_BASEURL, user, session }) => {
-      if (user?.link_id) {
-        return `/bake/me`
-      }
-      if (url.startsWith('/')) {
-        return `https://tinkerbread.moosatae.space/${url}`
-      }
-      return 'https://tinkerbread.moosatae.space/' // TODO : change this when production
+      const baseUrl = 'https://tinkerbread.moosatae.space';
+      if (user?.link_id) return `${baseUrl}/bake/me`;
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      return baseUrl;
     },
   },
 }
