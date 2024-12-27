@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense, Profiler } from 'react'
 import '@/style/bake.css'
 import { useParams, notFound } from 'next/navigation'
 import { useSession, status } from 'next-auth/react'
@@ -16,6 +16,10 @@ import { Gingerbread } from '@/components/GingerbreadMe.jsx'
 import { Arrow3D } from '@/components/Arrow'
 import Link from 'next/link'
 import BakeMoreGingerbread, { Textbox } from './BakeMoreGingerbread'
+
+// Lazy load components
+const LazyGingerbread = lazy(() => import('@/components/GingerbreadMe.jsx'))
+const LazyArrow3D = lazy(() => import('@/components/Arrow'))
 
 export default function Page() {
   const { GGBs_id } = useParams()
@@ -155,42 +159,44 @@ function PageContent() {
             <Snow count={500} area={{ x: [-5, 5], y: [-5, 10], z: [-15, -2] }} />
             <Scene />
 
-            {modelInstances.map((instance, index) => (
-              <Gingerbread
-                key={index}
-                ggbType={GGBs.ggbType}
-                instance={instance}
-                index={index}
-                handleClick={handleClick}
-                accessoryOfThis={partsInGingerbread}
-                selectedPart={selectedPart}
-                selectedDress={selectedDress}
-                setName={setName}
-                setMessage={setMessage}
-                setShowMessage={setShowMessage}
-              />
-            ))}
+            <Suspense fallback={<Loading />}>
+              {modelInstances.map((instance, index) => (
+                <LazyGingerbread
+                  key={index}
+                  ggbType={GGBs.ggbType}
+                  instance={instance}
+                  index={index}
+                  handleClick={handleClick}
+                  accessoryOfThis={partsInGingerbread}
+                  selectedPart={selectedPart}
+                  selectedDress={selectedDress}
+                  setName={setName}
+                  setMessage={setMessage}
+                  setShowMessage={setShowMessage}
+                />
+              ))}
 
-            <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
-            {/* <OrbitControls /> */}
-            {canDisplayPrev && (
-              <Arrow3D
-                key={'prev'}
-                arrow={'prev'}
-                position={[4.75, 0, 0.2]}
-                rotation={[0, (Math.PI * 3) / 2, 0]}
-                onClick={handlePrev}
-              />
-            )}
-            {canDisplayNext && (
-              <Arrow3D
-                key={'next'}
-                arrow={'next'}
-                position={[6.3, 0, 0.2]}
-                rotation={[0, (Math.PI * 3) / 2, 0]}
-                onClick={handleNext}
-              />
-            )}
+              <CameraController focusedIndex={focusedIndex} modelInstances={modelInstances} />
+              {/* <OrbitControls /> */}
+              {canDisplayPrev && (
+                <LazyArrow3D
+                  key={'prev'}
+                  arrow={'prev'}
+                  position={[4.75, 0, 0.2]}
+                  rotation={[0, (Math.PI * 3) / 2, 0]}
+                  onClick={handlePrev}
+                />
+              )}
+              {canDisplayNext && (
+                <LazyArrow3D
+                  key={'next'}
+                  arrow={'next'}
+                  position={[6.3, 0, 0.2]}
+                  rotation={[0, (Math.PI * 3) / 2, 0]}
+                  onClick={handleNext}
+                />
+              )}
+            </Suspense>
           </Canvas>
 
           <button
