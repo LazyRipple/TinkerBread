@@ -85,7 +85,7 @@ function PageContent() {
 
   useEffect(() => {
     setPartsInGingerBread(getParts(currentPage))
-  }, [GGBs])
+  }, [GGBs, load_status])
 
   const [selectedPart, setSelectedPart] = useState(null)
   const [selectedDress, setSelectedDress] = useState(null)

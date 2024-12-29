@@ -70,6 +70,9 @@ module.exports = (_phase, { defaultConfig }) => {
       config.resolve.alias['@'] = path.resolve(__dirname, 'src')
       return config
     },
+    swcMinify: true, // Optimizations
+    eactStrictMode: true,
+    // ANALYZE=true pnpm run build to build
   }
   Object.keys(wConfig).forEach((key) => {
     if (!KEYS_TO_OMIT.includes(key)) {
