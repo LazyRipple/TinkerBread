@@ -76,13 +76,28 @@ const authOptions = {
       return session
     },
     redirect: async ({ url, NEXT_PUBLIC_BASEURL, user, session }) => {
-      if (user?.link_id) {
-        return `/bake/me`
+      const baseUrl = NEXT_PUBLIC_BASEURL || 'https://tinkerbread.moosatae.space';
+
+      try {
+        if (user?.link_id) {
+          return `${baseUrl}/bake/me`;
+        }
+
+        if (url?.startsWith('/')) {
+          return `${baseUrl}${url}`;
+        }
+
+        // Handle callback URL specifically for Google OAuth
+        if (url?.includes('/api/auth/callback/google')) {
+          return url;
+        }
+
+        return baseUrl;
+      } catch (error) {
+        console.error('Redirect error:', error);
+        return baseUrl;
       }
-      if (url.startsWith('/')) {
-        return `https://tinkerbread.netlify.app/${url}`
-      }
-      return 'https://tinkerbread.netlify.app/' // TODO : change this when production
+
     },
   },
 }
