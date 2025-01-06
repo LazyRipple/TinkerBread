@@ -4,8 +4,7 @@ const prisma = global.prisma || new PrismaClient()
 export async function POST(request) {
   try {
     // TODO : change this when on production
-    // const allowedOrigins = ['http://localhost:3000']
-    const allowedOrigins = ['https://tinker-bread.vercel.app', 'https://tinkerbread.netlify.app']
+    const allowedOrigins = ['https://tinker-bread.vercel.app', 'http://localhost:3000']
     const origin = request.headers.get('origin')
     if (!allowedOrigins.includes(origin)) {
       throw new Error('Forbidden: Invalid origin')
